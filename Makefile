@@ -19,6 +19,7 @@ LIBFT       = $(LIBFT_DIR)libft.a
 # Source and object files
 SRCS        = $(SRC_DIR)main.c \
               $(SRC_DIR)tokenization.c  \
+			  $(SRC_DIR)tokenization_utils.c \
 			  $(SRC_DIR)utils.c \
 
 OBJS        = $(SRCS:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)
