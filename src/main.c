@@ -17,9 +17,9 @@ int main(int argc, char **argv, char **envp)
     while (1)
     {
         minishell.line = get_input();
-        if (!minishell.line) // Kullanıcı CTRL+D ile çıkarsa.
+        if (!minishell.line) // Kullanıcı CTRL+D ile çıkarsa. Burada signal kullanilacak daha sonra.
         {
-            printf("Exit\n");
+            printf("Exit\n"); // Simdilik exit yazdir
             break;
         }
         if (*(minishell.line) == '\0') { // Boş girdi durumunda devam et
