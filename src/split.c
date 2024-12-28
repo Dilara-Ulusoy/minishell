@@ -1,85 +1,9 @@
 #include "minishell.h"
 
-
-// Bu fonksiyon tokenları dolaşarak token tiplerini belirler
-// Örneğin: ls | grep "hello" > output.txt
-void determine_token_types(t_token *tokens)
-{
-    t_token *current = tokens;
-    while (current)
-    {
-        if (current->is_operator)
-        {
-            // Tekrar kontrol etmek istiyorsanız:
-            current->type = get_token_type(current->value);
-        }
-        else
-        {
-            current->type = T_WORD;
-        }
-        current = current->next;  // İleri gitmeyi unutmayın
-    }
-}
-
-void tokenize(char *line, t_token **tokens)
-{
-
-    // split_tokens fonksiyonuyla tırnak içini koruyarak ayırıyoruz
-    char **splitted = split_tokens(line);
-    if (!splitted)
-    {
-        printf("Error: failed to split tokens\n");
-        return;
-    }
-
-    // Her bir parçaya tipini belirleyip token listesine ekle
-    int i = 0;
-    while (splitted[i])
-    {
-        t_token_type type = get_token_type(splitted[i]);
-        add_token(tokens, splitted[i], type);
-        i++;
-    }
-    // heap'te oluşturulmuş stringleri free et
-    i = 0;
-    while (splitted[i])
-    {
-        free(splitted[i]);
-        i++;
-    }
-    free(splitted);
-
-    // Artık operator_expects_command mantığı ile
-    // token tiplerini (komut mu, argüman mı vb.) yeniden güncelle
-    determine_token_types(*tokens);
-}
-
-// Token tipini belirleyen fonksiyon
-t_token_type get_token_type(char *token)
-{
-    if (ft_strncmp(token, "|", 1) == 0)
-        return T_PIPE;
-    else if (ft_strncmp(token, ">", 1) == 0)
-        return T_REDIRECT_OUT;
-    else if (ft_strncmp(token, "<", 1) == 0)
-        return T_REDIRECT_IN;
-    else if (ft_strncmp(token, ">>", 2) == 0)
-        return T_REDIRECT_APPEND;
-    else if (ft_strncmp(token, "<<", 2) == 0)
-        return T_REDIRECT_HEREDOC;
-    else if (ft_strncmp(token, "(", 1) == 0)
-        return T_OPEN_P;
-    else if (ft_strncmp(token, ")", 1) == 0)
-        return T_CLOSE_P;
-    else if (ft_strncmp(token, "&&", 2) == 0)
-        return T_AND;
-    else if (ft_strncmp(token, "||", 2) == 0)
-        return T_OR;
-    else if (ft_strncmp(token, "\n", 2) == 0)
-        return T_NL;
-    else
-        return T_WORD; // Varsayılan olarak argüman
-}
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
 
 /**
  * Basit bir strndup fonksiyonu (42 projesinde ft_strndup ya da benzeri bir fonksiyonunuz olabilir)
@@ -89,7 +13,7 @@ static char *strndup_custom(const char *src, size_t n)
     char *dest = (char *)malloc(n + 1);
     if (!dest)
         return NULL;
-    ft_memcpy(dest, src, n);
+    memcpy(dest, src, n);
     dest[n] = '\0';
     return dest;
 }
@@ -107,7 +31,7 @@ char **split_tokens(const char *line)
 {
     // Kaç token bulabileceğimizi kestirmek için en kötü ihtimalle
     // her karakter bir token olsa bile +1 adet son NULL için yer ayıralım:
-    size_t max_tokens = ft_strlen(line) + 1;
+    size_t max_tokens = strlen(line) + 1;
 
     // Çıktı (token) dizisini oluşturuyoruz.
     // Sonunda NULL ile işaretlenecek.
@@ -164,3 +88,47 @@ char **split_tokens(const char *line)
     return tokens;
 }
 
+/**
+ * Aşağıda sadece testleri gerçekleştiren main fonksiyonunu yazıyoruz.
+ * Derleyip çalıştırdığınızda, girdi satırlarının nasıl tokenize edildiğini
+ * görebilirsiniz.
+ */
+int main(void)
+{
+    // Test için farklı input senaryoları
+    const char *test_inputs[] = {
+        "echo \"merhaba dunya\" 'tek tırnaklı  arg' arg3",
+        "ls -l -a \"dosya adi.txt\"",
+        "'tek tirnak'\"hemen sonra cift\"",
+        "  bosluklarla   baslayan  string  ",
+        "echo 'iç içe \" (ve) ' \"karmaşık '  ",
+        NULL
+    };
+
+    int test_index = 0;
+    while (test_inputs[test_index])
+    {
+        printf("Input  : [%s]\n", test_inputs[test_index]);
+        char **result = split_tokens(test_inputs[test_index]);
+        if (!result)
+        {
+            printf("split_tokens returned NULL!\n");
+        }
+        else
+        {
+            // Tokenleri yazdıralım
+            int i = 0;
+            while (result[i])
+            {
+                printf("  Token[%d]: [%s]\n", i, result[i]);
+                free(result[i]); // Kullanımdan sonra free etmeyi unutmayın
+                i++;
+            }
+            free(result); // Dizi pointer'ını da free'leyelim
+        }
+        printf("--------------------------------------------------\n");
+        test_index++;
+    }
+
+    return 0;
+}

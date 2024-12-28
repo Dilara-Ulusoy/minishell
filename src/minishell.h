@@ -18,18 +18,18 @@ typedef struct s_shell
 
 typedef enum s_token_type
 {
-	T_COMMAND, // command; ls, echo, cat Type: 0
-	T_ARG, // argument Type: 1
-	T_PIPE,  		// | Type: 2
-	T_REDIRECT_OUT, // > Type: 3
-	T_REDIRECT_IN, // < Type: 4
-	T_REDIRECT_APPEND, // >> Type: 5
-	T_REDIRECT_HEREDOC, // << Type: 6
-	T_OPEN_P, // ( Type: 7
-	T_CLOSE_P, // ) Type: 8
-	T_AND, // && Type: 9
-	T_OR, // || Type: 10
-	T_NL, // new line Type: 11
+	T_WORD, // argument Type: 0
+	T_PIPE,  		// | Type: 1
+	T_REDIRECT_OUT, // > Type: 2
+	T_REDIRECT_IN, // < Type: 3
+	T_REDIRECT_APPEND, // >> Type: 4
+	T_REDIRECT_HEREDOC, // << Type: 5
+	T_OPEN_P, // ( Type: 6
+	T_CLOSE_P, // ) Type: 7
+	T_AND, // && Type: 8
+	T_OR, // || Type: 9
+	T_NL, // new line Type: 10
+	T_GROUP,
 }
 t_token_type;
 
@@ -39,14 +39,9 @@ typedef struct s_token
 	t_token_type type;
 	char *value;
 	bool is_operator;
-	bool expect_command;
 	struct s_token *next;
 	struct s_token *prev;
 } t_token;
-
-typedef struct s_parser_state {
-    bool expect_command;
-} t_parser_state;
 
 
 
@@ -62,10 +57,10 @@ void print_tokens(t_token *head);
 void free_tokens(t_token *head);
 t_token_type get_token_type(char *token);
 bool is_operator_token(t_token_type type);
-void determine_token_types(t_token *tokens, t_parser_state *state);
+void determine_token_types(t_token *tokens);
 
 
 // Utils
-bool is_quote(char c);
+char **split_tokens(const char *line);
 
 

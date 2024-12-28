@@ -88,3 +88,4 @@
 6. Memory Management and Error Handling: Ensure robust memory usage and clear error messages.
 7. Bonus Features: Expand with advanced functionalities like logical operators (`&&`, `||`) and wildcard expansion (`*`).
 
+https://chatgpt.com/share/676fe80c-a718-800d-8865-fc69c7b165c1
