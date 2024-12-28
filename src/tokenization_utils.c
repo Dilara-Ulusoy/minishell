@@ -10,6 +10,16 @@ bool	is_operator_token(t_token_type type)
 		return (true);
 	return (false);
 }
+bool is_group(t_token *token)
+{
+    if (!token || !token->value)
+        return false;
+
+    char first_char = token->value[0];
+    return (first_char == '(' || first_char == ')');
+}
+
+
 
 // Yeni bir token oluştur
 t_token *create_token(char *value, t_token_type type) {

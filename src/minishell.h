@@ -57,6 +57,7 @@ void print_tokens(t_token *head);
 void free_tokens(t_token *head);
 t_token_type get_token_type(char *token);
 bool is_operator_token(t_token_type type);
+bool is_group(t_token *token);
 void determine_token_types(t_token *tokens);
 
 

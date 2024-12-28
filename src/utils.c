@@ -3,7 +3,7 @@
 // Kullanıcıdan girdi alan fonksiyon
 char *get_input(void)
 {
-    char *line = readline("minishell> ");
+    char *line = readline("minishell$ ");
     if (!line)
         return NULL;
     if (*line)
