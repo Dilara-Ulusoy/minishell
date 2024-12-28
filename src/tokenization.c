@@ -24,7 +24,7 @@ void determine_token_types(t_token *tokens)
     }
 }
 
-
+// Stringi tokenlara ayırır ve token listesine ekler ve token tiplerini belirler
 void tokenize(char *line, t_token **tokens)
 {
     // split_tokens fonksiyonuyla tırnak içini koruyarak ayırıyoruz
