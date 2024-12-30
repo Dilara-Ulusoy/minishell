@@ -29,7 +29,8 @@ typedef enum s_token_type
 	T_AND, // && Type: 8
 	T_OR, // || Type: 9
 	T_NL, // new line Type: 10
-	T_GROUP,
+	T_WORD_WILDCARD, // argument with wildcard Type: 11
+	T_GROUP, // ( or ) Type: 12
 }
 t_token_type;
 
@@ -58,6 +59,7 @@ void free_tokens(t_token *head);
 t_token_type get_token_type(char *token);
 bool is_operator_token(t_token_type type);
 bool is_group(t_token *token);
+bool contains_wildcard(const char *token);
 void determine_token_types(t_token *tokens);
 
 

@@ -18,6 +18,14 @@ bool is_group(t_token *token)
     char first_char = token->value[0];
     return (first_char == '(' || first_char == ')');
 }
+bool contains_wildcard(const char *token) {
+    while (*token) {
+        if (*token == '*' || *token == '?' || *token == '[' || *token == ']')
+            return true; // Joker karakter bulundu
+        token++;
+    }
+    return false; // Joker karakter yok
+}
 
 
 

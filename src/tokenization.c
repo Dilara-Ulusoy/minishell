@@ -2,7 +2,6 @@
 
 
 // Bu fonksiyon tokenları dolaşarak token tiplerini belirler
-// Örneğin: ls | grep "hello" > output.txt
 void determine_token_types(t_token *tokens)
 {
     t_token *current = tokens;
@@ -18,6 +17,9 @@ void determine_token_types(t_token *tokens)
         }
         else
         {
+            if(contains_wildcard(current->value)) // Joker karakter kontrolü
+                current->type = T_WORD_WILDCARD;
+            else
             current->type = T_WORD;
         }
         current = current->next;
@@ -28,28 +30,28 @@ void determine_token_types(t_token *tokens)
 void tokenize(char *line, t_token **tokens)
 {
     // split_tokens fonksiyonuyla tırnak içini koruyarak ayırıyoruz
-    char **splitted = split_tokens(line);
-    if (!splitted)
+    char **split = split_tokens(line);
+    if (!split)
     {
         printf("Error: failed to split tokens\n");
         return;
     }
     // Her bir parçaya tipini belirleyip token listesine ekle
     int i = 0;
-    while (splitted[i])
+    while (split[i])
     {
-        t_token_type type = get_token_type(splitted[i]);
-        add_token(tokens, splitted[i], type);
+        t_token_type type = get_token_type(split[i]);
+        add_token(tokens, split[i], type); // Bu fonksiyon token type'i belirlendikten sonra tokeni listeye ekler
         i++;
     }
     // heap'te oluşturulmuş stringleri free et
     i = 0;
-    while (splitted[i])
+    while (split[i])
     {
-        free(splitted[i]);
+        free(split[i]);
         i++;
     }
-    free(splitted);
+    free(split);
     determine_token_types(*tokens);
 }
 
@@ -95,6 +97,39 @@ static char *strndup_custom(const char *src, size_t n)
     return dest;
 }
 
+// Handle quote toggling
+static void handle_quote(char c, bool *in_single_quote, bool *in_double_quote)
+{
+    if (c == '\'' && !*in_double_quote)
+    {
+        *in_single_quote = !*in_single_quote;
+    }
+    else if (c == '\"' && !*in_single_quote)
+    {
+        *in_double_quote = !*in_double_quote;
+    }
+}
+
+// Handle parenthesis tracking
+static bool handle_parenthesis(char c, int *parenthesis_count, bool in_single_quote, bool in_double_quote)
+{
+    if (c == '(' && !in_single_quote && !in_double_quote)
+    {
+        (*parenthesis_count)++;
+    }
+    else if (c == ')' && !in_single_quote && !in_double_quote)
+    {
+        (*parenthesis_count)--;
+        if (*parenthesis_count < 0) // Unmatched closing parenthesis
+        {
+            fprintf(stderr, "Syntax error: Unmatched closing parenthesis\n");
+            return false;
+            exit(128);
+        }
+    }
+    return true;
+}
+
 char **split_tokens(const char *line)
 {
     size_t max_tokens = strlen(line) + 1;
@@ -102,64 +137,27 @@ char **split_tokens(const char *line)
     if (!tokens)
         return NULL;
 
-    size_t token_count = 0;        // Kaç adet token bulunduğunu takip eder
-    bool in_single_quote = false; // Tek tırnak içinde miyiz?
-    bool in_double_quote = false; // Çift tırnak içinde miyiz?
-    bool in_parenthesis = false;  // Parantez içinde miyiz?
-    size_t i = 0;   // line üzerinde gezer
-    size_t start = 0; // token başlangıcı
+    size_t token_count = 0;        // Number of tokens
+    bool in_single_quote = false; // Are we inside single quotes?
+    bool in_double_quote = false; // Are we inside double quotes?
+    int parenthesis_count = 0;    // Track nested parentheses
+    size_t i = 0;   // Index to traverse `line`
+    size_t start = 0; // Start of the current token
 
     while (line[i] != '\0')
     {
         char c = line[i];
 
-        // Eğer parantez açılıyorsa ve şu anda tırnak içinde değilsek
-        if (c == '(' && !in_single_quote && !in_double_quote)
-        {
-            if (in_parenthesis)
-            {
-                fprintf(stderr, "Syntax error: Nested parentheses are not supported\n");
-                free(tokens);
-                return NULL;
-            }
+        // Handle quotes
+        handle_quote(c, &in_single_quote, &in_double_quote);
 
-            in_parenthesis = true;
-            start = i++; // Parantezin başladığı index
-            continue;
+        // Handle parentheses
+        if (!handle_parenthesis(c, &parenthesis_count, in_single_quote, in_double_quote))
+        {
+            free(tokens);
+            return NULL;
         }
 
-        // Parantez kapanıyorsa
-        if (c == ')' && !in_single_quote && !in_double_quote)
-        {
-            if (!in_parenthesis)
-            {
-                fprintf(stderr, "Syntax error: Unmatched closing parenthesis\n");
-                free(tokens);
-                return NULL;
-            }
-
-            in_parenthesis = false;
-            tokens[token_count++] = strndup_custom(line + start, i - start + 1);
-            i++;
-            start = i; // Parantezden sonraki pozisyondan devam et
-            continue;
-        }
-
-        // Eğer tek tırnak açılmamışsa ve çift tırnak karakteri görürsek
-        if (c == '\"' && !in_single_quote)
-        {
-            in_double_quote = !in_double_quote;
-            i++;
-            continue;
-        }
-
-        // Eğer çift tırnak açılmamışsa ve tek tırnak karakteri görürsek
-        if (c == '\'' && !in_double_quote)
-        {
-            in_single_quote = !in_single_quote;
-            i++;
-            continue;
-        }
         // Ignore special characters (backslash or semicolon) not required by the subject
         if ((c == '\\' || c == ';') && !in_single_quote && !in_double_quote)
         {
@@ -167,40 +165,40 @@ char **split_tokens(const char *line)
             continue;
         }
 
-        // Tırnak ve parantez dışında boşluk görürsek token sonunu işaretler
-        if ((c == ' ' || c == '\t') && !in_single_quote && !in_double_quote && !in_parenthesis)
+        // Detect token boundaries on spaces or tabs
+        if ((c == ' ' || c == '\t') && !in_single_quote && !in_double_quote && parenthesis_count == 0)
         {
-            if (i > start) // Mevcut token var mı? (start < i ise var)
+            if (i > start) // If a token exists
             {
                 tokens[token_count++] = strndup_custom(line + start, i - start);
             }
-            start = i + 1; // Boşluktan sonraki konumdan yeni token başlayacak
+            start = i + 1; // Token starts after the space
         }
 
         i++;
     }
 
-    // Döngü sonunda hala tırnak içindeysek veya parantez kapanmadıysa syntax error döndür
+    // Check for unclosed quotes or parentheses
     if (in_single_quote || in_double_quote)
     {
         fprintf(stderr, "Syntax error: Unclosed quote detected\n");
         free(tokens);
         return NULL;
     }
-    if (in_parenthesis)
+    if (parenthesis_count > 0)
     {
         fprintf(stderr, "Syntax error: Unclosed parenthesis detected\n");
         free(tokens);
         return NULL;
     }
 
-    // Döngü sonunda buffer'da kalan token'ı ekle
+    // Add the last token if any
     if (i > start)
     {
         tokens[token_count++] = strndup_custom(line + start, i - start);
     }
 
-    // Son eleman olarak NULL atayalım.
+    // Null-terminate the tokens array
     tokens[token_count] = NULL;
 
     return tokens;
