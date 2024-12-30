@@ -28,7 +28,6 @@ bool contains_wildcard(const char *token) {
 }
 
 
-
 // Yeni bir token oluştur
 t_token *create_token(char *value, t_token_type type) {
     t_token *new_token = malloc(sizeof(t_token));

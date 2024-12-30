@@ -31,6 +31,7 @@ typedef enum s_token_type
 	T_NL, // new line Type: 10
 	T_WORD_WILDCARD, // argument with wildcard Type: 11
 	T_GROUP, // ( or ) Type: 12
+	T_UNDEFINED,
 }
 t_token_type;
 

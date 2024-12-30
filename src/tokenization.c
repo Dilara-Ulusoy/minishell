@@ -29,11 +29,10 @@ void determine_token_types(t_token *tokens)
 // Stringi tokenlara ayırır ve token listesine ekler ve token tiplerini belirler
 void tokenize(char *line, t_token **tokens)
 {
-    // split_tokens fonksiyonuyla tırnak içini koruyarak ayırıyoruz
     char **split = split_tokens(line);
     if (!split)
     {
-        printf("Error: failed to split tokens\n");
+        perror("split_tokens");
         return;
     }
     // Her bir parçaya tipini belirleyip token listesine ekle
@@ -42,13 +41,6 @@ void tokenize(char *line, t_token **tokens)
     {
         t_token_type type = get_token_type(split[i]);
         add_token(tokens, split[i], type); // Bu fonksiyon token type'i belirlendikten sonra tokeni listeye ekler
-        i++;
-    }
-    // heap'te oluşturulmuş stringleri free et
-    i = 0;
-    while (split[i])
-    {
-        free(split[i]);
         i++;
     }
     free(split);
@@ -84,9 +76,6 @@ t_token_type get_token_type(char *token)
 }
 
 
-/**
- * Basit bir strndup fonksiyonu (42 projesinde ft_strndup ya da benzeri bir fonksiyonunuz olabilir)
- */
 static char *strndup_custom(const char *src, size_t n)
 {
     char *dest = (char *)malloc(n + 1);
@@ -135,8 +124,10 @@ char **split_tokens(const char *line)
     size_t max_tokens = strlen(line) + 1;
     char **tokens = (char **)malloc(sizeof(char *) * max_tokens);
     if (!tokens)
+    {
+        perror("malloc");
         return NULL;
-
+    }
     size_t token_count = 0;        // Number of tokens
     bool in_single_quote = false; // Are we inside single quotes?
     bool in_double_quote = false; // Are we inside double quotes?
@@ -151,7 +142,7 @@ char **split_tokens(const char *line)
         // Handle quotes
         handle_quote(c, &in_single_quote, &in_double_quote);
 
-        // Handle parentheses
+        // Handle parentheses and check for unmatched parentheses
         if (!handle_parenthesis(c, &parenthesis_count, in_single_quote, in_double_quote))
         {
             free(tokens);
