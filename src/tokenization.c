@@ -1,6 +1,5 @@
 #include "minishell.h"
 
-
 // Bu fonksiyon tokenları dolaşarak token tiplerini belirler
 void determine_token_types(t_token *tokens)
 {
@@ -99,7 +98,7 @@ static void handle_quote(char c, bool *in_single_quote, bool *in_double_quote)
     }
 }
 
-// Handle parenthesis tracking
+// Handle parenthesis tracking and check for unmatched parentheses
 static bool handle_parenthesis(char c, int *parenthesis_count, bool in_single_quote, bool in_double_quote)
 {
     if (c == '(' && !in_single_quote && !in_double_quote)
@@ -122,18 +121,19 @@ static bool handle_parenthesis(char c, int *parenthesis_count, bool in_single_qu
 char **split_tokens(const char *line)
 {
     size_t max_tokens = strlen(line) + 1;
+    size_t token_count = 0;        // Number of tokens
+    bool in_single_quote = false; // Are we inside single quotes?
+    bool in_double_quote = false; // Are we inside double quotes?
+    int parenthesis_count = 0;    // Track nested parentheses
+    size_t i = 0;                 // Index to traverse `line`
+    size_t start = 0;             // Start of the current token
+
     char **tokens = (char **)malloc(sizeof(char *) * max_tokens);
     if (!tokens)
     {
         perror("malloc");
         return NULL;
     }
-    size_t token_count = 0;        // Number of tokens
-    bool in_single_quote = false; // Are we inside single quotes?
-    bool in_double_quote = false; // Are we inside double quotes?
-    int parenthesis_count = 0;    // Track nested parentheses
-    size_t i = 0;   // Index to traverse `line`
-    size_t start = 0; // Start of the current token
 
     while (line[i] != '\0')
     {
@@ -148,16 +148,39 @@ char **split_tokens(const char *line)
             free(tokens);
             return NULL;
         }
+        // Detect operators (&&, ||, |, >, <, etc.)
+        if (is_operator(c) && !in_single_quote && !in_double_quote)
+        {
+            // Check for double operator (&&, ||)
+            if ((line[i] == '&' && line[i + 1] == '&') || (line[i] == '|' && line[i + 1] == '|'))
+            {
+                // Add preceding token if any
+                if (i > start)
+                    tokens[token_count++] = strndup_custom(line + start, i - start);
+                tokens[token_count++] = strndup_custom(line + i, 2);   // Add the operator as a token
+                i += 1; // Skip the next character (part of the double operator)
+            }
+            else
+            {
+                // Add preceding token if any
+                if (i > start)
+                {
+                    tokens[token_count++] = strndup_custom(line + start, i - start);
+                }
+                // Add the single operator as a token
+                tokens[token_count++] = strndup_custom(&line[i], 1);
+            }
 
+            start = i + 1; // Move start past the operator
+        }
         // Ignore special characters (backslash or semicolon) not required by the subject
-        if ((c == '\\' || c == ';') && !in_single_quote && !in_double_quote)
+        else if ((c == '\\' || c == ';') && !in_single_quote && !in_double_quote)
         {
             i++; // Skip the character
             continue;
         }
-
         // Detect token boundaries on spaces or tabs
-        if ((c == ' ' || c == '\t') && !in_single_quote && !in_double_quote && parenthesis_count == 0)
+        else if ((c == ' ' || c == '\t') && !in_single_quote && !in_double_quote && parenthesis_count == 0)
         {
             if (i > start) // If a token exists
             {
@@ -168,21 +191,23 @@ char **split_tokens(const char *line)
 
         i++;
     }
-
     // Check for unclosed quotes or parentheses
     if (in_single_quote || in_double_quote)
     {
         fprintf(stderr, "Syntax error: Unclosed quote detected\n");
+        for (size_t j = 0; j < token_count; j++)
+            free(tokens[j]);
         free(tokens);
         return NULL;
     }
     if (parenthesis_count > 0)
     {
         fprintf(stderr, "Syntax error: Unclosed parenthesis detected\n");
+        for (size_t j = 0; j < token_count; j++)
+            free(tokens[j]);
         free(tokens);
         return NULL;
     }
-
     // Add the last token if any
     if (i > start)
     {
@@ -194,4 +219,3 @@ char **split_tokens(const char *line)
 
     return tokens;
 }
-

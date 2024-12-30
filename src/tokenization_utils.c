@@ -10,6 +10,11 @@ bool	is_operator_token(t_token_type type)
 		return (true);
 	return (false);
 }
+
+bool is_operator(char c)
+{
+    return (c == '|' || c == '>' || c == '<' || c == '&' || c == '(' || c == ')' || c == '\n');
+}
 bool is_group(t_token *token)
 {
     if (!token || !token->value)

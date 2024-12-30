@@ -1,3 +1,6 @@
+#ifndef MINISHELL_H
+# define MINISHELL_H
+
 #include <stdio.h>
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -5,8 +8,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdbool.h>
-
-
+#include "parsing.h"
 #include "../Libft/libft.h"
 
 typedef struct s_shell
@@ -31,7 +33,7 @@ typedef enum s_token_type
 	T_NL, // new line Type: 10
 	T_WORD_WILDCARD, // argument with wildcard Type: 11
 	T_GROUP, // ( or ) Type: 12
-	T_UNDEFINED,
+	T_EOF // End of file Type: 13,
 }
 t_token_type;
 
@@ -62,9 +64,13 @@ bool is_operator_token(t_token_type type);
 bool is_group(t_token *token);
 bool contains_wildcard(const char *token);
 void determine_token_types(t_token *tokens);
+bool is_operator(char c);
 
 
 // Utils
 char **split_tokens(const char *line);
 
 
+
+
+#endif

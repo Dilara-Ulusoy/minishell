@@ -12,3 +12,4 @@ char *get_input(void)
     free(line);
     return trimmed_line; // Temizlenmiş string döndür
 }
+
