@@ -72,10 +72,13 @@ t_token *tokenize(const char *line)
                If 0 is returned, it means we found no characters for a word
                (perhaps an immediate operator?), so we just continue.
         */
-        if (parse_word(&head, line, &i))
-            continue;
+        if (!parse_word(&head, line, &i))
+        {
+            /* If parse_word fails (e.g., due to a syntax error), clean up tokens */
+            free_tokens(&head);
+            return NULL; /* Return NULL to indicate failure */
+        }
     }
-
     return head;
 }
 
@@ -168,7 +171,6 @@ int parse_word(t_token **head, const char *line, int *pos)
         free_tokens(head);
         return 0;
     }
-
     token->type = TOKEN_WORD;
     token->value = word;
     token->next = NULL;
@@ -177,9 +179,6 @@ int parse_word(t_token **head, const char *line, int *pos)
     return 1; /* handled */
 }
 
-/*****************************************************************************/
-/*                       OPERATOR DETECTION & TOKEN CREATION                  */
-/*****************************************************************************/
 
 /*
    is_two_char_operator:
@@ -353,45 +352,29 @@ char *read_word_range(const char *line, int *index)
 {
     int start = *index; /* Remember where the word starts */
     int length = (int)ft_strlen(line);
+    int end;
+    int wordLength;
 
-    /* 1. Move through the line until we meet an operator start, whitespace, or end of string. */
     while (*index < length)
     {
         char c = line[*index];
-        if (c == '"' || c == '\'')     /* Handle quotes */
+        if (c == '"' || c == '\'')
         {
             if (!handle_quotes(line, index, c))
                 return NULL; /* Syntax error: Unclosed quote */
-            break; /* Skip further processing as handle_quotes updates the index */
+            continue;
         }
-        /* Diğer sınır koşulları */
         if (is_space(c) || is_two_char_operator(c) || c == '(' || c == ')')
             break;
-        /* Otherwise, it's a normal character forming part of the word. */
         (*index)++;
     }
-    /* 2. Calculate how many characters are in the word. */
-    int end = *index;  /* Where the word ended */
-    int wordLength = end - start;
-
-    /* 3. If wordLength == 0, that means we encountered an operator or whitespace immediately. */
+    end = *index; /* Where the word ended */
+    wordLength = end - start;
     if (wordLength == 0)
         return NULL;
-
-    /* 4. Allocate memory for the word (including null terminator). */
-    char *word = (char *)malloc(wordLength + 1);
-    if (!word)
-        return NULL; /* memory allocation failure */
-
-    /* 5. Copy the substring from line (start ... end-1). */
-    ft_memcpy(word, &line[start], wordLength);
-
-    /* 6. Add a null terminator. */
-    word[wordLength] = '\0';
-
-    /* 7. Return the allocated string. Caller is responsible for free(word). */
-    return word;
+    return allocate_word(line, start, wordLength);
 }
+
 
 int handle_quotes(const char *line, int *index, char quote)
 {
@@ -410,8 +393,18 @@ int handle_quotes(const char *line, int *index, char quote)
         }
         (*index)++;
     }
-
     /* No matching closing quote found */
-    fprintf(stderr, "Syntax error: Unclosed quote '%c' at position %d\n", quote, *index);
+    printf("Syntax error: Unclosed quote\n");
     return 0;
+}
+char *allocate_word(const char *line, int start, int length)
+{
+    char *word;
+
+    word = (char *)malloc(length + 1);
+    if (!word)
+        return NULL;
+    ft_memcpy(word, &line[start], length);
+    word[length] = '\0';
+    return word;
 }

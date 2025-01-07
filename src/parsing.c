@@ -4,57 +4,52 @@
 /*                           IMPLEMENTATION                                  */
 /*****************************************************************************/
 
+static int is_operator(t_token_type type)
+{
+    return (type == TOKEN_AND || type == TOKEN_OR || type == TOKEN_PIPE ||
+            type == TOKEN_REDIR_IN || type == TOKEN_REDIR_OUT ||
+            type == TOKEN_REDIR_APPEND || type == TOKEN_REDIR_HERE);
+}
+
+static int is_redirection(t_token_type type)
+{
+    return (type == TOKEN_REDIR_IN || type == TOKEN_REDIR_OUT ||
+            type == TOKEN_REDIR_APPEND || type == TOKEN_REDIR_HERE);
+}
+
+static void set_syntax_error(t_parser *parser, const char *token_value)
+{
+    parser->error_status = PARSE_SYNTAX_ERROR;
+    printf("Syntax error near unexpected token '%s'\n", token_value ? token_value : "newline");
+}
+
 
 void check_syntax_errors(t_parser *parser)
 {
     t_token *current = parser->tokens;
 
-    /* Early return if no tokens are provided */
-    if (!current)
+	if (!parser || !parser->tokens) /* Early return if no tokens */
         return;
 
-    /* Check if the first token is a binary operator (e.g., &&, ||, |) */
-    if (is_binary_operator(current->type) || current->type == TOKEN_REDIR_APPEND ||
-		current->type == TOKEN_REDIR_OUT || current->type == TOKEN_REDIR_IN ||
-		current->type == TOKEN_REDIR_HERE)
+    /* Check if the first token is invalid */
+    if (is_operator(current->type))
     {
-        parser->error_status = PARSE_SYNTAX_ERROR;
+        set_syntax_error(parser, current->value);
         return;
     }
-
-    /* Iterate through the tokens to check for other syntax issues */
-    while (current && current->next)
+   while (current && current->next)
+{
+    if ((is_operator(current->type) && is_operator(current->next->type)) ||
+        (is_redirection(current->type) && (!current->next || current->next->type != TOKEN_WORD)))
     {
-        /* If two binary operators are adjacent, that's a syntax error */
-        if (is_binary_operator(current->type) && is_binary_operator(current->next->type))
-        {
-            printf("Syntax error near unexpected token '%s'\n", current->next->value);
-            parser->error_status = PARSE_SYNTAX_ERROR;
-            return;
-        }
-
-        /* If a redirection operator (<, >, >>, <<) is followed by anything other than a WORD token */
-        if ((current->type == TOKEN_REDIR_IN || current->type == TOKEN_REDIR_OUT ||
-             current->type == TOKEN_REDIR_APPEND || current->type == TOKEN_REDIR_HERE) &&
-            (!current->next || current->next->type != TOKEN_WORD))
-        {
-            printf("Syntax error near unexpected token '%s'\n",
-                   current->next ? current->next->value : "newline");
-            parser->error_status = PARSE_SYNTAX_ERROR;
-            return;
-        }
-
-        current = current->next;
+        set_syntax_error(parser, current->next ? current->next->value : "newline");
+        return;
     }
-
-    /* Check if the last token is a binary operator (e.g., &&, ||, |) */
-    if (current && is_binary_operator(current->type))
-    {
-        printf("Syntax error near unexpected token '%s'\n", current->value);
-        parser->error_status = PARSE_SYNTAX_ERROR;
-    }
+    current = current->next;
 }
-
+    if (current && is_operator(current->type))     /* Check if the last token is an invalid operator */
+        set_syntax_error(parser, current->value);
+}
 
 /**
  * @brief build_ast

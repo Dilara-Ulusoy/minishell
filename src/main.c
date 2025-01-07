@@ -51,7 +51,7 @@ void debug_ast(const t_ast_node *root, int depth)
         {
             /* It's a command node => print cmd_args. */
             if (root->cmd_args && *(root->cmd_args))
-                printf("CMD: \"%s\" [depth=%d]\n", root->cmd_args, depth);
+                printf("CMD: %s [depth=%d]\n", root->cmd_args, depth);
             else
                 printf("CMD: (no command text) [depth=%d]\n", depth);
 

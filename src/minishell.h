@@ -55,6 +55,8 @@ int         is_space(char c);
 char        *read_word_range(const char *line, int *index);
 int handle_quotes(const char *line, int *index, char quote);
 
+char *allocate_word(const char *line, int start, int length);
+
 /*****************************************************************************/
 /*                        PARSE STEPS (LOGICALLY SPLIT)                      */
 /*****************************************************************************/
