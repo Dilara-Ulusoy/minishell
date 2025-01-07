@@ -9,68 +9,64 @@
 #include <unistd.h>
 #include <stdbool.h>
 #include "parsing.h"
+#include "token.h"
 #include "../Libft/libft.h"
+
 
 typedef struct s_shell
 {
 	char *line;
-	char *tokens;
+	t_token *tokens;
+	t_token *current_token;
+	t_ast_node *ast;
+	t_parser *parser;
+	int exit_code;
 
 } t_shell;
 
-typedef enum s_token_type
-{
-	T_WORD, // argument Type: 0
-	T_PIPE,  		// | Type: 1
-	T_REDIRECT_OUT, // > Type: 2
-	T_REDIRECT_IN, // < Type: 3
-	T_REDIRECT_APPEND, // >> Type: 4
-	T_REDIRECT_HEREDOC, // << Type: 5
-	T_OPEN_P, // ( Type: 6
-	T_CLOSE_P, // ) Type: 7
-	T_AND, // && Type: 8
-	T_OR, // || Type: 9
-	T_NL, // new line Type: 10
-	T_WORD_WILDCARD, // argument with wildcard Type: 11
-	T_GROUP, // ( or ) Type: 12
-	T_EOF // End of file Type: 13,
-}
-t_token_type;
 
+/*****************************************************************************/
+/*                         FUNCTION DECLARATIONS                             */
+/*****************************************************************************/
 
-typedef struct s_token
-{
-	t_token_type type;
-	char *value;
-	bool is_operator;
-	struct s_token *next;
-	struct s_token *prev;
-} t_token;
+/* The main function to convert a user input line into a linked list of tokens. */
+t_token *tokenize(const char *line);
 
+/* Two-char operator checks */
+int         is_two_char_operator(char c);
+t_token_type match_two_char_operator(const char *line, int index);
 
+/* Single-char operator checks */
+t_token_type match_single_char_operator(char c);
 
-char *get_input(void);
+/* Creating / appending tokens */
+t_token     *create_new_token_range(t_token_type type,
+                                    const char *line,
+                                    int startIndex,
+                                    int length);
+void        append_token(t_token **head, t_token *new_token);
 
+/* Whitespace handling */
+int         skip_whitespace(const char *line, int i);
+int         is_space(char c);
 
-//Tokenization
+/* Read a non-operator word */
+char        *read_word_range(const char *line, int *index);
 
-void tokenize(char *line, t_token **tokens);
-t_token *create_token(char *value, t_token_type type);
-void add_token(t_token **head, char *value, t_token_type type);
-void print_tokens(t_token *head);
-void free_tokens(t_token *head);
-t_token_type get_token_type(char *token);
-bool is_operator_token(t_token_type type);
-bool is_group(t_token *token);
-bool contains_wildcard(const char *token);
-void determine_token_types(t_token *tokens);
-bool is_operator(char c);
+/*****************************************************************************/
+/*                        PARSE STEPS (LOGICALLY SPLIT)                      */
+/*****************************************************************************/
 
+/* Step 2: parse two-char operator */
+int  parse_two_char_operator(t_token **head, const char *line, int *pos);
+/* Step 3: parse single-char operator */
+int  parse_single_char_operator(t_token **head, const char *line, int *pos);
+/* Step 4: parse word */
+int  parse_word(t_token **head, const char *line, int *pos);
 
-// Utils
-char **split_tokens(const char *line);
+void print_tokens(const t_token *head);
 
-
+void free_tokens(t_token **head);
 
 
 #endif

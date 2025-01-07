@@ -19,11 +19,7 @@ LIBFT       = $(LIBFT_DIR)libft.a
 # Source and object files
 SRCS        = $(SRC_DIR)main.c \
               $(SRC_DIR)tokenization.c  \
-			  $(SRC_DIR)tokenization_utils.c \
-			  $(SRC_DIR)utils.c \
-			  #$(SRC_DIR)parser.c \
-			  #$(SRC_DIR)parser_utils.c \
-			  #$(SRC_DIR)ast.c \
+			  $(SRC_DIR)parsing.c \
 
 OBJS        = $(SRCS:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)
 
@@ -33,6 +29,8 @@ OBJS        = $(SRCS:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)
 
 # Default target: build everything
 all: $(LIBFT) $(NAME)
+
+bonus: $(LIBFT)_bonus $(NAME)
 
 # Linking the executable
 $(NAME): $(OBJ_DIR) $(OBJS)
@@ -47,6 +45,10 @@ $(NAME): $(OBJ_DIR) $(OBJS)
 $(LIBFT):
 	@echo "Building libft..."
 	@$(MAKE) -C $(LIBFT_DIR)
+
+$(LIBFT)_bonus:
+	@echo "Building libft bonus..."
+	@$(MAKE) bonus -C $(LIBFT_DIR)
 
 #******************************************************************************#
 #                               COMPILE RULES                                  #
@@ -86,4 +88,4 @@ re: fclean all
 #******************************************************************************#
 
 # Indicate phony targets
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re bonus
