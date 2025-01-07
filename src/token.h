@@ -1,5 +1,6 @@
 #ifndef TOKEN_H
 # define TOKEN_H
+
 /*
     token_type:
     - Each enumerator corresponds to a possible category of token.

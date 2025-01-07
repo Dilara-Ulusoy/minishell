@@ -50,8 +50,10 @@ void        append_token(t_token **head, t_token *new_token);
 int         skip_whitespace(const char *line, int i);
 int         is_space(char c);
 
+
 /* Read a non-operator word */
 char        *read_word_range(const char *line, int *index);
+int handle_quotes(const char *line, int *index, char quote);
 
 /*****************************************************************************/
 /*                        PARSE STEPS (LOGICALLY SPLIT)                      */

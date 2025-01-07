@@ -1,0 +1,10 @@
+minishell$        echo "Dilara"    && echo "Cagaray          Dilara" // bosluklar elenmis
+AST_AND [depth=0]
+  CMD: "echo "Dilara"" [depth=1]
+  CMD: "echo "Cagaray Dilara"" [depth=1]
+
+
+minishell$  echo "Dilara"    && echo "Cagaray          Dilara  // double quote hatasi  var
+AST_AND [depth=0]
+  CMD: "echo "Dilara"" [depth=1]
+  CMD: "echo "Cagaray Dilara" [depth=1]

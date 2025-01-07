@@ -31,7 +31,7 @@
  * Splits the line string into a linked list of tokens.
  * Uses smaller helper methods for readability and memory correctness.
  *
- * @param line The user line line (e.g. "echo hello && cat < file.txt").
+ * @param line The user line (e.g. "echo hello && cat < file.txt").
  * @return Pointer to the first token in a linked list, or NULL if empty.
  */
 t_token *tokenize(const char *line)
@@ -45,7 +45,7 @@ t_token *tokenize(const char *line)
 
     while (i < length)
     {
-        /* 1. Skip whitespace */
+
         i = skip_whitespace(line, i);
         if (i >= length)
             break; // no more content left
@@ -165,7 +165,7 @@ int parse_word(t_token **head, const char *line, int *pos)
     if (!token)
     {
         free(word);
-        /* In production code, you might handle partial frees of the list. */
+        free_tokens(head);
         return 0;
     }
 
@@ -292,7 +292,6 @@ void append_token(t_token **head, t_token *new_token)
         *head = new_token;
         return;
     }
-
     t_token *cursor = *head;
     while (cursor->next)
         cursor = cursor->next; /* move to the end of the list */
@@ -300,15 +299,6 @@ void append_token(t_token **head, t_token *new_token)
     cursor->next = new_token; /* append at the end */
 }
 
-/*****************************************************************************/
-/*                            WHITESPACE FUNCTIONS                            */
-/*****************************************************************************/
-
-/*
-   skip_whitespace:
-   - Moves index forward while we see space, tab, or other whitespace chars.
-   - Returns the new index after skipping.
-*/
 int skip_whitespace(const char *line, int i)
 {
     while (line[i] && is_space(line[i]))
@@ -368,23 +358,18 @@ char *read_word_range(const char *line, int *index)
     while (*index < length)
     {
         char c = line[*index];
-
-        /* Stop if we see whitespace. */
-        if (is_space(c))
+        if (c == '"' || c == '\'')     /* Handle quotes */
+        {
+            if (!handle_quotes(line, index, c))
+                return NULL; /* Syntax error: Unclosed quote */
+            break; /* Skip further processing as handle_quotes updates the index */
+        }
+        /* Diğer sınır koşulları */
+        if (is_space(c) || is_two_char_operator(c) || c == '(' || c == ')')
             break;
-
-        /* Stop if this character can start a two-char operator: (&, |, <, >). */
-        if (is_two_char_operator(c))
-            break;
-
-        /* Stop if this character is a single-char operator: '(', ')' etc. */
-        if (c == '(' || c == ')')
-            break;
-
         /* Otherwise, it's a normal character forming part of the word. */
         (*index)++;
     }
-
     /* 2. Calculate how many characters are in the word. */
     int end = *index;  /* Where the word ended */
     int wordLength = end - start;
@@ -406,4 +391,27 @@ char *read_word_range(const char *line, int *index)
 
     /* 7. Return the allocated string. Caller is responsible for free(word). */
     return word;
+}
+
+int handle_quotes(const char *line, int *index, char quote)
+{
+    int length = (int)ft_strlen(line);
+
+    /* Move past the opening quote. */
+    (*index)++;
+
+    /* Traverse until a matching closing quote is found. */
+    while (*index < length)
+    {
+        if (line[*index] == quote) /* Matching closing quote found */
+        {
+            (*index)++;
+            return 1; /* Successfully handled the quote */
+        }
+        (*index)++;
+    }
+
+    /* No matching closing quote found */
+    fprintf(stderr, "Syntax error: Unclosed quote '%c' at position %d\n", quote, *index);
+    return 0;
 }
