@@ -67,8 +67,10 @@ int  parse_two_char_operator(t_token **head, const char *line, int *pos);
 int  parse_single_char_operator(t_token **head, const char *line, int *pos);
 /* Step 4: parse word */
 int  parse_word(t_token **head, const char *line, int *pos);
+int handle_newline(t_token **head, const char *line, int *pos);
 
 void print_tokens(const t_token *head);
+
 
 void free_tokens(t_token **head);
 

@@ -130,6 +130,7 @@ int is_operator(t_token_type type);
 int is_redirection(t_token_type type);
 void set_syntax_error(t_parser *parser, const char *token_value);
 void check_syntax_errors(t_parser *parser);
-t_ast_node *build_command_node(t_parser *p);
+
+
 
 #endif

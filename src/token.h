@@ -22,6 +22,7 @@ typedef enum e_token_type
     TOKEN_REDIR_HERE,   /* '<<' here-document operator */
     TOKEN_PAREN_OPEN,   /* '(' left parenthesis */
     TOKEN_PAREN_CLOSE,  /* ')' right parenthesis */
+    TOKEN_NL,           /* newline */
     TOKEN_UNKNOWN       /* fallback if something doesn't match known operators */
 } t_token_type;
 
@@ -47,4 +48,8 @@ typedef struct s_token
 } t_token;
 
 
+
+
 #endif
+
+

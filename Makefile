@@ -16,15 +16,21 @@ SRC_DIR     = src/
 LIBFT_DIR   = libft/
 LIBFT       = $(LIBFT_DIR)libft.a
 
+
 # Source and object files
 SRCS        = $(SRC_DIR)main.c \
-              $(SRC_DIR)tokenization.c  \
-			  $(SRC_DIR)tokenization_utils.c \
+              $(SRC_DIR)tokenizer.c  \
+			  $(SRC_DIR)tokenizer_utils.c \
+			  $(SRC_DIR)tokenizer_appender.c \
+			  $(SRC_DIR)tokenizer_handler.c \
 			  $(SRC_DIR)parsing.c \
 			  $(SRC_DIR)parsing_utils.c \
 			  $(SRC_DIR)ast_built.c \
 			  $(SRC_DIR)ast_node_create.c \
 			  $(SRC_DIR)free_token_ast.c \
+			  $(SRC_DIR)get_next_line.c \
+			  $(SRC_DIR)get_next_line_utils.c \
+
 
 
 OBJS        = $(SRCS:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)
