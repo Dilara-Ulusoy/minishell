@@ -101,18 +101,17 @@ int parse_two_char_operator(t_token **head, const char *line, int *pos)
 
     if (is_two_char_operator(line[i]) && (i + 1 < length))
     {
-        t_token_type twoCharType = match_two_char_operator(line, i);
-        if (twoCharType != TOKEN_UNKNOWN)
+        t_token_type doublechar = match_two_char_operator(line, i);
+        if (doublechar != TOKEN_UNKNOWN)
         {
             /* e.g. "&&", "||", ">>", or "<<" */
-            int operatorLength = 2;
-
+            int operator_length = 2;
             /* Create the new token */
-            t_token *opToken = create_new_token_range(twoCharType, line, i, operatorLength);
+            t_token *opToken = create_new_token_range(doublechar, line, i, operator_length);
             append_token(head, opToken);
 
-            /* Move pos forward by operatorLength */
-            *pos += operatorLength;
+            /* Move pos forward by operator_length */
+            *pos += operator_length;
             return 1; /* handled */
         }
     }
@@ -135,11 +134,11 @@ int parse_single_char_operator(t_token **head, const char *line, int *pos)
     t_token_type singleType = match_single_char_operator(line[*pos]);
     if (singleType != TOKEN_UNKNOWN)
     {
-        int operatorLength = 1;
-        t_token *opToken = create_new_token_range(singleType, line, *pos, operatorLength);
+        int operator_length = 1;
+        t_token *opToken = create_new_token_range(singleType, line, *pos, operator_length);
         append_token(head, opToken);
 
-        *pos += operatorLength; // skip this char
+        *pos += operator_length; // skip this char
         return 1; /* handled */
     }
     return 0; /* not handled */
@@ -179,19 +178,6 @@ int parse_word(t_token **head, const char *line, int *pos)
     return 1; /* handled */
 }
 
-
-/*
-   is_two_char_operator:
-   Returns non-zero (true) if 'c' can start a two-char operator like:
-    - '&' for "&&"
-    - '|' for "||"
-    - '<' for "<<"
-    - '>' for ">>"
-*/
-int is_two_char_operator(char c)
-{
-    return (c == '&' || c == '|' || c == '<' || c == '>');
-}
 
 /*
    match_two_char_operator:
@@ -263,53 +249,14 @@ t_token *create_new_token_range(t_token_type type,
         free(newTok);
         return NULL;
     }
-
     // 3. Copy the substring from line into newTok->value
     //    We'll use strncpy here for demonstration, but be mindful of bounds in real code.
-    strncpy(newTok->value, &line[startIndex], length);
+    ft_strlcpy(newTok->value, &line[startIndex], length);
     newTok->value[length] = '\0'; // null terminate
 
     // 4. Initialize next pointer
     newTok->next = NULL;
-
     return newTok;
-}
-
-/*
-   append_token:
-   - Adds 'new_token' to the end of the linked list whose head is '*head'.
-   - If *head is NULL, then new_token becomes the first and only element.
-*/
-void append_token(t_token **head, t_token *new_token)
-{
-    if (!new_token)
-        return;
-
-    if (!*head)
-    {
-        /* If the list is empty, new_token is the new head. */
-        *head = new_token;
-        return;
-    }
-    t_token *cursor = *head;
-    while (cursor->next)
-        cursor = cursor->next; /* move to the end of the list */
-
-    cursor->next = new_token; /* append at the end */
-}
-
-int skip_whitespace(const char *line, int i)
-{
-    while (line[i] && is_space(line[i]))
-        i++;
-    return i;
-}
-
-int is_space(char c)
-{
-    if(c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\v' || c == '\f')
-        return 1;
-    return 0;
 }
 
 /*****************************************************************************/
@@ -396,15 +343,4 @@ int handle_quotes(const char *line, int *index, char quote)
     /* No matching closing quote found */
     printf("Syntax error: Unclosed quote\n");
     return 0;
-}
-char *allocate_word(const char *line, int start, int length)
-{
-    char *word;
-
-    word = (char *)malloc(length + 1);
-    if (!word)
-        return NULL;
-    ft_memcpy(word, &line[start], length);
-    word[length] = '\0';
-    return word;
 }

@@ -17,7 +17,8 @@ typedef enum e_ast_node_type
     AST_COMMAND,
     AST_AND,
     AST_OR,
-    AST_PIPE
+    AST_PIPE,
+	AST_INVALID,
 } t_ast_node_type;
 
 /*
@@ -85,6 +86,7 @@ typedef struct s_parser
     e_parse_error    error_status;  /* ok, syntax error, memory error, etc. */
 } t_parser;
 
+
 /*****************************************************************************/
 /*             FUNCTION DECLARATIONS FOR AST BUILDING / REDIRECTIONS         */
 /*****************************************************************************/
@@ -96,6 +98,9 @@ t_ast_node    *build_ast(t_token *token_list);
 t_ast_node *parse_expression(t_parser *p, int min_prec);
 t_ast_node *parse_term(t_parser *p);
 t_ast_node *parse_command(t_parser *p);
+char *build_command_string(t_parser *p);
+void attach_io_node(t_io_node **io_list, t_io_node *new_io);
+t_io_node *create_io_node(t_io_type kind, const char *filename, t_parser *p);
 
 /* Redirection parsing: gather <, >, >>, << and attach them to a command. */
 void         parse_redirections(t_parser *p, t_io_node **io_list);
@@ -108,7 +113,7 @@ t_ast_node  *create_ast_operator_node(t_ast_node_type type, t_ast_node *left, t_
 void free_ast(t_ast_node *root);
 
 /* Utilities: next token, operator precedence checks, etc. */
-void         advance_token(t_parser *p);
+void         get_next_token(t_parser *p);
 int          get_precedence(t_token_type ttype);
 int          is_binary_operator(t_token_type ttype);
 t_io_type    map_token_to_io_type(t_token_type ttype);
@@ -116,8 +121,15 @@ t_io_type    map_token_to_io_type(t_token_type ttype);
 void free_io_list(t_io_node *io_list);
 
 void check_syntax_errors(t_parser *parser);
+t_ast_node_type get_ast_node_type(t_token_type operator_type);
+void *handle_parse_error(t_parser *p, t_ast_node *left_node, t_ast_node *right_node, const char *error_message);
+t_ast_node *built_operator_node(t_ast_node *left_node, t_ast_node *right_node, t_token_type operator_type, t_parser *p);
 
 
-
+int is_operator(t_token_type type);
+int is_redirection(t_token_type type);
+void set_syntax_error(t_parser *parser, const char *token_value);
+void check_syntax_errors(t_parser *parser);
+t_ast_node *build_command_node(t_parser *p);
 
 #endif

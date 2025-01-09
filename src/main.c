@@ -167,7 +167,6 @@ int main(int argc, char **argv, char **envp)
         ft_putendl_fd("Too many args. Usage: ./minishell", 2);
         exit(1);
     }
-    /* It's good practice to initialize shell struct members to NULL at start */
     shell.line = NULL;
     shell.tokens = NULL;
     while (1)
@@ -198,8 +197,8 @@ int main(int argc, char **argv, char **envp)
         else
         {
             debug_ast(ast_root, 0);
+            //execute_ast(ast_root);
         }
-
         //print_tokens(shell.tokens);
         free_tokens(&shell.tokens);
         shell.tokens = NULL;
