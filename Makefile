@@ -28,8 +28,6 @@ SRCS        = $(SRC_DIR)main.c \
 			  $(SRC_DIR)ast_built.c \
 			  $(SRC_DIR)ast_node_create.c \
 			  $(SRC_DIR)free_token_ast.c \
-			  $(SRC_DIR)get_next_line.c \
-			  $(SRC_DIR)get_next_line_utils.c \
 
 
 

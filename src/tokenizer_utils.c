@@ -1,5 +1,6 @@
 #include "minishell.h"
 
+
 int skip_whitespace(const char *line, int i)
 {
     while (line[i] && is_space(line[i]))
@@ -44,20 +45,43 @@ int handle_quotes(const char *line, int *index, char quote)
 {
     int length = (int)ft_strlen(line);
 
-    /* Move past the opening quote. */
+    /* Açılış tırnağını atla */
     (*index)++;
 
-    /* Traverse until a matching closing quote is found. */
     while (*index < length)
     {
-        if (line[*index] == quote) /* Matching closing quote found */
+        if (line[*index] == quote) /* Kapanış tırnağı bulundu */
         {
             (*index)++;
-            return 1; /* Successfully handled the quote */
+            return 1; /* Başarıyla tamamlandı */
         }
         (*index)++;
     }
-    /* No matching closing quote found */
-    printf("Syntax error: Unclosed quote\n");
-    return 0;
+
+    /* Quote kapanmadıysa, kullanıcıdan daha fazla girdi iste */
+    char *new_line = get_input("dquote> ");
+    if (!new_line)
+    {
+        printf("Syntax error: Unclosed quote\n");
+        return 0; /* Kullanıcı daha fazla girdi vermezse hata */
+    }
+
+    /* Yeni satırı birleştir */
+    char *temp = ft_strjoin(line, "\n");
+    if(!temp)
+    {
+        free(new_line);
+        return 0;
+    }
+    char *joined_line = ft_strjoin(temp, new_line);
+    if(!joined_line)
+    {
+        free(new_line);
+        return 0;
+    }
+    free(new_line);
+    free(temp);
+
+    /* Yeni satırı recursive olarak işleme devam et */
+    return handle_quotes(joined_line, index, quote);
 }

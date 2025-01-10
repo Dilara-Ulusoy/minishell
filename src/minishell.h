@@ -52,7 +52,7 @@ int         is_space(char c);
 
 
 /* Read a non-operator word */
-char        *read_word_range(const char *line, int *index);
+char *read_word_range(const char *line, int *index);
 int handle_quotes(const char *line, int *index, char quote);
 
 char *allocate_word(const char *line, int start, int length);
@@ -74,5 +74,6 @@ void print_tokens(const t_token *head);
 
 void free_tokens(t_token **head);
 
+char *get_input(const char *prompt);
 
 #endif

@@ -115,9 +115,10 @@ void free_tokens(t_token **head)
     - We trim leading/trailing spaces with ft_strtrim (ensure it's available).
     - Return the trimmed string. The caller must free it.
 */
-char *get_input(void)
+char *get_input(const char *prompt)
 {
-    char *line = readline("minishell$ ");
+    /* Use the custom prompt passed as a parameter */
+    char *line = readline(prompt);
     if (!line) /* If user pressed Ctrl+D or EOF occurred */
         return NULL;
 
@@ -171,7 +172,7 @@ int main(int argc, char **argv, char **envp)
     shell.tokens = NULL;
     while (1)
     {
-        shell.line = get_input(); /* Get user input (trimmed) */
+        shell.line = get_input("minishell$ ");
         if (!shell.line)
         {
             /* Ctrl+D or EOF => exit the shell */
