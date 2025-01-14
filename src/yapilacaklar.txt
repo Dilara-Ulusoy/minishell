@@ -1,0 +1,22 @@
+
+prompt --> echo "hello  ise
+dquote> 'dan sonra yazilan metni "line" icine eklemeliyiz ve line update olmali.
+Fonksiyonlarin icinde char **line pass etmeliyiz ki line update olabilsin ve
+tokenize fonksiyonu sonradan eklenen line icinde calisabilsin.
+
+
+Örn:
+minishell$ --> echo "hello
+dquote> Dilara"
+token type = 0 --> echo
+token type = 0 --> "hello
+token type = 10 --> \n
+token type = 0 --> Dilara"
+seklinde olmali.
+
+Real shell
+-------------------------------
+minishell % echo "hello
+dquote> Dilara"
+hello
+Dilara

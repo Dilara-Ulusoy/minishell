@@ -44,6 +44,7 @@ char *allocate_word(const char *line, int start, int length)
 int handle_quotes(const char *line, int *index, char quote)
 {
     int length = (int)ft_strlen(line);
+    char *new_line;
 
     /* Açılış tırnağını atla */
     (*index)++;
@@ -57,9 +58,11 @@ int handle_quotes(const char *line, int *index, char quote)
         }
         (*index)++;
     }
-
     /* Quote kapanmadıysa, kullanıcıdan daha fazla girdi iste */
-    char *new_line = get_input("dquote> ");
+    if(quote == '\'')
+        new_line = get_input("quote> ");
+    else
+        new_line = get_input("dquote> ");
     if (!new_line)
     {
         printf("Syntax error: Unclosed quote\n");
