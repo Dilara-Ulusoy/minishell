@@ -75,6 +75,7 @@ t_ast_node *parse_expression(t_parser *p, int min_prec)
 	/* If no current token or parse error is set, we can't proceed. */
 	if (!p->current_token || p->error_status != PARSE_OK)
 		return NULL;
+		
 
 	/*
 	   1) Parse one "term" (could be parenthesized expression or a command).

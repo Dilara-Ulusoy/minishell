@@ -152,11 +152,7 @@ void cleanup_shell(t_shell *shell)
     }
 }
 
-/*
-    Usage:
-      ./minishell
-    If user passes extra arguments, we print usage error and exit(1).
-*/
+
 int main(int argc, char **argv, char **envp)
 {
     t_shell shell;  /* Our shell struct containing 'line' and 'tokens' */
@@ -183,11 +179,11 @@ int main(int argc, char **argv, char **envp)
         /* If user typed an empty string after trimming, just free and continue */
         if (*(shell.line) == '\0')
         {
+            printf("Error: Empty line\n");
             free(shell.line);
             shell.line = NULL;
             continue;
         }
-
         /* Tokenize the user input */
         shell.tokens = tokenize(shell.line);
         t_ast_node *ast_root = build_ast(shell.tokens);
@@ -209,5 +205,4 @@ int main(int argc, char **argv, char **envp)
         free_ast(ast_root);
     }
     return 0;
-
 }

@@ -44,47 +44,23 @@ char *allocate_word(const char *line, int start, int length)
 int handle_quotes(const char *line, int *index, char quote)
 {
     int length = (int)ft_strlen(line);
-    char *new_line;
 
-    /* Açılış tırnağını atla */
+    /* Skip the opening quote */
     (*index)++;
 
+    /* Search for the closing quote */
     while (*index < length)
     {
-        if (line[*index] == quote) /* Kapanış tırnağı bulundu */
+        if (line[*index] == quote) /* Closing quote found */
         {
             (*index)++;
-            return 1; /* Başarıyla tamamlandı */
+            return 1; /* Successfully handled */
         }
         (*index)++;
     }
-    /* Quote kapanmadıysa, kullanıcıdan daha fazla girdi iste */
-    if(quote == '\'')
-        new_line = get_input("quote> ");
-    else
-        new_line = get_input("dquote> ");
-    if (!new_line)
-    {
-        printf("Syntax error: Unclosed quote\n");
-        return 0; /* Kullanıcı daha fazla girdi vermezse hata */
-    }
 
-    /* Yeni satırı birleştir */
-    char *temp = ft_strjoin(line, "\n");
-    if(!temp)
-    {
-        free(new_line);
-        return 0;
-    }
-    char *joined_line = ft_strjoin(temp, new_line);
-    if(!joined_line)
-    {
-        free(new_line);
-        return 0;
-    }
-    free(new_line);
-    free(temp);
-
-    /* Yeni satırı recursive olarak işleme devam et */
-    return handle_quotes(joined_line, index, quote);
+    /* If we exit the loop without finding the closing quote */
+    printf("Syntax error: Unclosed %c quote\n", quote);
+    return 0; /* Return error */
 }
+

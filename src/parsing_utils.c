@@ -27,7 +27,7 @@ void check_syntax_errors(t_parser *parser)
 	if (!parser || !parser->tokens) /* Early return if no tokens */
         return;
 
-    /* Check if the first token is invalid */
+       /* Check if the first token is invalid */
     if (is_operator(current->type))
     {
         set_syntax_error(parser, current->value);

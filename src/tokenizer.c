@@ -41,7 +41,10 @@ t_token *tokenize(const char *line)
     int i;
 
     if (!line || !*line)
+    {
+        printf("Error: Empty command\n");
         return NULL;
+    }
     head = NULL; /* head of token list */
     length = (int)ft_strlen(line);
     i = 0;
@@ -60,8 +63,10 @@ t_token *tokenize(const char *line)
             return NULL; /* Return NULL to indicate failure */
         }
     }
+   
     return head;
 }
+
 /*****************************************************************************/
 /*                          PARSING FUNCTIONS                                */
 /*****************************************************************************/
@@ -146,6 +151,7 @@ int parse_word(t_token **head, const char *line, int *pos)
     token->type = TOKEN_WORD;
     token->value = word;
     token->next = NULL;
+
 
     append_token(head, token);
     return 1; /* handled */
