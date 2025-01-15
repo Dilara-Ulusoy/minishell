@@ -8,6 +8,17 @@ void free_ast(t_ast_node *root)
     if (!root)
         return;
 
+     // AST Node türüne göre yazdırma
+    if (root->node_type == AST_AND || root->node_type == AST_OR || root->node_type == AST_PIPE) {
+        printf("Freed AST Operator Node: %p ----> %s\n",
+               (void *)root,
+               root->node_type == AST_AND ? "AND" : root->node_type == AST_OR ? "OR" : "PIPE");
+    } else if (root->node_type == AST_COMMAND) {
+        printf("Freed AST Command Node: %p ----> %s\n",
+               (void *)root,
+               root->cmd_args ? root->cmd_args : "(null)");
+    }
+
     /* free left and right subtrees */
     free_ast(root->left);
     free_ast(root->right);
@@ -20,6 +31,7 @@ void free_ast(t_ast_node *root)
     if (root->io_redirects)
     {
         t_io_node *curr = root->io_redirects;
+        printf("Freed IO Node: %p ----> %s\n", (void *)curr, curr->filename ? curr->filename : "(null)");
         while (curr)
         {
             t_io_node *next = curr->next;

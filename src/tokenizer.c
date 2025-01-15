@@ -63,7 +63,7 @@ t_token *tokenize(const char *line)
             return NULL; /* Return NULL to indicate failure */
         }
     }
-   
+
     return head;
 }
 
@@ -139,6 +139,8 @@ int parse_word(t_token **head, const char *line, int *pos)
     char *word = read_word_range(line, pos);
     if (!word)
         return 0; /* no word read */
+
+    printf("Allocated Token: %p ------>%s\n", (void *)word, word);
 
     /* Build the token from the newly allocated string 'word'. */
     t_token *token = (t_token *)malloc(sizeof(t_token));

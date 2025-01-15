@@ -24,6 +24,9 @@ t_ast_node *create_ast_operator_node(t_ast_node_type type, t_ast_node *left, t_a
     if (!node)
         return NULL;
 
+    printf("Allocated AST Operator Node: %p %s\n", (void *)node, node->node_type == AST_AND ? "AND" : node->node_type == AST_OR ? "OR" : "PIPE");
+
+
     node->node_type = type;
     node->cmd_args = NULL;
     node->io_redirects = NULL;
@@ -62,6 +65,7 @@ t_ast_node *create_ast_command_node(const char *cmd_text, t_io_node *io_list)
     t_ast_node *node = (t_ast_node *)malloc(sizeof(t_ast_node));
     if (!node)
         return NULL;
+    printf("Allocated AST Command Node: %p ----> %s\n", (void *)node, cmd_text);
 
     node->node_type = AST_COMMAND;
     if (cmd_text && *cmd_text)
@@ -87,6 +91,9 @@ t_ast_node *create_ast_command_node(const char *cmd_text, t_io_node *io_list)
 t_io_node *create_io_node(t_io_type kind, const char *filename, t_parser *p)
 {
     t_io_node *new_io = (t_io_node *)malloc(sizeof(t_io_node));
+
+    printf("Allocated AST IO Node: %p\n", (void *)new_io);
+
     if (!new_io)
     {
         p->error_status = PARSE_MEMORY_ERROR;
