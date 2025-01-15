@@ -198,7 +198,7 @@ int parse_word(t_token **head, const char *line, int *pos)
 char *read_word_range(const char *line, int *index)
 {
     int start = *index; /* Remember where the word starts */
-    int length = (int)ft_strlen(line);
+    int length = (int)strlen(line);
     int end;
     int wordLength;
 
@@ -208,9 +208,10 @@ char *read_word_range(const char *line, int *index)
 
         if (c == '"' || c == '\'')
         {
-            if (!handle_quotes(line, index, c))
+            char *processed = handle_quotes(line, index, c);
+            if (!processed)
                 return NULL; /* Syntax error: Unclosed quote */
-            continue;
+            return processed; // İşlenmiş stringi geri döndür ve memory tahsisini yönet
         }
         if (is_space(c) || is_two_char_operator(c) || c == '(' || c == ')' || c == '\n')
             break;
@@ -222,6 +223,7 @@ char *read_word_range(const char *line, int *index)
         return NULL;
     return allocate_word(line, start, wordLength);
 }
+
 
 int handle_newline(t_token **head, const char *line, int *pos)
 {

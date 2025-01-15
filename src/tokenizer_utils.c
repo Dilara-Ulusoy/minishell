@@ -40,27 +40,47 @@ char *allocate_word(const char *line, int start, int length)
     return word;
 }
 
-
-int handle_quotes(const char *line, int *index, char quote)
+/* Handle quotes and return the processed string */
+char *handle_quotes(const char *line, int *i, char quote)
 {
-    int length = (int)ft_strlen(line);
+    int length = (int)strlen(line);
+    char *result = (char *)malloc(length + 1);
+    char *env_value;
 
-    /* Skip the opening quote */
-    (*index)++;
-
-    /* Search for the closing quote */
-    while (*index < length)
+    if (!result)
     {
-        if (line[*index] == quote) /* Closing quote found */
-        {
-            (*index)++;
-            return 1; /* Successfully handled */
-        }
-        (*index)++;
+        perror("malloc");
+        return NULL;
     }
+    int res_index = 0;
 
-    /* If we exit the loop without finding the closing quote */
+    // Tırnağı atla
+    (*i)++;
+
+    while (*i < length)
+    {
+        if (line[*i] == quote) // Kapatıcı tırnak bulundu
+        {
+            (*i)++;
+            result[res_index] = '\0';
+            return result; // İşlenmiş stringi döndür
+        }
+        else if (quote == '"' && line[*i] == '$') // Çift tırnak içinde $ işareti EG: echo "hello $USER"
+        {
+            env_value = expand_env_var(line, i);
+            ft_memcpy(&result[res_index], env_value, ft_strlen(env_value));
+            res_index += ft_strlen(env_value);
+            free(env_value);
+        }
+        else // Normal bir karakter ise EG: echo "hello"
+        {
+            result[res_index++] = line[*i];
+            (*i)++;
+        }
+    }
+    // Eğer tırnak kapatılmadan sona ulaşılırsa
     printf("Syntax error: Unclosed %c quote\n", quote);
-    return 0; /* Return error */
+    free(result);
+    return NULL; // Hata
 }
 
