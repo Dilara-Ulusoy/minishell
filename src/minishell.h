@@ -8,6 +8,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdbool.h>
+#include <dirent.h>
 #include "parsing.h"
 #include "token.h"
 #include "../Libft/libft.h"
@@ -78,5 +79,13 @@ char *get_input(const char *prompt);
 
 char *expand_env_var(const char *line, int *index);
 void handle_env_var(const char *line, int *i, char *result, int *res_index);
+
+
+//glob
+
+const char **get_cwd_entries(void);
+const char **glob_pattern(const char **entries, const char *pattern);
+bool match_pattern(const char *pattern, const char *str);
+int handle_wildcard_expansion(t_token **head, char *word);
 
 #endif

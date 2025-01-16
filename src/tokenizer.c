@@ -41,11 +41,8 @@ t_token *tokenize(const char *line)
     int i;
 
     if (!line || !*line)
-    {
-        printf("Error: Empty command\n");
-        return NULL;
-    }
-    head = NULL; /* head of token list */
+        return(perror("Error: Empty line\n"), NULL);
+    head = NULL;
     length = (int)ft_strlen(line);
     i = 0;
     while (i < length)
@@ -63,7 +60,6 @@ t_token *tokenize(const char *line)
             return NULL; /* Return NULL to indicate failure */
         }
     }
-
     return head;
 }
 
@@ -81,20 +77,21 @@ t_token *tokenize(const char *line)
  */
 int parse_two_char_operator(t_token **head, const char *line, int *pos)
 {
+    t_token_type doublechar;
+    t_token *opToken;
     int length = (int)ft_strlen(line);
     int i = *pos;
 
     if (is_two_char_operator(line[i]) && (i + 1 < length))
     {
-        t_token_type doublechar = match_two_char_operator(line, i);
+        doublechar = match_two_char_operator(line, i);
         if (doublechar != TOKEN_UNKNOWN)
         {
             /* e.g. "&&", "||", ">>", or "<<" */
             int operator_length = 3;
             /* Create the new token */
-            t_token *opToken = create_new_token_range(doublechar, line, i, operator_length);
+            opToken = create_new_token_range(doublechar, line, i, operator_length);
             append_token(head, opToken);
-
             /* Move pos forward by operator_length */
             *pos += operator_length;
             return 1; /* handled */
@@ -138,11 +135,21 @@ int parse_word(t_token **head, const char *line, int *pos)
 {
     char *word = read_word_range(line, pos);
     if (!word)
-        return 0; /* no word read */
+        return 0; /* No word read */
 
     printf("Allocated Token: %p ------>%s\n", (void *)word, word);
 
-    /* Build the token from the newly allocated string 'word'. */
+    /* Joker karakter içeriyor mu? */
+    if (ft_strchr(word, '*'))
+    {
+        if (!handle_wildcard_expansion(head, word))
+        {
+            free_tokens(head);
+            return 0;
+        }
+        return 1; /* Successfully parsed */
+    }
+    /* Joker karakter yoksa, normal bir kelime olarak ekle */
     t_token *token = (t_token *)malloc(sizeof(t_token));
     if (!token)
     {
@@ -153,11 +160,10 @@ int parse_word(t_token **head, const char *line, int *pos)
     token->type = TOKEN_WORD;
     token->value = word;
     token->next = NULL;
-
-
     append_token(head, token);
-    return 1; /* handled */
+    return 1; /* Successfully parsed */
 }
+
 
 /*****************************************************************************/
 /*                              READ WORD RANGE                               */
@@ -197,18 +203,20 @@ int parse_word(t_token **head, const char *line, int *pos)
  */
 char *read_word_range(const char *line, int *index)
 {
-    int start = *index; /* Remember where the word starts */
-    int length = (int)strlen(line);
-    int end;
+    int start; /* Remember where the word starts */
+    int length;
     int wordLength;
+    char c;
+    char *processed;
 
+    length = (int)ft_strlen(line);
+    start = *index;
     while (*index < length)
     {
-        char c = line[*index];
-
+        c = line[*index];
         if (c == '"' || c == '\'')
         {
-            char *processed = handle_quotes(line, index, c);
+            processed = handle_quotes(line, index, c);
             if (!processed)
                 return NULL; /* Syntax error: Unclosed quote */
             return processed; // İşlenmiş stringi geri döndür ve memory tahsisini yönet
@@ -217,8 +225,7 @@ char *read_word_range(const char *line, int *index)
             break;
         (*index)++;
     }
-    end = *index; /* Where the word ended */
-    wordLength = end - start;
+    wordLength = (*index) - start;
     if (wordLength == 0)
         return NULL;
     return allocate_word(line, start, wordLength);
@@ -235,4 +242,33 @@ int handle_newline(t_token **head, const char *line, int *pos)
         return 1;
     }
     return 0;
+}
+
+/**
+ * @brief handle_wildcard_expansion
+ * Handles wildcard expansion for a given word by matching it against entries
+ * in the current working directory and appending the results as tokens.
+ *
+ * @param head Pointer to the token list head.
+ * @param word The word containing a wildcard.
+ * @return 1 on success, 0 on failure.
+ */
+int handle_wildcard_expansion(t_token **head, char *word) {
+    const char **matches = glob_pattern(get_cwd_entries(), word);
+    if (matches) {
+        while (*matches) {
+            t_token *token = (t_token *)malloc(sizeof(t_token));
+            if (!token) {
+                free_tokens(head);
+                return 0; /* Memory allocation failed */
+            }
+            token->type = TOKEN_WORD;
+            token->value = ft_strdup(*matches); // Assign expanded value
+            token->next = NULL;
+            append_token(head, token); // Append token to the list
+            matches++;
+        }
+    }
+    free(word); // Free the original word
+    return 1;
 }

@@ -64,6 +64,18 @@ void *handle_parse_error(t_parser *p, t_ast_node *left_node, t_ast_node *right_n
        return(void *)NULL;
 }
 
+char *handle_allocation_error(t_parser *parser, char *var_name, const char *error_message)
+{
+    if (error_message)
+        perror(error_message); // Hata mesajını yazdır
+    if (var_name)
+        free(var_name); // Belleği temizle
+    if (parser) // `parser` NULL değilse kontrol et
+        parser->error_status = PARSE_MEMORY_ERROR; // Hata durumunu işaretle
+    return NULL; // NULL döndür
+}
+
+
 void get_next_token(t_parser *p)
 {
     if (p->current_token)

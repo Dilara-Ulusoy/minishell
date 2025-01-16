@@ -123,6 +123,8 @@ void free_io_list(t_io_node *io_list);
 void check_syntax_errors(t_parser *parser);
 t_ast_node_type get_ast_node_type(t_token_type operator_type);
 void *handle_parse_error(t_parser *p, t_ast_node *left_node, t_ast_node *right_node, const char *error_message);
+char *handle_allocation_error(t_parser *parser, char *var_name, const char *error_message);
+
 t_ast_node *built_operator_node(t_ast_node *left_node, t_ast_node *right_node, t_token_type operator_type, t_parser *p);
 
 

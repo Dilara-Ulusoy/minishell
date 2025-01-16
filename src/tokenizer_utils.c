@@ -43,7 +43,7 @@ char *allocate_word(const char *line, int start, int length)
 /* Handle quotes and return the processed string */
 char *handle_quotes(const char *line, int *i, char quote)
 {
-    int length = (int)strlen(line);
+    int length = (int)ft_strlen(line);
     char *result = (char *)malloc(length + 1);
     char *env_value;
 

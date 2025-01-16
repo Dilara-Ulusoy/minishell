@@ -192,14 +192,10 @@ int main(int argc, char **argv, char **envp)
         shell.tokens = tokenize(shell.line);
         t_ast_node *ast_root = build_ast(shell.tokens);
         if (!ast_root)
-        {
             printf("Parsing failed.\n");
-        }
         else
-        {
             debug_ast(ast_root, 0);
             //execute_ast(ast_root);
-        }
         print_tokens(shell.tokens);
         free_tokens(&shell.tokens);
         shell.tokens = NULL;
