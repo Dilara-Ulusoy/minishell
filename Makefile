@@ -30,6 +30,7 @@ SRCS        = $(SRC_DIR)main.c \
 			  $(SRC_DIR)free_token_ast.c \
 			  $(SRC_DIR)env_variable.c \
 			  $(SRC_DIR)debug.c \
+			  $(SRC_DIR)init_shell.c \
 
 
 

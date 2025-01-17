@@ -30,8 +30,9 @@ typedef struct s_shell
 /*                         FUNCTION DECLARATIONS                             */
 /*****************************************************************************/
 
-/* Input Handling */
+/* Input Handling and initialization */
 char *get_input(const char *prompt);
+void init_shell(t_shell *shell);
 
 
 /* Environment variable expansion */
