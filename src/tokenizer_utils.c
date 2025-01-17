@@ -84,3 +84,30 @@ char *handle_quotes(const char *line, int *i, char quote)
     return NULL; // Hata
 }
 
+
+void print_tokens(const t_token *head)
+{
+    const t_token *curr = head;
+    while (curr)
+    {
+        printf("TOKEN: type=%d, value= %s\n", curr->type, curr->value);
+        curr = curr->next;
+    }
+}
+
+void free_tokens(t_token **head)
+{
+    t_token *temp;
+
+    while (*head)
+    {
+        printf("Freeing Token: %p -------> %s\n", (void *)(*head), (*head)->value ? (*head)->value : "(null)");
+        temp = (*head)->next;
+
+        if ((*head)->value)
+            free((*head)->value);
+
+        free(*head);
+        *head = temp;
+    }
+}

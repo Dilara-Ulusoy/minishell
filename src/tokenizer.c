@@ -138,18 +138,17 @@ int parse_word(t_token **head, const char *line, int *pos)
         return 0; /* No word read */
 
     printf("Allocated Token: %p ------>%s\n", (void *)word, word);
-
-    /* Joker karakter içeriyor mu? */
-    if (ft_strchr(word, '*'))
+    /*  Wildcard expansion is disabled for now because it's not required
+      if (ft_strchr(word, '*'))
     {
         if (!handle_wildcard_expansion(head, word))
         {
             free_tokens(head);
             return 0;
         }
-        return 1; /* Successfully parsed */
+        return 1;
     }
-    /* Joker karakter yoksa, normal bir kelime olarak ekle */
+    */
     t_token *token = (t_token *)malloc(sizeof(t_token));
     if (!token)
     {
@@ -244,31 +243,3 @@ int handle_newline(t_token **head, const char *line, int *pos)
     return 0;
 }
 
-/**
- * @brief handle_wildcard_expansion
- * Handles wildcard expansion for a given word by matching it against entries
- * in the current working directory and appending the results as tokens.
- *
- * @param head Pointer to the token list head.
- * @param word The word containing a wildcard.
- * @return 1 on success, 0 on failure.
- */
-int handle_wildcard_expansion(t_token **head, char *word) {
-    const char **matches = glob_pattern(get_cwd_entries(), word);
-    if (matches) {
-        while (*matches) {
-            t_token *token = (t_token *)malloc(sizeof(t_token));
-            if (!token) {
-                free_tokens(head);
-                return 0; /* Memory allocation failed */
-            }
-            token->type = TOKEN_WORD;
-            token->value = ft_strdup(*matches); // Assign expanded value
-            token->next = NULL;
-            append_token(head, token); // Append token to the list
-            matches++;
-        }
-    }
-    free(word); // Free the original word
-    return 1;
-}

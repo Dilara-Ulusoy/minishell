@@ -75,7 +75,7 @@ t_ast_node *parse_expression(t_parser *p, int min_prec)
 	/* If no current token or parse error is set, we can't proceed. */
 	if (!p->current_token || p->error_status != PARSE_OK)
 		return NULL;
-		
+
 
 	/*
 	   1) Parse one "term" (could be parenthesized expression or a command).
@@ -303,7 +303,6 @@ static int append_to_buffer(char **buffer, size_t *buffer_size, size_t *buf_pos,
 		if (!*buffer)
 			return 0; // Hata durumu
 	}
-
 	// Argümanları boşluk ile ayır
 	if (*buf_pos > 0)
 		(*buffer)[(*buf_pos)++] = ' ';

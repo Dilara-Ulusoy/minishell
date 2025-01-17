@@ -48,6 +48,24 @@ typedef struct s_token
 } t_token;
 
 
+/* Token Creation and Management */
+t_token *tokenize(const char *line);
+t_token *create_new_token_range(t_token_type type, const char *line, int startIndex, int length);
+void     append_token(t_token **head, t_token *new_token);
+void     free_tokens(t_token **head);
+
+
+/* Token Utilities */
+int      is_operator(t_token_type type);
+int      is_binary_operator(t_token_type type);
+int      is_redirection(t_token_type type);
+int      get_precedence(t_token_type type);
+int      is_two_char_operator(char c);
+t_token_type match_two_char_operator(const char *line, int index);
+t_token_type match_single_char_operator(char c);
+
+/* Debugging */
+void print_tokens(const t_token *head);
 
 
 #endif

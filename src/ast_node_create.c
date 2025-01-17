@@ -24,14 +24,17 @@ t_ast_node *create_ast_operator_node(t_ast_node_type type, t_ast_node *left, t_a
     if (!node)
         return NULL;
 
-    printf("Allocated AST Operator Node: %p %s\n", (void *)node, node->node_type == AST_AND ? "AND" : node->node_type == AST_OR ? "OR" : "PIPE");
-
-
     node->node_type = type;
     node->cmd_args = NULL;
     node->io_redirects = NULL;
     node->left = left;
     node->right = right;
+
+    /* Log allocation after initialization */
+    printf("Allocated AST Operator Node: %p ----> %s\n",
+           (void *)node,
+           node->node_type == AST_AND ? "AND" : node->node_type == AST_OR ? "OR" : "PIPE");
+
     return node;
 }
 
