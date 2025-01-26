@@ -48,23 +48,24 @@
 	  3) create an AST_COMMAND node and return it.
 */
 
-static t_ast_node *handle_ast_command_creation(char *cmd_args, t_io_node *io_list, t_parser *p)
+static	t_ast_node *handle_ast_command_creation(char *cmd_args, t_io_node *io_list, t_parser *p)
 {
-    t_ast_node *cmd_node = create_ast_command_node(cmd_args, io_list);
-    if (!cmd_node)
-    {
-        free_io_list(io_list);
-        p->error_status = PARSE_MEMORY_ERROR;
-        return NULL;
-    }
-    return cmd_node;
+	t_ast_node *cmd_node;
+	cmd_node = create_ast_command_node(cmd_args, io_list);
+	if (!cmd_node)
+	{
+		free_io_list(io_list);
+		p->error_status = PARSE_MEMORY_ERROR;
+		return NULL;
+	}
+	return (cmd_node);
 }
 
-t_ast_node *parse_command(t_parser *p)
+t_ast_node	*parse_command(t_parser *p)
 {
-	t_io_node *io_list;
-	t_ast_node *cmd_node;
-	char *cmd_args;
+	t_io_node	*io_list;
+	t_ast_node	*cmd_node;
+	char		*cmd_args;
 
 	if (!p->current_token || p->error_status != PARSE_OK)
 		return NULL;
@@ -88,10 +89,10 @@ t_ast_node *parse_command(t_parser *p)
 	return cmd_node;
 }
 
-static char *resize_buffer(char *buffer, size_t *buffer_size)
+static char	*resize_buffer(char *buffer, size_t *buffer_size)
 {
-	size_t new_size;
-	char *new_buffer;
+	size_t	new_size;
+	char	*new_buffer;
 
 	new_size = *buffer_size * 2;
 	new_buffer = ft_calloc(new_size, 1);
@@ -156,30 +157,58 @@ char *build_command_string(t_parser *p)
 	}
 	return buffer;
 }
-
-int process_redirections(t_parser *p, char **cmd_args, t_io_node **io_list)
+/**
+ * process_redirections - Handles input/output redirections and updates command arguments.
+ *
+ * This function processes redirection operators (e.g., <, >, >>, <<) and ensures
+ * that command arguments are correctly updated as tokens are parsed.
+ *
+ * Behavior:
+ * 1. Initial Parsing:
+ *    - Calls `parse_redirections` to handle any redirection tokens and update `io_list`.
+ *
+ * 2. Processing Remaining Tokens:
+ *    - While the current token is of type `TOKEN_WORD`, it:
+ *      - Builds the command string using `build_command_string`.
+ *      - Frees the previous command string and updates it with the new one.
+ *      - Calls `parse_redirections` to handle additional redirections.
+ *
+ * 3. Error Handling:
+ *    - If `build_command_string` fails, the function returns 0 (failure).
+ *    - Finally, it checks `p->error_status` to confirm parsing success.
+ *
+ * @param p         Pointer to the parser structure containing the current token and state.
+ * @param cmd_args  Double pointer to the command arguments string (updated during parsing).
+ * @param io_list   Pointer to the list of I/O redirection nodes to store redirection info.
+ *
+ * @return          1 if parsing was successful, 0 if an error occurred.
+ */
+int	process_redirections(t_parser *p, char **cmd_args, t_io_node **io_list)
 {
-    parse_redirections(p, io_list);
-    while (p->current_token && p->current_token->type == TOKEN_WORD)
-    {
-        char *new_args = build_command_string(p);
-        if (!new_args)
-            return 0;
+	char	*new_args;
 
-        free(*cmd_args);
-        *cmd_args = new_args;
+	parse_redirections(p, io_list);
+	while (p->current_token && p->current_token->type == TOKEN_WORD)
+	{
+		new_args = build_command_string(p);
+		if (!new_args)
+			return (0);
 
-        parse_redirections(p, io_list);
-    }
-    return (p->error_status == PARSE_OK);
+		free(*cmd_args);
+		*cmd_args = new_args;
+		parse_redirections(p, io_list);
+	}
+	if(p->error_status != PARSE_OK)
+		return (0);
+	return (1);
 }
 
-void cleanup_resources(char *cmd_args, t_io_node *io_list)
+void	cleanup_resources(char *cmd_args, t_io_node *io_list)
 {
-    if (cmd_args)
-        free(cmd_args);
-    if (io_list)
-        free_io_list(io_list);
+	if (cmd_args)
+		free(cmd_args);
+	if (io_list)
+		free_io_list(io_list);
 }
 
 
