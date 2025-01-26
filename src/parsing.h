@@ -2,6 +2,7 @@
 #include "minishell.h"
 #include "token.h"
 
+
 #ifndef PARSING_H
 # define PARSING_H
 
@@ -87,7 +88,6 @@ typedef struct s_parser
 } t_parser;
 
 
-
 /* AST creation and manipulation */
 t_ast_node  *create_ast_command_node(const char *cmd_text, t_io_node *io_list);
 t_ast_node  *create_ast_operator_node(t_ast_node_type type, t_ast_node *left, t_ast_node *right);
@@ -105,6 +105,8 @@ t_ast_node  *parse_expression(t_parser *p, int min_prec);
 t_ast_node  *parse_term(t_parser *p);
 t_ast_node  *parse_command(t_parser *p);
 void         parse_redirections(t_parser *p, t_io_node **io_list);
+int process_redirections(t_parser *p, char **cmd_args, t_io_node **io_list);
+void cleanup_resources(char *cmd_args, t_io_node *io_list);
 
 /* Syntax validation */
 void check_syntax_errors(t_parser *parser);

@@ -28,25 +28,22 @@ t_token *create_new_token_range(t_token_type type,
                                 int startIndex,
                                 int length)
 {
-    // 1. Allocate memory for the token structure
-    t_token *newTok = (t_token *)malloc(sizeof(t_token));
-    if (!newTok)
-        return NULL; // memory error
-
-    newTok->type = type;
-
-    // 2. Allocate memory for the token's value string
-    newTok->value = (char *)malloc(length + 1); // +1 for '\0'
-    if (!newTok->value)
+    t_token *new_token = (t_token *)malloc(sizeof(t_token)); // Allocate memory for the new token
+    if (!new_token)
+        return NULL;
+    new_token->type = type;
+    new_token->value = (char *)malloc((length + 1) * sizeof(char));    // 2. Allocate memory for the token's value string
+    if (!new_token->value)
     {
-        free(newTok);
+        free_tokens(&new_token);
         return NULL;
     }
-    // 3. Copy the substring from line into newTok->value
-    ft_strlcpy(newTok->value, &line[startIndex], length + 1); // Ensure length + 1
-    newTok->value[length] = '\0';                             // Null-terminate for safety
+    // 3. Copy the substring from line into new_token->value
+    ft_memcpy(new_token->value, &line[startIndex], length + 1); // Ensure length + 1
+    new_token->value[length] = '\0';                             // Null-terminate for safety
 
     // 4. Initialize next pointer
-    newTok->next = NULL;
-    return newTok;
+    new_token->next = NULL;
+    return new_token;
 }
+

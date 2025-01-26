@@ -95,7 +95,7 @@ t_io_node *create_io_node(t_io_type kind, const char *filename, t_parser *p)
 {
     t_io_node *new_io = (t_io_node *)malloc(sizeof(t_io_node));
 
-    printf("Allocated AST IO Node: %p\n", (void *)new_io);
+    printf("Allocated AST IO Node: %p ----> %s\n", (void *)new_io, filename);
 
     if (!new_io)
     {
@@ -116,18 +116,4 @@ t_io_node *create_io_node(t_io_type kind, const char *filename, t_parser *p)
     return new_io;
 }
 
-// Helper function: Attach a new IO node to the IO list
-void attach_io_node(t_io_node **io_list, t_io_node *new_io)
-{
-    if (!*io_list)
-    {
-        *io_list = new_io;
-    }
-    else
-    {
-        t_io_node *tmp = *io_list;
-        while (tmp->next)
-            tmp = tmp->next;
-        tmp->next = new_io;
-    }
-}
+

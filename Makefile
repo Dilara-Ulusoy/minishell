@@ -23,7 +23,7 @@ SRCS        = $(SRC_DIR)main.c \
 			  $(SRC_DIR)tokenizer_utils.c \
 			  $(SRC_DIR)tokenizer_appender.c \
 			  $(SRC_DIR)tokenizer_handler.c \
-			  $(SRC_DIR)parsing.c \
+			  $(SRC_DIR)parse_command.c \
 			  $(SRC_DIR)parsing_utils.c \
 			  $(SRC_DIR)ast_built.c \
 			  $(SRC_DIR)ast_node_create.c \
@@ -31,6 +31,9 @@ SRCS        = $(SRC_DIR)main.c \
 			  $(SRC_DIR)env_variable.c \
 			  $(SRC_DIR)debug.c \
 			  $(SRC_DIR)init_shell.c \
+			  $(SRC_DIR)parse_expression.c \
+			  $(SRC_DIR)parse_redirections.c \
+			  $(SRC_DIR)parse_error.c \
 
 
 

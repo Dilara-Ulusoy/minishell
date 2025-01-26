@@ -84,3 +84,12 @@ void debug_ast(const t_ast_node *root, int depth)
     }
 }
 
+void print_tokens(const t_token *head)
+{
+    const t_token *curr = head;
+    while (curr)
+    {
+        printf("TOKEN: type=%d, value= %s\n", curr->type, curr->value);
+        curr = curr->next;
+    }
+}

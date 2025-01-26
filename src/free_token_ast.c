@@ -1,21 +1,43 @@
 #include "minishell.h"
 
 /*****************************************************************************/
-/*                         FREE THE AST RECURSIVELY                          */
+/*                         FREE                                               */
 /*****************************************************************************/
+
+void free_tokens(t_token **head)
+{
+    t_token *temp;
+
+    while (*head)
+    {
+        //printf("Freeing Token: %p -------> %s\n", (void *)(*head), (*head)->value ? (*head)->value : "(null)");
+        temp = (*head)->next;
+
+        if ((*head)->value)
+            free((*head)->value);
+
+        free(*head);
+        *head = temp;
+    }
+}
+
 void free_ast(t_ast_node *root)
 {
     if (!root)
         return;
      // AST Node türüne göre yazdırma
     if (root->node_type == AST_AND || root->node_type == AST_OR || root->node_type == AST_PIPE) {
+        /*
         printf("Freed AST Operator Node: %p ----> %s\n",
                (void *)root,
                root->node_type == AST_AND ? "AND" : root->node_type == AST_OR ? "OR" : "PIPE");
+        */
     } else if (root->node_type == AST_COMMAND) {
+        /*
         printf("Freed AST Command Node: %p ----> %s\n",
                (void *)root,
                root->cmd_args ? root->cmd_args : "(null)");
+               */
     }
     /* free left and right subtrees */
     free_ast(root->left);
@@ -65,16 +87,18 @@ void cleanup_shell(t_shell *shell)
     if (shell->line)
     {
         free(shell->line);
+        //printf("Freed Line: %p\n", (void *)shell->line);
         shell->line = NULL;
     }
     if (shell->tokens)
     {
         free_tokens(&shell->tokens);
+        //printf("Freed Tokens: %p\n", (void *)shell->tokens);
         shell->tokens = NULL;
     }
     if(shell->ast)
     {
         free_ast(shell->ast);
-        shell->ast = NULL;
+        //printf("Freed AST: %p\n", (void *)shell->ast);
     }
 }
