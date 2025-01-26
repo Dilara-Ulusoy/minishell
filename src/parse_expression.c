@@ -83,26 +83,27 @@
 
 */
 
-static t_ast_node *parse_right_node(t_parser *p, t_ast_node *left_node, int op_prec)
+static	t_ast_node *parse_right_node(t_parser *p, t_ast_node *left_node, int op_prec)
 {
-    int next_prec;
+	t_ast_node	*right_node;
+	int			next_prec;
 
 	next_prec = op_prec + 1;
-	t_ast_node *right_node = parse_expression(p, next_prec);
-    if (!right_node)
-    {
-        handle_parse_error(p, left_node, NULL, "Expected expression after operator");
-        return NULL;
-    }
-    return right_node;
+	right_node = parse_expression(p, next_prec);
+	if (!right_node)
+	{
+		handle_parse_error(p, left_node, NULL, "Expected expression after operator");
+		return NULL;
+	}
+	return right_node;
 }
 
-t_ast_node *parse_expression(t_parser *p, int min_prec)
+t_ast_node	*parse_expression(t_parser *p, int min_prec)
 {
-	t_token_type operator_type;
-	t_ast_node *left_node;
-	t_ast_node *right_node;
-	int op_prec;
+	t_token_type	operator_type;
+	t_ast_node		*left_node;
+	t_ast_node		*right_node;
+	int				op_prec;
 
 	if (!p->current_token || p->error_status != PARSE_OK) /* If no current token or parse error is set, we can't proceed. */
 		return NULL;
@@ -114,16 +115,16 @@ t_ast_node *parse_expression(t_parser *p, int min_prec)
 		op_prec = get_precedence(p->current_token->type);
 		if (op_prec < min_prec) /* If operator's precedence is less than min_prec, we stop. */
 			break;
-		operator_type = p->current_token->type; /* Remember the operator type (e.g., TOKEN_AND, TOKEN_OR, etc.). */
-		get_next_token(p); /* consume the operator token */
-		right_node = parse_right_node(p, left_node, op_prec); /* Use the helper function */
-        if (!right_node)
-            return NULL;
-		left_node = built_operator_node(left_node, right_node, operator_type, p); 	/* Built an operator AST node */
+		operator_type = p->current_token->type;				  /* Remember the operator type (e.g., TOKEN_AND, TOKEN_OR, etc.). */
+		get_next_token(p);									  /* consume the operator token */
+		right_node = parse_right_node(p, left_node, op_prec);
+		if (!right_node)
+			return NULL;
+		left_node = built_operator_node(left_node, right_node, operator_type, p); /* Built an operator AST node */
 		if (!left_node)
 			return NULL;
 	}
-	return left_node; 	/* 6) Once we see an operator with lower precedence or no more tokens, we stop. */
+	return left_node; /* 6) Once we see an operator with lower precedence or no more tokens, we stop. */
 }
 
 /*****************************************************************************/
@@ -166,7 +167,7 @@ t_ast_node *parse_expression(t_parser *p, int min_prec)
 	  1) If we see '(' => parse sub-expression => expect ')' => return sub-expr
 	  2) Else => parse_command
 */
-t_ast_node *parse_term(t_parser *p)
+t_ast_node	*parse_term(t_parser *p)
 {
 	t_ast_node *sub_expr;
 	/* If there's no token or an error is already flagged, we cannot proceed. */
@@ -195,10 +196,10 @@ t_ast_node *parse_term(t_parser *p)
 }
 
 // Built operator node function is used to create an operator node with left and right nodes.
-t_ast_node *built_operator_node(t_ast_node *left_node, t_ast_node *right_node, t_token_type operator_type, t_parser *p)
+t_ast_node	*built_operator_node(t_ast_node *left_node, t_ast_node *right_node, t_token_type operator_type, t_parser *p)
 {
-	t_ast_node_type ast_type;
-	t_ast_node *op_node;
+	t_ast_node_type	ast_type;
+	t_ast_node		*op_node;
 
 	ast_type = get_ast_node_type(operator_type);
 	if (ast_type == AST_INVALID)
@@ -217,21 +218,19 @@ t_ast_node *built_operator_node(t_ast_node *left_node, t_ast_node *right_node, t
 /*
    get_precedence:
    - a simple numeric precedence system
-     OR (||) -> 10
-     AND (&&) -> 20
-     PIPE (|) -> 30
+	 OR (||) -> 10
+	 AND (&&) -> 20
+	 PIPE (|) -> 30
    - higher => parse first
 */
-int get_precedence(t_token_type type)
+int	get_precedence(t_token_type type)
 {
-    if(type == TOKEN_OR)
+	if (type == TOKEN_OR)
 		return 10;
-	else if(type == TOKEN_AND)
+	else if (type == TOKEN_AND)
 		return 20;
-	else if(type == TOKEN_PIPE)
+	else if (type == TOKEN_PIPE)
 		return 30;
 	else
-		return 0; /* lowest precedence */
+		return 0;
 }
-
-

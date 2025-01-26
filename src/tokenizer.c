@@ -1,30 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokenizer.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/26 22:34:26 by dakcakoc          #+#    #+#             */
+/*   Updated: 2025/01/26 22:46:01 by dakcakoc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
-
-/*****************************************************************************/
-/*                      HELPER METHOD DECLARATIONS                            */
-/*****************************************************************************/
-
-/*
-    Each helper method corresponds to a specific step in the tokenize process:
-    1) parse_two_char_operator
-    2) parse_single_char_operator
-    3) parse_word
-*/
-/*
-    Already-existing methods from the file:
-    - is_two_char_operator
-    - match_two_char_operator
-    - create_new_token_range
-    - append_token
-    - skip_whitespace
-    - is_space
-    - match_single_char_operator
-    - read_word_range
-*/
-
-/*****************************************************************************/
-/*                   THE MAIN TOKENIZE FUNCTION (UPDATED)                    */
-/*****************************************************************************/
 
 /**
  * @brief tokenize
@@ -34,39 +20,35 @@
  * @param line The user line (e.g. "echo hello && cat < file.txt").
  * @return Pointer to the first token in a linked list, or NULL if empty.
  */
-t_token *tokenize(t_token *head, const char *line)
+t_token	*tokenize(t_token *head, const char *line)
 {
-    int length;
-    int i;
+	int	length;
+	int	i;
 
-    if (!line || !*line)
-    {
-        ft_putstr_fd("Error: Empty line", STDERR_FILENO);
-        return (NULL);
-    }
-    length = (int)ft_strlen(line);
-    i = 0;
-    while (i < length)
-    {
-        i = skip_whitespace(line, i);
-        if (i >= length)
-            break; // no more content left
-        if (parse_two_char_operator(&head, line, &i, length) ||
-            parse_single_char_operator(&head, line, &i, length) ||
-            handle_newline(&head, line, &i))
-            continue;
-        if (!parse_word(&head, line, &i, length))
-        {
-            free_tokens(&head);
-            return NULL;
-        }
-    }
-    return (head);
+	if (!line || !*line)
+	{
+		ft_putstr_fd("Error: Empty line", STDERR_FILENO);
+		return (NULL);
+	}
+	length = (int)ft_strlen(line);
+	i = 0;
+	while (i < length)
+	{
+		i = skip_whitespace(line, i);
+		if (i >= length)
+			break; // no more content left
+		if (parse_two_char_operator(&head, line, &i, length) ||
+			parse_single_char_operator(&head, line, &i, length) ||
+			handle_newline(&head, line, &i))
+			continue;
+		if (!parse_word(&head, line, &i, length))
+		{
+			free_tokens(&head);
+			return (NULL);
+		}
+	}
+	return (head);
 }
-
-/*****************************************************************************/
-/*                          PARSING FUNCTIONS                                */
-/*****************************************************************************/
 
 /**
  * @brief Parses a two-character operator from the given position in the line.
@@ -83,28 +65,28 @@ t_token *tokenize(t_token *head, const char *line)
  *   - Returns 0 to indicate no operator was handled.
 
 **/
-int parse_two_char_operator(t_token **head, const char *line, int *pos, int length)
+int	parse_two_char_operator(t_token **head, const char *line, int *pos, int length)
 {
-    t_token_type doublechar;
-    t_token *opToken;
-    int i = *pos;
+	t_token_type doublechar;
+	t_token *opToken;
+	int i;
 
-    if (is_two_char_operator(line[i]) && (i + 1 < length))
-    {
-        doublechar = match_two_char_operator(line, i);
-        if (doublechar != TOKEN_UNKNOWN)
-        {
-            /* e.g. "&&", "||", ">>", or "<<" */
-            int operator_length = 3;
-            /* Create the new token */
-            opToken = create_new_token_range(doublechar, line, i, operator_length);
-            append_token(head, opToken);
-            /* Move pos forward by operator_length */
-            *pos += operator_length;
-            return 1; /* handled */
-        }
-    }
-    return 0; /* not handled */
+	i = *pos;
+	if (is_two_char_operator(line[i]) && (i + 1 < length))
+	{
+		doublechar = match_two_char_operator(line, i);
+		if (doublechar != TOKEN_UNKNOWN)
+		{
+			int operator_length = 3;
+			/* Create the new token */
+			opToken = create_new_token_range(doublechar, line, i, operator_length);
+			append_token(head, opToken);
+			/* Move pos forward by operator_length */
+			*pos += operator_length;
+			return (1);
+		}
+	}
+	return (0);
 }
 
 /**
@@ -130,26 +112,24 @@ int parse_two_char_operator(t_token **head, const char *line, int *pos, int leng
  *
  * @return int 1 if a single-character operator was successfully parsed, 0 otherwise.
  */
-int parse_single_char_operator(t_token **head, const char *line, int *pos, int length)
+int	parse_single_char_operator(t_token **head, const char *line, int *pos, int length)
 {
-    t_token_type single;
-    t_token *opToken;
-    int operator_length;
+	t_token_type	single;
+	t_token			*opToken;
+	int				operator_length;
 
-    if (*pos >= length) // Boundary check to prevent out-of-bounds access
-        return 0;
-
-    single = match_single_char_operator(line[*pos]);
-    if (single != TOKEN_UNKNOWN)
-    {
-        operator_length = 1;
-        opToken = create_new_token_range(single, line, *pos, operator_length);
-        append_token(head, opToken);
-
-        *pos += operator_length; // Move the position forward
-        return 1;                /* handled */
-    }
-    return 0; /* not handled */
+	if (*pos >= length) // Boundary check to prevent out-of-bounds access
+		return (0);
+	single = match_single_char_operator(line[*pos]);
+	if (single != TOKEN_UNKNOWN)
+	{
+		operator_length = 1;
+		opToken = create_new_token_range(single, line, *pos, operator_length);
+		append_token(head, opToken);
+		*pos += operator_length;
+		return (1);
+	}
+	return (0);
 }
 
 /**
@@ -180,34 +160,40 @@ int parse_single_char_operator(t_token **head, const char *line, int *pos, int l
  *             0 otherwise (e.g., no word found or memory allocation failure).
  */
 
-int parse_word(t_token **head, const char *line, int *pos, int length)
+int	parse_word(t_token **head, const char *line, int *pos, int length)
 {
-    t_token *token;
-    char *word;
+	t_token	*token;
+	char	*word;
 
-    if (*pos >= length) // Check if *pos is within bounds
-        return 0;
-    word = read_word_range(line, pos, length); // read_word_range must ensure bounds
-    if (!word)
-        return 0; /* No word read */
-    //printf("Allocated Token: %p ------>%s\n", (void *)word, word);
-    token = (t_token *)malloc(sizeof(t_token));
-    if (!token)
-    {
-        free(word);
-        free_tokens(head);
-        return 0;
-    }
-    token->type = TOKEN_WORD;
-    token->value = word;
-    token->next = NULL;
-    append_token(head, token);
-    return 1; /* Successfully parsed */
+	if (*pos >= length)// Check if *pos is within bounds
+		return (0);
+	word = read_word_range(line, pos, length); // read_word_range must ensure bounds
+	if (!word)
+		return (0); /* No word read */
+	printf("Allocated Token: %p ------>%s\n", (void *)word, word);
+	token = (t_token *)malloc(sizeof(t_token));
+	if (!token)
+	{
+		free(word);
+		free_tokens(head);
+		return (0);
+	}
+	token->type = TOKEN_WORD;
+	token->value = word;
+	token->next = NULL;
+	append_token(head, token);
+	return (1);
 }
 
-/*****************************************************************************/
-/*                              READ WORD RANGE                               */
-/*****************************************************************************/
+static char	*process_quoted_string(const char *line, int *index, char quote_char)
+{
+	char *processed;
+
+	processed = handle_quotes(line, index, quote_char);
+	if (!processed)
+		return (NULL);
+	return (processed);
+}
 
 /**
  * @brief Extracts a word from the input line, handling special cases like quotes.
@@ -227,42 +213,37 @@ int parse_word(t_token **head, const char *line, int *pos, int length)
  */
 char *read_word_range(const char *line, int *index, int length)
 {
-    int start; /* Remember where the word starts */
-    int wordLength;
-    char c;
-    char *processed;
+	int		start; /* Remember where the word starts */
+	int		wordLength;
+	char	c;
 
-    start = *index;
-    while (*index < length)
-    {
-        c = line[*index];
-        if (c == '"' || c == '\'')
-        {
-            processed = handle_quotes(line, index, c);
-            if (!processed)
-                return NULL;  /* Syntax error: Unclosed quote */
-            return processed; // İşlenmiş stringi geri döndür ve memory tahsisini yönet
-        }
-        if (is_space(c) || is_two_char_operator(c) || c == '(' || c == ')' || c == '\n')
-            break;
-        (*index)++;
-    }
-    wordLength = (*index) - start;
-    if (wordLength == 0)
-        return NULL;
-    return allocate_word(line, start, wordLength);
+	start = *index;
+	while (*index < length)
+	{
+		c = line[*index];
+		if (c == '"' || c == '\'')
+			return process_quoted_string(line, index, c);
+		if (is_space(c) || is_two_char_operator(c) || c == '(' || c == ')' || c == '\n')
+			break;
+		(*index)++;
+	}
+	wordLength = (*index) - start;
+	if (wordLength == 0)
+		return (NULL);
+	return allocate_word(line, start, wordLength);
 }
 
-int handle_newline(t_token **head, const char *line, int *pos)
+int	handle_newline(t_token **head, const char *line, int *pos)
 {
-    t_token *nl_token;
+	t_token	*nl_token;
 
-    if (line[*pos] == '\n')
-    {
-        nl_token = create_new_token_range(TOKEN_NL, "\\n", 0, 2);
-        append_token(head, nl_token);
-        (*pos)++; // Yeni satırı geç
-        return 1;
-    }
-    return 0;
+	if (line[*pos] == '\n')
+	{
+		nl_token = create_new_token_range(TOKEN_NL, "\\n", 0, 2);
+		append_token(head, nl_token);
+		(*pos)++;
+		return (1);
+	}
+	return (0);
 }
+

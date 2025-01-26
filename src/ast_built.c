@@ -19,8 +19,8 @@ static void	init_parser(t_parser *parser, t_token *token_list)
 
 t_ast_node	*build_ast(t_token *token_list)
 {
-	t_parser parser;
-	t_ast_node *root;
+	t_parser	parser;
+	t_ast_node	*root;
 
 	root = NULL;
 	init_parser(&parser, token_list);

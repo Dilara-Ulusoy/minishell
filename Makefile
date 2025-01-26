@@ -35,6 +35,7 @@ SRCS        = $(SRC_DIR)main.c \
 			  $(SRC_DIR)parse_redirections.c \
 			  $(SRC_DIR)parse_error.c \
 			  $(SRC_DIR)syntax_error_check.c \
+			  $(SRC_DIR)handle_quote.c \
 
 
 
