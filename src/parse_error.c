@@ -6,48 +6,6 @@ void set_syntax_error(t_parser *parser, const char *token_value)
 	printf("Syntax error near unexpected token '%s'\n", token_value);
 }
 
-void check_syntax_errors(t_parser *parser)
-{
-    t_token *current;
-
-    if (!parser || !parser->tokens) /* Early return if no tokens */
-        return;
-
-    current = parser->tokens;
-    if (is_redirection(current->type) && current->next && current->next->type == TOKEN_WORD)
-        current = current->next; /* İki tokenı doğru olarak işaretleyip devam et */
-    else if (is_operator(current->type)) /* İlk token operatör ise hata */
-    {
-        set_syntax_error(parser, current->value);
-        return;
-    }
-    while (current && current->next)
-    {
-        /* Arka arkaya iki operatör kontrolü */
-        if (is_operator(current->type) && is_operator(current->next->type))
-        {
-            set_syntax_error(parser, current->next->value);
-            return;
-        }
-        /* Yönlendirmeden sonra kelime gelmiyorsa hata ver */
-        if (is_redirection(current->type))
-        {
-            if (current->next == NULL || current->next->type != TOKEN_WORD)
-            {
-                if (current->next != NULL)
-                    set_syntax_error(parser, current->next->value);
-                else
-                    set_syntax_error(parser, "newline");
-                return;
-            }
-        }
-        current = current->next;
-    }
-    /* Eğer son token geçersiz bir operatör ise hata */
-    if (current && is_operator(current->type))
-        set_syntax_error(parser, current->value);
-}
-
 void *handle_parse_error(t_parser *p, t_ast_node *left_node, t_ast_node *right_node, const char *error_message)
 {
 	// Hata durumunu ayarla

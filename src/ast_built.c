@@ -10,32 +10,32 @@
  * If leftover tokens or errors are found, sets parser.error_status accordingly.
  */
 
-static void init_parser(t_parser *parser, t_token *token_list)
+static void	init_parser(t_parser *parser, t_token *token_list)
 {
-    parser->tokens = token_list;
-    parser->current_token = token_list;
-    parser->error_status = PARSE_OK;
+	parser->tokens = token_list;
+	parser->current_token = token_list;
+	parser->error_status = PARSE_OK;
 }
 
-t_ast_node *build_ast(t_token *token_list)
+t_ast_node	*build_ast(t_token *token_list)
 {
-    t_parser parser;
-    t_ast_node *root;
+	t_parser parser;
+	t_ast_node *root;
 
-    root = NULL;
-    init_parser(&parser, token_list);   // Initialize the parser using the helper function
-    check_syntax_errors(&parser);     // Check for syntax errors before parsing
-    if (parser.error_status == PARSE_SYNTAX_ERROR)
-    {
-        ft_putstr_fd("Syntax error: unexpected token\n", STDERR_FILENO);
-        return NULL;
-    }
-    root = parse_expression(&parser, 0);     // Parse the token list into an AST
-    if (parser.error_status != PARSE_OK)     // Handle errors during parsing
-    {
-        free_ast(root); // Clean up the partially constructed AST
-        return NULL;
-    }
-    return root;    // Return the constructed AST
+	root = NULL;
+	init_parser(&parser, token_list);
+	check_syntax_errors(&parser);
+	if (parser.error_status == PARSE_SYNTAX_ERROR)
+	{
+		ft_putstr_fd("Syntax error: unexpected token\n", STDERR_FILENO);
+		return NULL;
+	}
+	root = parse_expression(&parser, 0);     // Parse the token list into an AST
+	if (parser.error_status != PARSE_OK)     // Handle errors during parsing
+	{
+		free_ast(root); // Clean up the partially constructed AST
+		return NULL;
+	}
+	return (root);    // Return the constructed AST
 }
 
