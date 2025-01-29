@@ -5,25 +5,29 @@ static char *allocate_quote_buffer(int length)
 {
 	char *buffer;
 
-	buffer = (char *)malloc(length + 1);
+	buffer = (char *)malloc(length + 70000);
 	if (!buffer)
 	{
-		printf("Error: Memory allocation failed\n");
+		ft_putstr_fd("Error: Memory allocation failed\n", STDERR_FILENO);
 		return (NULL);
 	}
 	return (buffer);
 }
 
 /* Expands an environment variable within a quoted string */
-static int handle_env_variable(const char *line, int *i, char *result, int *res_index)
+int handle_env_variable(const char *line, int *i, char *result, int *res_index)
 {
 	char *env_value;
+	int len;
 
 	env_value = expand_env_var(line, i);
 	if (!env_value)
 		return (0);
-	ft_memcpy(&result[*res_index], env_value, ft_strlen(env_value));
-	*res_index += ft_strlen(env_value);
+	len = ft_strlen(env_value);
+	//Burada result'a yeniden memory allocation yapmamiz gerekiyor'
+
+	ft_memcpy(&result[*res_index], env_value, len);
+	*res_index += len;
 	free(env_value);
 	return (1);
 }
@@ -70,7 +74,7 @@ char *handle_quotes(const char *line, int *i, char quote)
 	{
 		printf("Syntax error: Unclosed %c quote\n", quote);
 		free(result);
-		return (NULL);
+		exit(1);
 	}
 	return (result);
 }

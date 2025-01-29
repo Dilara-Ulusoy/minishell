@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <stdbool.h>
 #include <dirent.h>
+#include <errno.h>
 #include "parsing.h"
 #include "token.h"
 #include "../Libft/libft.h"
@@ -37,7 +38,7 @@ void init_shell(t_shell *shell);
 
 /* Environment variable expansion */
 char  *expand_env_var(const char *line, int *index);
-void   handle_env_var(const char *line, int *i, char *result, int *res_index);
+int   handle_env_var(const char *line, int *i, char *result, int *res_index);
 
 /* Word Parsing */
 char *read_word_range(const char *line, int *index, int length);

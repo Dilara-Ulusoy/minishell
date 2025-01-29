@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:34:26 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/01/26 22:46:01 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/01/27 14:25:49 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,7 @@ int	parse_word(t_token **head, const char *line, int *pos, int length)
 	word = read_word_range(line, pos, length); // read_word_range must ensure bounds
 	if (!word)
 		return (0); /* No word read */
-	printf("Allocated Token: %p ------>%s\n", (void *)word, word);
+	//printf("Allocated Token: %p ------>%s\n", (void *)word, word);
 	token = (t_token *)malloc(sizeof(t_token));
 	if (!token)
 	{

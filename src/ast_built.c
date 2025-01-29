@@ -15,6 +15,7 @@ static void	init_parser(t_parser *parser, t_token *token_list)
 	parser->tokens = token_list;
 	parser->current_token = token_list;
 	parser->error_status = PARSE_OK;
+    parser->error_number = 0;
 }
 
 t_ast_node	*build_ast(t_token *token_list)
@@ -24,12 +25,8 @@ t_ast_node	*build_ast(t_token *token_list)
 
 	root = NULL;
 	init_parser(&parser, token_list);
-	check_syntax_errors(&parser);
-	if (parser.error_status == PARSE_SYNTAX_ERROR)
-	{
-		ft_putstr_fd("Syntax error: unexpected token\n", STDERR_FILENO);
+	if(!check_syntax_errors(&parser) || parser.error_status == PARSE_SYNTAX_ERROR)
 		return NULL;
-	}
 	root = parse_expression(&parser, 0);     // Parse the token list into an AST
 	if (parser.error_status != PARSE_OK)     // Handle errors during parsing
 	{

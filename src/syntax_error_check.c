@@ -1,5 +1,6 @@
 #include "minishell.h"
 
+
 /**
  * handle_initial_token_check - Checks the first token for syntax errors.
  *
@@ -17,7 +18,11 @@ static int handle_initial_token_check(t_parser *parser, t_token **current)
 	}
 	else if (is_operator((*current)->type)) /* İlk token operatör ise hata */
 	{
-		set_syntax_error(parser, (*current)->value);
+		if(!is_redirection((*current)->type))
+			set_syntax_error(parser, (*current)->value);
+		else
+			set_syntax_error(parser, "\\n");
+		set_error_number(parser, 1);
 		return (0);
 	}
 	return (1);
@@ -35,7 +40,8 @@ static int handle_consecutive_operators(t_parser *parser, t_token *current)
 	if (is_operator(current->type) && is_operator(current->next->type))
 	{
 		set_syntax_error(parser, current->next->value);
-		return 0;
+		set_error_number(parser, 1);
+		return(0);
 	}
 	return 1;
 }
@@ -74,25 +80,30 @@ static int handle_redirection_followed_by_word(t_parser *parser, t_token *curren
 static void handle_trailing_operator(t_parser *parser, t_token *current)
 {
 	if (current && is_operator(current->type))
+	{
 		set_syntax_error(parser, current->value);
+		set_error_number(parser, 1);
+		printf("%d", parser->error_number);
+	}
 }
 
-void check_syntax_errors(t_parser *parser)
+int check_syntax_errors(t_parser *parser)
 {
 	t_token *current;
 
 	current = parser->tokens;
 	if (!parser || !parser->tokens) /* Early return if no tokens */
-		return;
+		return 0;
 	if (!handle_initial_token_check(parser, &current))
-		return;
+		return 0;
 	while (current && current->next)
 	{
 		if (!handle_consecutive_operators(parser, current))
-			return;
+			return 0;
 		if (!handle_redirection_followed_by_word(parser, current))
-			return;
+			return 0;
 		current = current->next;
 	}
 	handle_trailing_operator(parser, current);
+	return 1;
 }

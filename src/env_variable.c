@@ -8,7 +8,7 @@ char *expand_env_var(const char *line, int *index)
     int word_length = 0;
     char *var_name = NULL;
     char *result = NULL;
-    const char *env_value;
+    char *env_value;
 
     // Değişken uzunluğu hesaplama
     while (line[start + word_length] && (ft_isalnum(line[start + word_length]) || line[start + word_length] == '_'))
@@ -29,7 +29,9 @@ char *expand_env_var(const char *line, int *index)
 
     env_value = getenv(var_name);
     if (env_value)
+    {
         result = ft_strdup(env_value);
+    }
     else
         result = ft_strdup("");
 
@@ -40,14 +42,3 @@ char *expand_env_var(const char *line, int *index)
     return result;
 }
 
-
-// New function definition
-void handle_env_var(const char *line, int *i, char *result, int *res_index)
-{
-    char *env = expand_env_var(line, i);
-    if (!env)
-        return;
-    ft_memcpy(&result[*res_index], env, ft_strlen(env));
-    *res_index += ft_strlen(env);
-    free(env);
-}

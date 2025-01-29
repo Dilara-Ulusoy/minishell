@@ -1,9 +1,20 @@
 #include "minishell.h"
 
-void set_syntax_error(t_parser *parser, const char *token_value)
+int set_syntax_error(t_parser *parser, const char *token_value)
 {
 	parser->error_status = PARSE_SYNTAX_ERROR;
-	printf("Syntax error near unexpected token '%s'\n", token_value);
+	ft_putstr_fd("zsh: parse error near '", STDERR_FILENO);
+	ft_putstr_fd((char *)token_value, STDERR_FILENO);
+	ft_putstr_fd("'\n", STDERR_FILENO);
+	//printf("zsh: parse error near '%s'\n", token_value);
+	return (1);
+}
+
+int set_error_number(t_parser *parser, int number)
+{
+	if(parser->error_number == 0)
+		parser->error_number = number;
+	exit(number);
 }
 
 void	*handle_parse_error(t_parser *p, t_ast_node *left_node, t_ast_node *right_node, const char *error_message)

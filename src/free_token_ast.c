@@ -10,7 +10,7 @@ void free_tokens(t_token **head)
 
     while (*head)
     {
-        //printf("Freeing Token: %p -------> %s\n", (void *)(*head), (*head)->value ? (*head)->value : "(null)");
+        printf("Freeing Token: %p -------> %s\n", (void *)(*head), (*head)->value ? (*head)->value : "(null)");
         temp = (*head)->next;
 
         if ((*head)->value)
