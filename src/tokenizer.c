@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:34:26 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/01/30 14:11:34 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/01/30 16:35:08 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,6 +196,29 @@ static char	*process_quoted_string(const char *line, int *index, char quote_char
 	return (processed);
 }
 
+static char *expand_env_variable(const char *line, int *index)
+{
+	char *var_name;
+	char *env_value;
+	char *result;
+
+	(*index)++; /* $ karakterini atla */
+	var_name = extract_env_var_name(line, index);
+	if (!var_name)
+		return (NULL);
+	env_value = getenv(var_name);
+	free(var_name);
+	if (!env_value)
+		return NULL;
+	result = ft_strdup(env_value);
+	if (!result)
+	{
+		ft_putstr_fd("Error: Memory allocation failed\n", STDERR_FILENO);
+		return NULL;
+	}
+	return (result);
+}
+
 /**
  * @brief Extracts a word from the input line, handling special cases like quotes.
  *
@@ -224,6 +247,8 @@ char *read_word_range(const char *line, int *index, int length)
 		c = line[*index];
 		if (c == '"' || c == '\'')
 			return process_quoted_string(line, index, c);
+		if (c == '$')
+			return expand_env_variable(line, index);
 		if (is_space(c) || is_two_char_operator(c) || c == '(' || c == ')' || c == '\n')
 			break;
 		(*index)++;

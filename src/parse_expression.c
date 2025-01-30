@@ -1,5 +1,20 @@
 #include "minishell.h"
 
+static	t_ast_node *parse_right_node(t_parser *p, int op_prec)
+{
+	t_ast_node	*right_node;
+	int			next_prec;
+
+	next_prec = op_prec + 1;
+	right_node = parse_expression(p, next_prec);
+	if (!right_node)
+	{
+		handle_parse_error(p, NULL, NULL, "Expected expression after operator");
+		return NULL;
+	}
+	return (right_node);
+}
+
 /*****************************************************************************/
 /*                             PARSE EXPRESSION                               */
 /*****************************************************************************/
@@ -82,22 +97,6 @@
 	we effectively enforce the correct grouping rules.
 
 */
-
-static	t_ast_node *parse_right_node(t_parser *p, t_ast_node *left_node, int op_prec)
-{
-	t_ast_node	*right_node;
-	int			next_prec;
-
-	next_prec = op_prec + 1;
-	right_node = parse_expression(p, next_prec);
-	if (!right_node)
-	{
-		handle_parse_error(p, left_node, NULL, "Expected expression after operator");
-		return NULL;
-	}
-	return right_node;
-}
-
 t_ast_node	*parse_expression(t_parser *p, int min_prec)
 {
 	t_token_type	operator_type;
@@ -105,24 +104,24 @@ t_ast_node	*parse_expression(t_parser *p, int min_prec)
 	t_ast_node		*right_node;
 	int				op_prec;
 
-	if (!p->current_token || p->error_status != PARSE_OK) /* If no current token or parse error is set, we can't proceed. */
-		return NULL;
+	if (!p->current_token || p->error_status != PARSE_OK)
+		return (NULL);
 	left_node = parse_term(p);
 	if (!left_node)
-		return NULL;
+		return (NULL);
 	while (p->current_token && is_binary_operator(p->current_token->type))
 	{
 		op_prec = get_precedence(p->current_token->type);
 		if (op_prec < min_prec) /* If operator's precedence is less than min_prec, we stop. */
-			break;
-		operator_type = p->current_token->type;				  /* Remember the operator type (e.g., TOKEN_AND, TOKEN_OR, etc.). */
-		get_next_token(p);									  /* consume the operator token */
-		right_node = parse_right_node(p, left_node, op_prec);
+			break ;
+		operator_type = p->current_token->type;	/* Remember the operator type (e.g., TOKEN_AND, TOKEN_OR, etc.). */
+		get_next_token(p);
+		right_node = parse_right_node(p, op_prec);
 		if (!right_node)
-			return NULL;
+			return (NULL);
 		left_node = built_operator_node(left_node, right_node, operator_type, p); /* Built an operator AST node */
 		if (!left_node)
-			return NULL;
+			return (NULL);
 	}
 	return left_node; /* 6) Once we see an operator with lower precedence or no more tokens, we stop. */
 }
@@ -169,30 +168,13 @@ t_ast_node	*parse_expression(t_parser *p, int min_prec)
 */
 t_ast_node	*parse_term(t_parser *p)
 {
-	t_ast_node *sub_expr;
-	/* If there's no token or an error is already flagged, we cannot proceed. */
 	if (!p->current_token || p->error_status != PARSE_OK)
-		return NULL;
+		return (NULL);
 
-	/* CASE 1: Parenthesized expression */
 	if (p->current_token->type == TOKEN_PAREN_OPEN)
-	{
-		get_next_token(p); /* consume '(' */
-		/* parse an expression with min_prec=0 (like a fresh expression) */
-		sub_expr = parse_expression(p, 0);
-		if (!sub_expr)
-			return NULL; /* sub-expression parse failed */
-		if (!p->current_token || p->current_token->type != TOKEN_PAREN_CLOSE)
-		{
-			p->error_status = PARSE_SYNTAX_ERROR;
-			free_ast(sub_expr);
-			return NULL;
-		}
-		get_next_token(p); /* consume the ')' token */
-		return sub_expr;   /* The entire parenthesized expression is one "term." */
-	}
+		return (parse_parenthesized_expression(p));  /* CASE 1: Parenthesized expression */
 	else
-		return parse_command(p); /* CASE 2: If not '(', we parse a command (like "echo hello" or "ls -l") */
+		return (parse_command(p)); /* CASE 2: If not '(', we parse a command (like "echo hello" or "ls -l") */
 }
 
 // Built operator node function is used to create an operator node with left and right nodes.
@@ -215,22 +197,20 @@ t_ast_node	*built_operator_node(t_ast_node *left_node, t_ast_node *right_node, t
 	return op_node;
 }
 
-/*
-   get_precedence:
-   - a simple numeric precedence system
-	 OR (||) -> 10
-	 AND (&&) -> 20
-	 PIPE (|) -> 30
-   - higher => parse first
-*/
-int	get_precedence(t_token_type type)
+t_ast_node	*parse_parenthesized_expression(t_parser *p)
 {
-	if (type == TOKEN_OR)
-		return 10;
-	else if (type == TOKEN_AND)
-		return 20;
-	else if (type == TOKEN_PIPE)
-		return 30;
-	else
-		return 0;
+	t_ast_node	*sub_expr;
+
+	get_next_token(p);
+	sub_expr = parse_expression(p, 0); /* min_prec = 0 ile yeni bir ifade ayrıştır */
+	if (!sub_expr)
+		return (NULL);
+	if (!p->current_token || p->current_token->type != TOKEN_PAREN_CLOSE)
+	{
+		p->error_status = PARSE_SYNTAX_ERROR;
+		free_ast(sub_expr);
+		return (NULL);
+	}
+	get_next_token(p);
+	return (sub_expr); /* Tüm parantezli ifade tek bir "term" olarak döndürülür */
 }
