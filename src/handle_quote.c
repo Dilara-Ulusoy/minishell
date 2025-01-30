@@ -1,11 +1,26 @@
 #include "minishell.h"
 
 /* Allocate memory for the result buffer */
-static char *allocate_quote_buffer(int length)
+static char *allocate_quote_buffer(const char *line)
 {
 	char *buffer;
+	int len;
+	int env_var_len;
 
-	buffer = (char *)malloc(length + 70000);
+	buffer = NULL;
+	len = ft_strlen(line);
+	env_var_len = get_env_var_length(line);
+	if (env_var_len != 0)
+	{
+		buffer = (char *)malloc(len + env_var_len + 1);
+		if (!buffer)
+		{
+			ft_putstr_fd("Error: Memory allocation failed\n", STDERR_FILENO);
+			return (NULL);
+		}
+	}
+	else
+		buffer = (char *)malloc(len + 1);
 	if (!buffer)
 	{
 		ft_putstr_fd("Error: Memory allocation failed\n", STDERR_FILENO);
@@ -17,18 +32,20 @@ static char *allocate_quote_buffer(int length)
 /* Expands an environment variable within a quoted string */
 int handle_env_variable(const char *line, int *i, char *result, int *res_index)
 {
-	char *env_value;
-	int len;
+	char	*var_name;
+	char	*env_value;
+	int		len;
 
-	env_value = expand_env_var(line, i);
-	if (!env_value)
+	var_name = extract_env_var_name(line, i);
+	if (!var_name)
 		return (0);
+	env_value = getenv(var_name);
+	free(var_name);
+	if (!env_value)
+		return (1);
 	len = ft_strlen(env_value);
-	//Burada result'a yeniden memory allocation yapmamiz gerekiyor'
-
 	ft_memcpy(&result[*res_index], env_value, len);
 	*res_index += len;
-	free(env_value);
 	return (1);
 }
 
@@ -36,8 +53,8 @@ int handle_env_variable(const char *line, int *i, char *result, int *res_index)
 static int process_quoted_content(const char *line, int *i, char quote, char *result)
 {
 	int res_index = 0;
-	int length = (int)ft_strlen(line);
-	while (*i < length)
+	int len = (int)ft_strlen(line);
+	while (*i < len)
 	{
 		if (line[*i] == quote) // Closing quote found
 		{
@@ -62,10 +79,9 @@ static int process_quoted_content(const char *line, int *i, char quote, char *re
 /* Main function to handle quoted strings */
 char *handle_quotes(const char *line, int *i, char quote)
 {
-	int		length = (int)ft_strlen(line);
-	char	*result;
+	char *result;
 
-	result = allocate_quote_buffer(length);
+	result = allocate_quote_buffer(line);
 	if (!result)
 		return (NULL);
 

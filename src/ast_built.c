@@ -15,7 +15,7 @@ static void	init_parser(t_parser *parser, t_token *token_list)
 	parser->tokens = token_list;
 	parser->current_token = token_list;
 	parser->error_status = PARSE_OK;
-    parser->error_number = 0;
+	parser->error_number = 0;
 }
 
 t_ast_node	*build_ast(t_token *token_list)

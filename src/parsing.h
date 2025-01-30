@@ -86,6 +86,7 @@ typedef struct s_parser
     t_token         *current_token; /* pointer to the token being parsed now */
     e_parse_error    error_status;  /* ok, syntax error, memory error, etc. */
     int error_number;
+    char *variable_name;
 } t_parser;
 
 
