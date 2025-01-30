@@ -162,14 +162,16 @@ char *handle_quotes(const char *line, int *i, char quote)
 
 	result = allocate_quote_buffer(line);
 	if (!result)
+	{
+		ft_putstr_fd("Error; Memory allocation for quoted string failed\n", STDERR_FILENO);
 		return (NULL);
-
+	}
 	(*i)++; // Skip the opening quote
 	if (!process_quoted_content(line, i, quote, result))
 	{
 		ft_putstr_fd("Error: Unclosed quote\n", STDERR_FILENO);
 		free(result);
-		exit(1);
+		return (NULL);
 	}
 	return (result);
 }

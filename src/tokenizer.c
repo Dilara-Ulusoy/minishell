@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:34:26 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/01/30 16:35:08 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/01/30 16:55:38 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,11 +166,11 @@ int	parse_word(t_token **head, const char *line, int *pos, int length)
 	t_token	*token;
 	char	*word;
 
-	if (*pos >= length)// Check if *pos is within bounds
+	if (*pos >= length) // Check if *pos is within bounds
 		return (0);
-	word = read_word_range(line, pos, length); // read_word_range must ensure bounds
+	word = read_word_range(line, pos, length);
 	if (!word)
-		return (0); /* No word read */
+		return (0);
 	//printf("Allocated Token: %p ------>%s\n", (void *)word, word);
 	token = (t_token *)malloc(sizeof(t_token));
 	if (!token)
@@ -188,11 +188,14 @@ int	parse_word(t_token **head, const char *line, int *pos, int length)
 
 static char	*process_quoted_string(const char *line, int *index, char quote_char)
 {
-	char *processed;
+	char	*processed;
 
 	processed = handle_quotes(line, index, quote_char);
 	if (!processed)
+	{
+		ft_putstr_fd("Error: Handle quotes failed\n", STDERR_FILENO);
 		return (NULL);
+	}
 	return (processed);
 }
 
@@ -202,19 +205,19 @@ static char *expand_env_variable(const char *line, int *index)
 	char *env_value;
 	char *result;
 
-	(*index)++; /* $ karakterini atla */
+	(*index)++; /* Skip $ character */
 	var_name = extract_env_var_name(line, index);
 	if (!var_name)
 		return (NULL);
 	env_value = getenv(var_name);
 	free(var_name);
 	if (!env_value)
-		return NULL;
+		return (NULL);
 	result = ft_strdup(env_value);
 	if (!result)
 	{
 		ft_putstr_fd("Error: Memory allocation failed\n", STDERR_FILENO);
-		return NULL;
+		return (NULL);
 	}
 	return (result);
 }
