@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:34:26 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/01/27 14:25:49 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/01/30 14:11:34 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ int	parse_two_char_operator(t_token **head, const char *line, int *pos, int leng
 	t_token_type doublechar;
 	t_token *opToken;
 	int i;
+	int operator_length;
 
 	i = *pos;
 	if (is_two_char_operator(line[i]) && (i + 1 < length))
@@ -77,7 +78,7 @@ int	parse_two_char_operator(t_token **head, const char *line, int *pos, int leng
 		doublechar = match_two_char_operator(line, i);
 		if (doublechar != TOKEN_UNKNOWN)
 		{
-			int operator_length = 3;
+			operator_length = 2;
 			/* Create the new token */
 			opToken = create_new_token_range(doublechar, line, i, operator_length);
 			append_token(head, opToken);

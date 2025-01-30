@@ -1,5 +1,17 @@
-#include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokenizer_utils.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/30 14:04:08 by dakcakoc          #+#    #+#             */
+/*   Updated: 2025/01/30 14:04:10 by dakcakoc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
+
+#include "minishell.h"
 
 int	skip_whitespace(const char *line, int i)
 {
@@ -15,22 +27,16 @@ int	is_space(char c)
 	return (0);
 }
 
-/*
-   is_two_char_operator:
-   Returns non-zero (true) if 'c' can start a two-char operator like:
-    - '&' for "&&"
-    - '|' for "||"
-    - '<' for "<<"
-    - '>' for ">>"
-*/
 int	is_two_char_operator(char c)
 {
-	return (c == '&' || c == '|' || c == '<' || c == '>');
+	if((c == '&' || c == '|' || c == '<' || c == '>'))
+		return (1);
+	return (0);
 }
 
 char	*allocate_word(const char *line, int start, int length)
 {
-	char *word;
+	char	*word;
 
 	word = (char *)malloc(length + 1);
 	if (!word)

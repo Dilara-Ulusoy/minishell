@@ -6,7 +6,6 @@ int set_syntax_error(t_parser *parser, const char *token_value)
 	ft_putstr_fd("zsh: parse error near '", STDERR_FILENO);
 	ft_putstr_fd((char *)token_value, STDERR_FILENO);
 	ft_putstr_fd("'\n", STDERR_FILENO);
-	//printf("zsh: parse error near '%s'\n", token_value);
 	return (1);
 }
 
