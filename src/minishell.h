@@ -1,3 +1,6 @@
+#ifndef MINISHELL_H
+# define MINISHELL_H
+
 #include <stdio.h>
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -5,67 +8,66 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdbool.h>
-
-
+#include <dirent.h>
+#include <errno.h>
+#include "parsing.h"
+#include "token.h"
 #include "../Libft/libft.h"
+
 
 typedef struct s_shell
 {
 	char *line;
-	char *tokens;
+	t_token *tokens;
+	t_token *current_token;
+	t_ast_node *ast;
+	t_parser *parser;
+	int exit_code;
 
 } t_shell;
 
-typedef enum s_token_type
-{
-	T_COMMAND, // command; ls, echo, cat Type: 0
-	T_ARG, // argument Type: 1
-	T_PIPE,  		// | Type: 2
-	T_REDIRECT_OUT, // > Type: 3
-	T_REDIRECT_IN, // < Type: 4
-	T_REDIRECT_APPEND, // >> Type: 5
-	T_REDIRECT_HEREDOC, // << Type: 6
-	T_OPEN_P, // ( Type: 7
-	T_CLOSE_P, // ) Type: 8
-	T_AND, // && Type: 9
-	T_OR, // || Type: 10
-	T_NL, // new line Type: 11
-}
-t_token_type;
+/*****************************************************************************/
+/*                         FUNCTION DECLARATIONS                             */
+/*****************************************************************************/
+
+/* Input Handling and initialization */
+char *get_input(const char *prompt);
+void init_shell(t_shell *shell);
 
 
-typedef struct s_token
-{
-	t_token_type type;
-	char *value;
-	bool is_operator;
-	bool expect_command;
-	struct s_token *next;
-	struct s_token *prev;
-} t_token;
-
-typedef struct s_parser_state {
-    bool expect_command;
-} t_parser_state;
+/* Environment variable expansion */
+int handle_env_variable(const char *line, int *i, char *result, int *res_index);
+int get_env_var_length(const char *line);
+char *extract_env_var_name(const char *line, int *index);
 
 
-
-char *get_input(void);
-
-
-//Tokenization
-
-void tokenize(char *line, t_token **tokens);
-t_token *create_token(char *value, t_token_type type);
-void add_token(t_token **head, char *value, t_token_type type);
-void print_tokens(t_token *head);
-void free_tokens(t_token *head);
-t_token_type get_token_type(char *token);
-bool is_operator_token(t_token_type type);
-void determine_token_types(t_token *tokens, t_parser_state *state);
+/* Word Parsing */
+char *read_word_range(const char *line, int *index, int length);
+char *handle_quotes(const char *line, int *i, char quote);
+char *allocate_word(const char *line, int start, int length);
 
 
-// Utils
-bool is_quote(char c);
+/* Whitespace handling */
+int         skip_whitespace(const char *line, int i);
+int         is_space(char c);
+
+/*****************************************************************************/
+/*                        PARSE STEPS                                        */
+/*****************************************************************************/
+
+/* Step 2: Parse two-char operator */
+int parse_two_char_operator(t_token **head, const char *line, int *pos, int length);
+
+/* Step 3: Parse single-char operator */
+int parse_single_char_operator(t_token **head, const char *line, int *pos, int length);
+
+/* Step 4: Parse word */
+int parse_word(t_token **head, const char *line, int *pos, int length);
+int  handle_newline(t_token **head, const char *line, int *pos);
 
 
+// Cleanup
+void cleanup_shell(t_shell *shell);
+
+
+#endif
