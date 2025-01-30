@@ -36,8 +36,7 @@ void init_shell(t_shell *shell);
 
 
 /* Environment variable expansion */
-char  *expand_env_var(const char *line, int *index);
-int   handle_env_var(const char *line, int *i, char *result, int *res_index);
+int handle_env_variable(const char *line, int *i, char *result, int *res_index);
 int get_env_var_length(const char *line);
 char *extract_env_var_name(const char *line, int *index);
 
