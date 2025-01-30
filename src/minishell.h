@@ -69,5 +69,10 @@ int  handle_newline(t_token **head, const char *line, int *pos);
 // Cleanup
 void cleanup_shell(t_shell *shell);
 
+// Builtin functions
+int ft_cd(char *new_path);
+void ft_pwd();
+void ft_echo(char *str);
+int execute_pwd(char *cmd);
 
 #endif

@@ -25,6 +25,16 @@ void parse_and_process_command(t_shell *shell)
 		cleanup_shell(shell);
 		return ;
 	}
+	//printf("%s", shell->ast->cmd_args);
+	if (ft_strncmp(shell->ast->cmd_args,"echo ",5) == 0)
+	{
+		printf("%s\n",shell->ast->cmd_args);
+		ft_echo("I will go to myfolder");
+		ft_cd("myfolder");
+	}
+	execute_pwd(shell->ast->cmd_args);
+	//if (ft_strncmp(shell->ast->cmd_args,"pwd",3) == 0)
+	//	ft_pwd();
 	debug_ast(shell->ast, 0);   // -------> FOR DUBEGGING
 	// execute_ast(shell->ast); /* Uncomment for actual execution */
 	//print_tokens(shell->tokens);  // -------> FOR DUBEGGING
