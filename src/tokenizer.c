@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:34:26 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/01/30 16:55:38 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/01/30 21:51:52 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,8 @@
  * @param line The user line (e.g. "echo hello && cat < file.txt").
  * @return Pointer to the first token in a linked list, or NULL if empty.
  */
-t_token	*tokenize(t_token *head, const char *line)
+t_token	*tokenize(t_token *head, const char *line, int length)
 {
-	int	length;
 	int	i;
 
 	if (!line || !*line)
@@ -30,7 +29,6 @@ t_token	*tokenize(t_token *head, const char *line)
 		ft_putstr_fd("Error: Empty line", STDERR_FILENO);
 		return (NULL);
 	}
-	length = (int)ft_strlen(line);
 	i = 0;
 	while (i < length)
 	{
@@ -79,11 +77,9 @@ int	parse_two_char_operator(t_token **head, const char *line, int *pos, int leng
 		if (doublechar != TOKEN_UNKNOWN)
 		{
 			operator_length = 2;
-			/* Create the new token */
-			opToken = create_new_token_range(doublechar, line, i, operator_length);
+			opToken = create_new_token_range(doublechar, line, i, operator_length); /* Create the new token */
 			append_token(head, opToken);
-			/* Move pos forward by operator_length */
-			*pos += operator_length;
+			*pos += operator_length; /* Move pos forward by operator_length */
 			return (1);
 		}
 	}
@@ -205,22 +201,28 @@ static char	*process_quoted_string(const char *line, int *index, char quote_char
 
 static char *expand_env_variable(const char *line, int *index)
 {
-	char *var_name;
-	char *env_value;
-	char *result;
+	char	*var_name;
+	char	*env_value;
+	char	*result;
 
 	(*index)++; /* Skip $ character */
 	var_name = extract_env_var_name(line, index);
 	if (!var_name)
+	{
+		ft_putstr_fd("Error: Invalid environment variable name\n", STDERR_FILENO);
 		return (NULL);
+	}
 	env_value = getenv(var_name);
 	free(var_name);
 	if (!env_value)
+	{
+		ft_putstr_fd("Error: Environment variable not found\n", STDERR_FILENO);
 		return (NULL);
+	}
 	result = ft_strdup(env_value);
 	if (!result)
 	{
-		ft_putstr_fd("Error: Memory allocation failed\n", STDERR_FILENO);
+		ft_putstr_fd("Error: ft_strdup failed\n", STDERR_FILENO);
 		return (NULL);
 	}
 	return (result);

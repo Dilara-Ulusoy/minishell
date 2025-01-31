@@ -11,23 +11,23 @@ void parse_and_process_command(t_shell *shell)
 		shell->line = NULL;
 		return ;
 	}
-	shell->tokens = tokenize(shell->tokens, shell->line);
+	shell->tokens = tokenize(shell->tokens, shell->line, shell->line_length);
 	if (!shell->tokens)
 	{
-		printf("Tokenization failed.\n");
+		printf("Error: Tokenization failed.\n");
 		cleanup_shell(shell);
 		return ;
 	}
 	shell->ast = build_ast(shell->tokens); /* Build the AST */
 	if (!shell->ast)
 	{
-		printf("Parsing failed.\n");
+		printf("Error: Parsing failed.\n");
 		cleanup_shell(shell);
 		return ;
 	}
-	debug_ast(shell->ast, 0);   // -------> FOR DUBEGGING
+	//debug_ast(shell->ast, 0);   // -------> FOR DUBEGGING
 	// execute_ast(shell->ast); /* Uncomment for actual execution */
-	//print_tokens(shell->tokens);  // -------> FOR DUBEGGING
+	print_tokens(shell->tokens);  // -------> FOR DUBEGGING
 	cleanup_shell(shell);
 }
 
@@ -47,7 +47,8 @@ int main(int argc, char **argv, char **envp)
 	{
 		shell.line = get_input("minishell$ ");
 		if (!shell.line) /* Exit condition (Ctrl+D or EOF) */
-			break;
+			break ;
+		shell.line_length = ft_strlen(shell.line);
 		parse_and_process_command(&shell);
 	}
 	cleanup_shell(&shell);

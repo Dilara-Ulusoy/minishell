@@ -23,6 +23,7 @@ typedef struct s_shell
 	t_ast_node *ast;
 	t_parser *parser;
 	int exit_code;
+	int line_length;
 
 } t_shell;
 

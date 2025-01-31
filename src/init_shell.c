@@ -11,6 +11,7 @@ void init_shell(t_shell *shell)
     shell->ast = NULL;
     shell->parser = NULL;
     shell->exit_code = 0;
+    shell->line_length = 0;
 }
 
 /*
@@ -30,7 +31,10 @@ char *get_input(const char *prompt)
     trimmed_line = ft_strtrim(line, " \t\n");     /* Trim whitespace (assuming ft_strtrim is defined somewhere) */
 	free(line);
     if (!trimmed_line)
-        return(perror("Error: Memory allocation failed\n"), NULL);
+    {
+        ft_putstr_fd("Error: Memory allocation failed\n", STDERR_FILENO);
+        return NULL;
+    }
     if (*trimmed_line)     /* Add non-empty lines to history */
         add_history(trimmed_line);
     return trimmed_line;

@@ -111,10 +111,12 @@ static int process_quoted_content(const char *line, int *i, char quote, char *re
 {
 	int res_index = 0;
 	int len = (int)ft_strlen(line);
+	result[res_index++] = quote;
 	while (*i < len)
 	{
 		if (line[*i] == quote) // Closing quote found
 		{
+			result[res_index++] = quote;
 			(*i)++;
 			result[res_index] = '\0';
 			return (1);

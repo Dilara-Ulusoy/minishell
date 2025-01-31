@@ -49,7 +49,7 @@ typedef struct	s_token
 
 
 /* Token Creation and Management */
-t_token			*tokenize(t_token *head, const char *line);
+t_token			*tokenize(t_token *head, const char *line, int length);
 t_token			*create_new_token_range(t_token_type type, const char *line, int startIndex, int length);
 void			append_token(t_token **head, t_token *new_token);
 void			free_tokens(t_token **head);
