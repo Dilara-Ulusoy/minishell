@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:34:26 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/01/30 21:51:52 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/01/31 13:12:27 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,11 +185,6 @@ int	parse_word(t_token **head, const char *line, int *pos, int length)
 static char	*process_quoted_string(const char *line, int *index, char quote_char)
 {
 	char	*processed;
-	if(ft_strrchr(line, ' ') != 0)
-	{
-		ft_putstr_fd("Error: Command not found\n", STDERR_FILENO);
-		return (NULL);
-	}
 	processed = handle_quotes(line, index, quote_char);
 	if (!processed)
 	{
