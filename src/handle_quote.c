@@ -109,30 +109,28 @@ int handle_env_variable(const char *line, int *i, char *result, int *res_index)
  */
 static int process_quoted_content(const char *line, int *i, char quote, char *result)
 {
-	int res_index = 0;
-	int len = (int)ft_strlen(line);
-	result[res_index++] = quote;
-	while (*i < len)
+	int res_index;
+	int len;
+
+	res_index = 0;
+	len = ft_strlen(line);
+	result[res_index++] = quote; // Açılış tırnağını ekle
+	while (*i < len && line[*i] != quote)
 	{
-		if (line[*i] == quote) // Closing quote found
-		{
-			result[res_index++] = quote;
-			(*i)++;
-			result[res_index] = '\0';
-			return (1);
-		}
-		else if (quote == '"' && line[*i] == '$') // Handle environment variables
+		if (quote == '"' && line[*i] == '$')
 		{
 			if (!handle_env_variable(line, i, result, &res_index))
 				return (0);
 		}
-		else // Normal character inside quotes
-		{
-			result[res_index++] = line[*i];
-			(*i)++;
-		}
+		else
+			result[res_index++] = line[(*i)++];
 	}
-	return (0);
+	if (*i >= len) // Eğer kapatıcı tırnak bulunmazsa hata döndür
+		return (0);
+	result[res_index++] = quote; // Kapanış tırnağını ekle
+	result[res_index] = '\0';
+	(*i)++;
+	return (1);
 }
 
 /*

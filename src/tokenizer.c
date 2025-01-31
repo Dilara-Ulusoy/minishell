@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:34:26 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/01/31 13:12:27 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/01/31 22:20:10 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,18 +182,6 @@ int	parse_word(t_token **head, const char *line, int *pos, int length)
 	return (1);
 }
 
-static char	*process_quoted_string(const char *line, int *index, char quote_char)
-{
-	char	*processed;
-	processed = handle_quotes(line, index, quote_char);
-	if (!processed)
-	{
-		ft_putstr_fd("Error: Handle quotes failed\n", STDERR_FILENO);
-		return (NULL);
-	}
-	return (processed);
-}
-
 static char *expand_env_variable(const char *line, int *index)
 {
 	char	*var_name;
@@ -250,7 +238,7 @@ char *read_word_range(const char *line, int *index, int length)
 	{
 		c = line[*index];
 		if (c == '"' || c == '\'')
-			return process_quoted_string(line, index, c);
+			return handle_quotes(line, index, c);
 		if (c == '$')
 			return expand_env_variable(line, index);
 		if (is_space(c) || is_two_char_operator(c) || c == '(' || c == ')' || c == '\n')

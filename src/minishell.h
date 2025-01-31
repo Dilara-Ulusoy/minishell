@@ -10,10 +10,10 @@
 #include <stdbool.h>
 #include <dirent.h>
 #include <errno.h>
+#include <signal.h>
 #include "parsing.h"
 #include "token.h"
 #include "../Libft/libft.h"
-
 
 typedef struct s_shell
 {

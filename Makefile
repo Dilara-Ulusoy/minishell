@@ -8,7 +8,8 @@ NAME        = minishell
 # Compiler and flags
 CC          = cc
 CFLAGS      = -Wall -Wextra -Werror -g -fsanitize=address
-READLINE    = -L/opt/homebrew/opt/readline/lib -I/opt/homebrew/opt/readline/include -lreadline -lhistory
+READLINE    = -I /opt/homebrew/opt/readline/include/readline -lreadline # -L/opt/homebrew/opt/readline/lib
+#READLINE    = -I/usr/include/readline -lreadline
 
 # Directories
 OBJ_DIR     = obj/

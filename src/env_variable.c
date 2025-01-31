@@ -6,15 +6,18 @@ int	get_env_var_length(const char *line)
 	int			temp_index = 0;
 	char		*var_name;
 	const char	*env_value;
+	int len = 0;
 
 	var_name = extract_env_var_name(line, &temp_index);
 	if (!var_name)
 		return (0);
+
 	env_value = getenv(var_name);
 	if (!env_value)
 		return (0);
 	free(var_name);
-	return (ft_strlen(env_value));
+	len = ft_strlen(env_value);
+	return (len);
 }
 // This function is used to extract the name of an environment variable from a string. Eg $HOME -> HOME
 char	*extract_env_var_name(const char *line, int *index)
