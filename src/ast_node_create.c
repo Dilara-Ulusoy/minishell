@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:16:56 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/01/26 22:23:01 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/01/31 14:07:41 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,21 +66,34 @@ t_ast_node	*create_ast_command_node(const char *cmd_text, t_io_node *io_list)
 
 	node = (t_ast_node *)malloc(sizeof(t_ast_node));
 	if (!node)
+	{
+		free_ast(node); // Prevent memory leak
 		return (NULL);
+	}
 	printf("Allocated AST Command Node: %p ----> %s\n", (void *)node, cmd_text);
 	node->node_type = AST_COMMAND;
+	node->cmd_args = NULL;
 	if (cmd_text && *cmd_text)
 	{
 		node->cmd_args = ft_strdup(cmd_text);
 		if (!node->cmd_args)
 		{
 			free(node);
+			free_io_list(io_list); // Bellek sızıntısını önlemek için
 			return (NULL);
 		}
 	}
 	else
-		node->cmd_args = NULL; /* no command text => empty string or
-		possible "commandless" redirection */
+	{
+		// NULL yerine boş bir string atanabilir
+		node->cmd_args = ft_strdup("");
+		if (!node->cmd_args)
+		{
+			free(node);
+			free_io_list(io_list); // Bellek sızıntısını önlemek için
+			return (NULL);
+		}
+	}
 	node->io_redirects = io_list;
 	node->left = NULL;
 	node->right = NULL;

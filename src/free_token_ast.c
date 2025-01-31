@@ -25,35 +25,29 @@ void free_ast(t_ast_node *root)
 {
     if (!root)
         return;
-     // AST Node türüne göre yazdırma
-    if (root->node_type == AST_AND || root->node_type == AST_OR || root->node_type == AST_PIPE) {
-        /*
-        printf("Freed AST Operator Node: %p ----> %s\n",
-               (void *)root,
-               root->node_type == AST_AND ? "AND" : root->node_type == AST_OR ? "OR" : "PIPE");
-        */
-    } else if (root->node_type == AST_COMMAND) {
-        /*
-        printf("Freed AST Command Node: %p ----> %s\n",
-               (void *)root,
-               root->cmd_args ? root->cmd_args : "(null)");
-               */
+    if (root->left)
+    {
+        free(root->left);
+        root->left = NULL;
     }
-    /* free left and right subtrees */
-    free_ast(root->left);
-    free_ast(root->right);
-    /* free command text if command node */
+    if (root->right)
+    {
+        free(root->right);
+        root->right = NULL;
+    }
     if (root->cmd_args)
+    {
         free(root->cmd_args);
-    /* free i/o redirection list */
+        root->cmd_args = NULL;
+    }
     if (root->io_redirects)
     {
-        t_io_node *curr = root->io_redirects;
-        free_io_list(curr);
+        free_io_list(root->io_redirects);
+        root->io_redirects = NULL;
     }
-    /* finally free the node itself */
     free(root);
 }
+
 
 void free_io_list(t_io_node *io_list)
 {
@@ -99,6 +93,7 @@ void cleanup_shell(t_shell *shell)
     if(shell->ast)
     {
         free_ast(shell->ast);
+        shell->ast = NULL;
         //printf("Freed AST: %p\n", (void *)shell->ast);
     }
 }
