@@ -189,7 +189,11 @@ int	parse_word(t_token **head, const char *line, int *pos, int length)
 static char	*process_quoted_string(const char *line, int *index, char quote_char)
 {
 	char	*processed;
-
+	if(ft_strrchr(line, ' ') != 0)
+	{
+		ft_putstr_fd("Error: Command not found\n", STDERR_FILENO);
+		return (NULL);
+	}
 	processed = handle_quotes(line, index, quote_char);
 	if (!processed)
 	{
