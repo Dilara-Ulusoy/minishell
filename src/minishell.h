@@ -45,6 +45,8 @@ char *extract_env_var_name(const char *line, int *index);
 /* Word Parsing */
 char *read_word_range(const char *line, int *index, int length);
 char *handle_quotes(const char *line, int *i, char quote);
+
+int count_quotes(const char *str);
 char *allocate_word(const char *line, int start, int length);
 
 
