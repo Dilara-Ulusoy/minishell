@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:34:26 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/03 13:59:43 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/02/03 13:02:44 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -237,8 +237,6 @@ char *read_word_range(const char *line, int *index, int length)
 	while (*index < length)
 	{
 		c = line[*index];
-		if((c == '"' || c == '\'') && count_quotes(line) == 0)
-			return handle_quotes(line, index, c);
 		if ((c == '"' || c == '\'') && (*index == 0 || is_space(line[*index - 1])))
 			return handle_quotes(line, index, c);
 		if (c == '$')
@@ -267,16 +265,3 @@ int	handle_newline(t_token **head, const char *line, int *pos)
 	return (0);
 }
 
-int count_quotes(const char *str)
-{
-    int count = 0;
-
-    while (*str)
-    {
-        if (ft_strchr("\"'", *str)) // Eğer karakter " veya ' ise
-            count++;
-        str++;
-    }
-
-    return (count % 2 == 0); // Çiftse 1, tekse 0 döndür
-}

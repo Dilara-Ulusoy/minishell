@@ -119,7 +119,7 @@ static int append_to_buffer(char **buffer, size_t *buffer_size, size_t *buf_pos,
 	}
 	// Argümanları boşluk ile ayır
 	if (*buf_pos > 0)
-			(*buffer)[(*buf_pos)++] = ' ';
+		(*buffer)[(*buf_pos)++] = ' ';
 
 	// Yeni kelimeyi tampona kopyala
 	ft_memcpy(&(*buffer)[*buf_pos], word_value, word_len);
@@ -147,6 +147,7 @@ char *build_command_string(t_parser *p)
 	{
 		word_value = p->current_token->value;
 		word_len = ft_strlen(word_value);
+
 		if (!append_to_buffer(&buffer, &buffer_size, &buf_pos, word_value, word_len))
 		{
 			p->error_status = PARSE_MEMORY_ERROR;
