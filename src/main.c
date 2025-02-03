@@ -46,7 +46,7 @@ void parse_and_process_command(t_shell *shell)
 	}
 	//debug_ast(shell->ast, 0);   // -------> FOR DUBEGGING
 	// execute_ast(shell->ast); /* Uncomment for actual execution */
-	//print_tokens(shell->tokens);  // -------> FOR DUBEGGING
+	print_tokens(shell->tokens);  // -------> FOR DUBEGGING
 	cleanup_shell(shell);
 }
 
