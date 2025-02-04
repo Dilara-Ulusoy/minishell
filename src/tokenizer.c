@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:34:26 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/03 13:02:44 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/02/04 12:13:12 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,34 +182,6 @@ int	parse_word(t_token **head, const char *line, int *pos, int length)
 	return (1);
 }
 
-static char *expand_env_variable(const char *line, int *index)
-{
-	char	*var_name;
-	char	*env_value;
-	char	*result;
-
-	(*index)++; /* Skip $ character */
-	var_name = extract_env_var_name(line, index);
-	if (!var_name)
-	{
-		ft_putstr_fd("Error: Invalid environment variable name\n", STDERR_FILENO);
-		return (NULL);
-	}
-	env_value = getenv(var_name);
-	free(var_name);
-	if (!env_value)
-	{
-		ft_putstr_fd("Error: Environment variable not found\n", STDERR_FILENO);
-		return (NULL);
-	}
-	result = ft_strdup(env_value);
-	if (!result)
-	{
-		ft_putstr_fd("Error: ft_strdup failed\n", STDERR_FILENO);
-		return (NULL);
-	}
-	return (result);
-}
 
 /**
  * @brief Extracts a word from the input line, handling special cases like quotes.
@@ -239,8 +211,6 @@ char *read_word_range(const char *line, int *index, int length)
 		c = line[*index];
 		if ((c == '"' || c == '\'') && (*index == 0 || is_space(line[*index - 1])))
 			return handle_quotes(line, index, c);
-		if (c == '$')
-			return expand_env_variable(line, index);
 		if (is_space(c) || is_two_char_operator(c) || c == '(' || c == ')' || c == '\n')
 			break;
 		(*index)++;

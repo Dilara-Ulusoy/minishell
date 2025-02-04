@@ -1,5 +1,6 @@
 #include "minishell.h"
 
+
 /*
  * Allocates a buffer for processing quoted strings.
  *
@@ -107,31 +108,55 @@ int handle_env_variable(const char *line, int *i, char *result, int *res_index)
  * - If inside double quotes and a `$` is encountered, it attempts to expand an environment variable.
  * - If the quote is never closed, it returns `0` to indicate an error.
  */
-static int process_quoted_content(const char *line, int *i, char quote, char *result)
+static int process_quoted_content(const char *line, int *i, char quote, char *result, int len)
 {
-	int res_index;
-	int len;
+    int res_index = 0;
 
-	res_index = 0;
-	len = ft_strlen(line);
-	result[res_index++] = quote; // Açılış tırnağını ekle
-	while (*i < len && line[*i] != quote)
-	{
-		if (quote == '"' && line[*i] == '$')
-		{
-			if (!handle_env_variable(line, i, result, &res_index))
-				return (0);
-		}
-		else
-			result[res_index++] = line[(*i)++];
-	}
-	if (*i >= len) // Eğer kapatıcı tırnak bulunmazsa hata döndür
-		return (0);
-	result[res_index++] = quote; // Kapanış tırnağını ekle
-	result[res_index] = '\0';
-	(*i)++;
-	return (1);
+    result[res_index++] = quote; // Açılış tırnağını ekle
+    while (*i < len && line[*i] != quote) // Tırnak kapanana kadar devam et
+    {
+        if (quote == '"' && line[*i] == '$') // Çift tırnak içindeki değişkenleri işle
+        {
+           // Bir sonraki karakter geçerli bir değişken ismi başlatıyorsa env genişlet
+            if (line[*i + 1] && (ft_isalpha(line[*i + 1]) || line[*i + 1] == '_'))
+            {
+                if (!handle_env_variable(line, i, result, &res_index))
+                    return 0;
+            }
+			else
+            {
+                // `$` karakteri değişken değil, normal bir karakter olarak ekleyelim
+                result[res_index++] = line[*i];
+                (*i)++;
+            }
+        }
+        else
+        {
+            result[res_index++] = line[*i];
+            (*i)++;
+        }
+    }
+    if (*i >= len) // Eğer kapatıcı tırnak bulunamazsa hata döndür
+        return (0);
+    result[res_index++] = quote; // Kapanış tırnağını ekle
+    (*i)++; // Kapatıcı tırnağı atla
+    // Eğer tırnak kapandıktan hemen sonra boşluk varsa burada bitir
+    if (*i < len && line[*i] == ' ')
+    {
+        result[res_index] = '\0';
+        return (1);
+    }
+    // Boşluk yoksa, kalan karakterleri kopyala (örn: `"ec""ho"`)
+    while (*i < len && line[*i] != ' ')
+    {
+            result[res_index++] = line[*i];
+            (*i)++;
+    }
+    result[res_index] = '\0'; // Null sonlandırıcı ekle
+    return (1);
 }
+
+
 
 /*
  * Handles quoted content in a string.
@@ -159,7 +184,9 @@ static int process_quoted_content(const char *line, int *i, char quote, char *re
 char *handle_quotes(const char *line, int *i, char quote)
 {
 	char	*result;
+	int len;
 
+	len = ft_strlen(line);
 	result = allocate_quote_buffer(line);
 	if (!result)
 	{
@@ -167,7 +194,7 @@ char *handle_quotes(const char *line, int *i, char quote)
 		return (NULL);
 	}
 	(*i)++; // Skip the opening quote
-	if (!process_quoted_content(line, i, quote, result))
+	if (!process_quoted_content(line, i, quote, result, len))
 	{
 		ft_putstr_fd("Error: Unclosed quote\n", STDERR_FILENO);
 		free(result);
