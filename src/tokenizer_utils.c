@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 14:04:08 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/01/30 14:04:10 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/02/04 22:07:57 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,3 @@ int	is_two_char_operator(char c)
 	return (0);
 }
 
-char	*allocate_word(const char *line, int start, int length)
-{
-	char	*word;
-
-	word = (char *)malloc(length + 1);
-	if (!word)
-		return (NULL);
-	ft_memcpy(word, &line[start], length);
-	word[length] = '\0';
-	return (word);
-}

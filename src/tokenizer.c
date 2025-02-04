@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:34:26 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/04 16:37:31 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/02/04 22:08:14 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,9 +209,9 @@ char *read_word_range(const char *line, int *index, int length)
 	{
 		c = line[*index];
 		if ((c == '"' || c == '\'') && (*index == 0 || is_space(line[*index - 1])))
-			return handle_quotes(line, index, c);
+			return process_quoted_content(line, index, c, length);
 		if(c == '$')
-			return handle_env_var(line, index);
+			return get_env_var_value(line, index);
 		if (is_space(c) || is_two_char_operator(c) || c == '(' || c == ')' || c == '\n')
 			break;
 		(*index)++;
@@ -219,7 +219,7 @@ char *read_word_range(const char *line, int *index, int length)
 	wordLength = (*index) - start;
 	if (wordLength == 0)
 		return (NULL);
-	return allocate_word(line, start, wordLength);
+	return ft_substr(line, start, wordLength);
 }
 
 int	handle_newline(t_token **head, const char *line, int *pos)
@@ -235,5 +235,3 @@ int	handle_newline(t_token **head, const char *line, int *pos)
 	}
 	return (0);
 }
-
-

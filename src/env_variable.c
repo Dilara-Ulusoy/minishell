@@ -1,48 +1,31 @@
 #include "minishell.h"
 
-// This function is used to calculate the length of an environment variable's value. Eg $PATH -> length of actual PATH string
-int	get_env_var_length(const char *line)
+char *get_env_var_value(const char *line, int *index)
 {
-	int			temp_index = 0;
-	char		*var_name;
-	const char	*env_value;
-	int len = 0;
+	int start;
+	int len;
+	char *var_name;
+	char *var_value;
 
-	var_name = extract_env_var_name(line, &temp_index);
+	start = *index + 1;
+	len = 0;
+	if (!ft_isalpha(line[start]) && line[start] != '_')
+	{
+		(*index)++;
+		return ft_strdup("$");
+	}
+	while (ft_isalpha(line[start + len]) || line[start + len] == '_')
+		len++;
+	var_name = ft_substr(line, start, len);
 	if (!var_name)
-		return (0);
-
-	env_value = getenv(var_name);
-	if (!env_value)
-		return (0);
+		return NULL;
+	(*index) += len;
+	var_value = getenv(var_name);
 	free(var_name);
-	len = ft_strlen(env_value);
-	return (len);
-}
-// This function is used to extract the name of an environment variable from a string. Eg $HOME -> HOME
-char	*extract_env_var_name(const char *line, int *index)
-{
-	int			i;
-	int			start;
-	char		*var_name;
-
-	i = 0;
-	while (line[i] && line[i] != '$')
-		i++;
-	if (line[i] == '$')
-		i++;
-	start = i;
-	while (line[i] && (ft_isalnum(line[i]) || line[i] == '_'))
-		i++;
-	if (i == start)
-		return (0);
-	var_name =(char *)malloc(sizeof(char) * (i + 1));
-	if(!var_name)
-		return (NULL);
-	ft_memcpy(var_name, &line[start], i - start);
-	var_name[i - start] = '\0';
-	*index = i;
-	return (var_name);
+	(*index)++;
+	if (!var_value)
+		return ft_strdup("");
+	return ft_strdup(var_value);
 }
 
 
