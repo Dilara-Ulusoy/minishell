@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:34:26 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/04 12:13:12 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/02/04 16:37:31 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,7 +182,6 @@ int	parse_word(t_token **head, const char *line, int *pos, int length)
 	return (1);
 }
 
-
 /**
  * @brief Extracts a word from the input line, handling special cases like quotes.
  *
@@ -201,7 +200,7 @@ int	parse_word(t_token **head, const char *line, int *pos, int length)
  */
 char *read_word_range(const char *line, int *index, int length)
 {
-	int		start; /* Remember where the word starts */
+	int		start;
 	int		wordLength;
 	char	c;
 
@@ -211,6 +210,8 @@ char *read_word_range(const char *line, int *index, int length)
 		c = line[*index];
 		if ((c == '"' || c == '\'') && (*index == 0 || is_space(line[*index - 1])))
 			return handle_quotes(line, index, c);
+		if(c == '$')
+			return handle_env_var(line, index);
 		if (is_space(c) || is_two_char_operator(c) || c == '(' || c == ')' || c == '\n')
 			break;
 		(*index)++;
@@ -234,4 +235,5 @@ int	handle_newline(t_token **head, const char *line, int *pos)
 	}
 	return (0);
 }
+
 
