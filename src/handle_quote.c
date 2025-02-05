@@ -28,7 +28,10 @@ char *process_quoted_content(const char *line, int *index, char quote, int len)
         }
     }
     if (*index >= len)
+    {
+        fprintf(stderr, "Error: unclosed quote\n");
         return NULL;
+    }
     temp[res_index++] = quote;
     (*index)++;
     temp[res_index] = '\0';

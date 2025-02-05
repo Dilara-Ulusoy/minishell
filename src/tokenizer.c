@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:34:26 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/05 15:36:27 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/02/05 17:20:13 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@
  * @param line The user line (e.g. "echo hello && cat < file.txt").
  * @return Pointer to the first token in a linked list, or NULL if empty.
  */
-t_token	*tokenize(t_token *head, const char *line, int length)
+t_token *tokenize(t_token *head, const char *line, int length)
 {
-	int	i;
+	int i;
 
 	if (!line || !*line)
 	{
@@ -63,7 +63,7 @@ t_token	*tokenize(t_token *head, const char *line, int length)
  *   - Returns 0 to indicate no operator was handled.
 
 **/
-int	parse_two_char_operator(t_token **head, const char *line, int *pos, int length)
+int parse_two_char_operator(t_token **head, const char *line, int *pos, int length)
 {
 	t_token_type doublechar;
 	t_token *opToken;
@@ -109,11 +109,11 @@ int	parse_two_char_operator(t_token **head, const char *line, int *pos, int leng
  *
  * @return int 1 if a single-character operator was successfully parsed, 0 otherwise.
  */
-int	parse_single_char_operator(t_token **head, const char *line, int *pos, int length)
+int parse_single_char_operator(t_token **head, const char *line, int *pos, int length)
 {
-	t_token_type	single;
-	t_token			*opToken;
-	int				operator_length;
+	t_token_type single;
+	t_token *opToken;
+	int operator_length;
 
 	if (*pos >= length) // Boundary check to prevent out-of-bounds access
 		return (0);
@@ -157,17 +157,20 @@ int	parse_single_char_operator(t_token **head, const char *line, int *pos, int l
  *             0 otherwise (e.g., no word found or memory allocation failure).
  */
 
-int	parse_word(t_token **head, const char *line, int *pos, int length)
+int parse_word(t_token **head, const char *line, int *pos, int length)
 {
-	t_token	*token;
-	char	*word;
+	t_token *token;
+	char *word;
 
 	if (*pos >= length) // Check if *pos is within bounds
 		return (0);
 	word = read_word_range(line, pos, length);
 	if (!word)
+	{
+		free_tokens(head);
 		return (0);
-	//printf("Allocated Token: %p ------>%s\n", (void *)word, word);
+	}
+	// printf("Allocated Token: %p ------>%s\n", (void *)word, word);
 	token = (t_token *)malloc(sizeof(t_token));
 	if (!token)
 	{
@@ -200,38 +203,31 @@ int	parse_word(t_token **head, const char *line, int *pos, int length)
  */
 char *read_word_range(const char *line, int *index, int length)
 {
-	int		start;
-	int		wordLength;
-	char	c;
+	int start;
+	int wordLength;
+	char c;
 
 	start = *index;
 	while (*index < length)
 	{
 		c = line[*index];
-		if ((c == '"' || c == '\'') && (*index == 0 || is_space(line[*index - 1])))
+		if ((c == '"' || c == '\''))
 			return process_quoted_content(line, index, c, length);
-		if(c == '$')
-		{
-			if(ft_strchr("$", line[*index + 1]))
-				return handle_pid_variable(index);
-			if (is_space(line[*index - 1 ]))
-				return get_env_var_value(line, index);
-			else
-				return handle_env_variable_without_space(line, index, start);
-		}
+		if (c == '$')
+			return handle_dollar_sign(line, index, start);
 		if (is_space(c) || is_two_char_operator(c) || c == '(' || c == ')' || c == '\n')
 			break;
 		(*index)++;
 	}
 	wordLength = (*index) - start;
 	if (wordLength == 0)
-		return (NULL);
+		return NULL;
 	return ft_substr(line, start, wordLength);
 }
 
-int	handle_newline(t_token **head, const char *line, int *pos)
+int handle_newline(t_token **head, const char *line, int *pos)
 {
-	t_token	*nl_token;
+	t_token *nl_token;
 
 	if (line[*pos] == '\n')
 	{
@@ -245,29 +241,51 @@ int	handle_newline(t_token **head, const char *line, int *pos)
 
 char *handle_env_variable_without_space(const char *line, int *index, int start)
 {
-    char *temp = ft_substr(line, start, (*index) - start); // `$` öncesindeki kısmı al
-	if (!temp)
-        return NULL;
+	char *temp;
+	char *temp2;
+	char *result;
 
-    char *temp2 = get_env_var_value(line, index); // `$` sonrası değişkeni al
+	temp = ft_substr(line, start, (*index) - start);
+	if (!temp)
+		return NULL;
+	temp2 = get_env_var_value(line, index); // `$` sonrası değişkeni al
 	if (!temp2)
-    {
-        free(temp);
-        return NULL;
-    }
-    char *result = ft_strjoin(temp, temp2); // İkisini birleştir
-    free(temp);
-    free(temp2);
-    return result;
+	{
+		free(temp);
+		return NULL;
+	}
+	result = ft_strjoin(temp, temp2); // İkisini birleştir
+	if (!result)
+	{
+		free(temp);
+		free(temp2);
+		return NULL;
+	}
+	free(temp);
+	free(temp2);
+	return result;
 }
+
 char *handle_pid_variable(int *index)
 {
-    int pid_number = getpid();
-    char *pid = ft_itoa(pid_number);
-    if (!pid)
-        return NULL;
-    (*index) += 2; // `$$`
-    return pid;
+	int pid_number = getpid();
+	char *result = ft_itoa(pid_number);
+	if (!result)
+		return NULL;
+	(*index) += 2; // `$$`
+	return result;
 }
 
-
+char *handle_dollar_sign(const char *line, int *index, int start)
+{
+	char *result;
+	if (line[*index + 1] == '$')
+		result = handle_pid_variable(index);
+	else if (is_space(line[*index - 1])) // Eğer boşluktan sonra `$` geliyorsa
+		result = get_env_var_value(line, index);
+	else
+		result = handle_env_variable_without_space(line, index, start);
+	if (!result)
+		return NULL; // Eğer malloc başarısız olduysa NULL dön
+	return result;
+}

@@ -42,6 +42,7 @@ char *get_env_var_value(const char *line, int *index);
 char *process_quoted_content(const char *line, int *index, char quote, int len);
 char *handle_env_variable_without_space(const char *line, int *index, int start);
 char *handle_pid_variable(int *index);
+char *handle_dollar_sign(const char *line, int *index, int start);
 
 
 /* Word Parsing */
