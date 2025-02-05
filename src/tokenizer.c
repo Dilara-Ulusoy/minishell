@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:34:26 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/05 10:15:27 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/02/05 15:36:27 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,7 +212,12 @@ char *read_word_range(const char *line, int *index, int length)
 			return process_quoted_content(line, index, c, length);
 		if(c == '$')
 		{
-			return get_env_var_value(line, index);
+			if(ft_strchr("$", line[*index + 1]))
+				return handle_pid_variable(index);
+			if (is_space(line[*index - 1 ]))
+				return get_env_var_value(line, index);
+			else
+				return handle_env_variable_without_space(line, index, start);
 		}
 		if (is_space(c) || is_two_char_operator(c) || c == '(' || c == ')' || c == '\n')
 			break;
@@ -237,3 +242,32 @@ int	handle_newline(t_token **head, const char *line, int *pos)
 	}
 	return (0);
 }
+
+char *handle_env_variable_without_space(const char *line, int *index, int start)
+{
+    char *temp = ft_substr(line, start, (*index) - start); // `$` öncesindeki kısmı al
+	if (!temp)
+        return NULL;
+
+    char *temp2 = get_env_var_value(line, index); // `$` sonrası değişkeni al
+	if (!temp2)
+    {
+        free(temp);
+        return NULL;
+    }
+    char *result = ft_strjoin(temp, temp2); // İkisini birleştir
+    free(temp);
+    free(temp2);
+    return result;
+}
+char *handle_pid_variable(int *index)
+{
+    int pid_number = getpid();
+    char *pid = ft_itoa(pid_number);
+    if (!pid)
+        return NULL;
+    (*index) += 2; // `$$`
+    return pid;
+}
+
+

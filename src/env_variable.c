@@ -41,3 +41,6 @@ char *get_env_var_value(const char *line, int *index)
 		return ft_strdup("");
 	return ft_strdup(var_value);
 }
+
+
+

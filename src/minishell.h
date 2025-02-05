@@ -38,15 +38,14 @@ void init_shell(t_shell *shell);
 
 
 /* Environment variable expansion */
-int get_env_var_length(const char *line, int *i);
 char *get_env_var_value(const char *line, int *index);
 char *process_quoted_content(const char *line, int *index, char quote, int len);
+char *handle_env_variable_without_space(const char *line, int *index, int start);
+char *handle_pid_variable(int *index);
 
 
 /* Word Parsing */
 char *read_word_range(const char *line, int *index, int length);
-char *handle_quotes(const char *line, int *i, char quote);
-char *allocate_word(const char *line, int start, int length);
 
 
 /* Whitespace handling */

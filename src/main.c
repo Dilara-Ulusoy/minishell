@@ -25,7 +25,6 @@ void	setup_signal_handlers(void)
 
 void find_ast_pipes(t_ast_node *node)
 {
-
 	if (!node)
 		return;
     if (node->node_type == AST_PIPE)
@@ -70,7 +69,7 @@ void parse_and_process_command(t_shell *shell)
 		cleanup_shell(shell);
 		return ;
 	}
-	find_ast_pipes(shell->ast);  // -------> FOR DUBEGGING
+	//find_ast_pipes(shell->ast);  // -------> FOR DUBEGGING
 	//debug_ast(shell->ast, 0);   // -------> FOR DUBEGGING
 	// execute_ast(shell->ast); /* Uncomment for actual execution */
 	//print_tokens(shell->tokens);  // -------> FOR DUBEGGING
