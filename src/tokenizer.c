@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:34:26 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/04 22:08:14 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/02/04 23:11:47 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@
  * @param line The user line (e.g. "echo hello && cat < file.txt").
  * @return Pointer to the first token in a linked list, or NULL if empty.
  */
-t_token	*tokenize(t_token *head, const char *line, int length)
+t_token *tokenize(t_token *head, const char *line, int length)
 {
-	int	i;
+	int i;
 
 	if (!line || !*line)
 	{
@@ -63,7 +63,7 @@ t_token	*tokenize(t_token *head, const char *line, int length)
  *   - Returns 0 to indicate no operator was handled.
 
 **/
-int	parse_two_char_operator(t_token **head, const char *line, int *pos, int length)
+int parse_two_char_operator(t_token **head, const char *line, int *pos, int length)
 {
 	t_token_type doublechar;
 	t_token *opToken;
@@ -109,11 +109,11 @@ int	parse_two_char_operator(t_token **head, const char *line, int *pos, int leng
  *
  * @return int 1 if a single-character operator was successfully parsed, 0 otherwise.
  */
-int	parse_single_char_operator(t_token **head, const char *line, int *pos, int length)
+int parse_single_char_operator(t_token **head, const char *line, int *pos, int length)
 {
-	t_token_type	single;
-	t_token			*opToken;
-	int				operator_length;
+	t_token_type single;
+	t_token *opToken;
+	int operator_length;
 
 	if (*pos >= length) // Boundary check to prevent out-of-bounds access
 		return (0);
@@ -157,17 +157,17 @@ int	parse_single_char_operator(t_token **head, const char *line, int *pos, int l
  *             0 otherwise (e.g., no word found or memory allocation failure).
  */
 
-int	parse_word(t_token **head, const char *line, int *pos, int length)
+int parse_word(t_token **head, const char *line, int *pos, int length)
 {
-	t_token	*token;
-	char	*word;
+	t_token *token;
+	char *word;
 
 	if (*pos >= length) // Check if *pos is within bounds
 		return (0);
 	word = read_word_range(line, pos, length);
 	if (!word)
 		return (0);
-	//printf("Allocated Token: %p ------>%s\n", (void *)word, word);
+	// printf("Allocated Token: %p ------>%s\n", (void *)word, word);
 	token = (t_token *)malloc(sizeof(t_token));
 	if (!token)
 	{
@@ -200,9 +200,9 @@ int	parse_word(t_token **head, const char *line, int *pos, int length)
  */
 char *read_word_range(const char *line, int *index, int length)
 {
-	int		start;
-	int		wordLength;
-	char	c;
+	int start;
+	int wordLength;
+	char c;
 
 	start = *index;
 	while (*index < length)
@@ -210,7 +210,7 @@ char *read_word_range(const char *line, int *index, int length)
 		c = line[*index];
 		if ((c == '"' || c == '\'') && (*index == 0 || is_space(line[*index - 1])))
 			return process_quoted_content(line, index, c, length);
-		if(c == '$')
+		if (c == '$')
 			return get_env_var_value(line, index);
 		if (is_space(c) || is_two_char_operator(c) || c == '(' || c == ')' || c == '\n')
 			break;
@@ -219,12 +219,13 @@ char *read_word_range(const char *line, int *index, int length)
 	wordLength = (*index) - start;
 	if (wordLength == 0)
 		return (NULL);
-	return ft_substr(line, start, wordLength);
+	return (ft_substr(line, start, wordLength));
 }
 
-int	handle_newline(t_token **head, const char *line, int *pos)
+
+int handle_newline(t_token **head, const char *line, int *pos)
 {
-	t_token	*nl_token;
+	t_token *nl_token;
 
 	if (line[*pos] == '\n')
 	{

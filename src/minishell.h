@@ -34,20 +34,14 @@ typedef struct s_shell
 /* Input Handling and initialization */
 char *get_input(const char *prompt);
 void init_shell(t_shell *shell);
-
-
+int count_quotes(const char *line);
 
 /* Environment variable expansion */
-int get_env_var_length(const char *line, int *i);
 char *get_env_var_value(const char *line, int *index);
 char *process_quoted_content(const char *line, int *index, char quote, int len);
 
-
 /* Word Parsing */
 char *read_word_range(const char *line, int *index, int length);
-char *handle_quotes(const char *line, int *i, char quote);
-char *allocate_word(const char *line, int start, int length);
-
 
 /* Whitespace handling */
 int         skip_whitespace(const char *line, int i);
@@ -70,6 +64,5 @@ int  handle_newline(t_token **head, const char *line, int *pos);
 
 // Cleanup
 void cleanup_shell(t_shell *shell);
-
 
 #endif
