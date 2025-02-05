@@ -9,6 +9,20 @@ char *get_env_var_value(const char *line, int *index)
 
 	start = *index + 1;
 	len = 0;
+	if (is_space(line[*index - 1]) && (line[*index + 1] == '\0' || is_space(line[*index + 1])))
+	{
+		(*index)++;
+		return ft_strdup("$"); // Eğer `echo $` ise `$`'yi olduğu gibi koru
+	}
+	// Eğer önceki karakter boşluksa ve geçersiz karakter varsa, geçersiz karakterleri atla
+	if (is_space(line[*index - 1]) && !ft_isalpha(line[start]) && line[start] != '_')
+	{
+		(*index)++; // `$` karakterini atla
+		while (!ft_isalpha(line[*index]) && line[*index] != '_' && line[*index] != '\0')
+			(*index)++; // Geçersiz karakterleri atla
+		return ft_strdup("");
+	}
+	// Eğer geçersiz değişken başlıyorsa, sadece `$` döndür
 	if (!ft_isalpha(line[start]) && line[start] != '_')
 	{
 		(*index)++;
@@ -27,5 +41,3 @@ char *get_env_var_value(const char *line, int *index)
 		return ft_strdup("");
 	return ft_strdup(var_value);
 }
-
-

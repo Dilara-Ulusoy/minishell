@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:34:26 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/04 22:08:14 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/02/05 10:15:27 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,7 +211,9 @@ char *read_word_range(const char *line, int *index, int length)
 		if ((c == '"' || c == '\'') && (*index == 0 || is_space(line[*index - 1])))
 			return process_quoted_content(line, index, c, length);
 		if(c == '$')
+		{
 			return get_env_var_value(line, index);
+		}
 		if (is_space(c) || is_two_char_operator(c) || c == '(' || c == ')' || c == '\n')
 			break;
 		(*index)++;
