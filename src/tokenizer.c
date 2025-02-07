@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:34:26 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/05 17:20:13 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/02/07 12:01:59 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,8 +211,24 @@ char *read_word_range(const char *line, int *index, int length)
 	while (*index < length)
 	{
 		c = line[*index];
-		if ((c == '"' || c == '\''))
+		if ((c == '"' || c == '\'')) /*minishell$ ec"ho" 5 ----> "ho" 5*/
+		{
+			if (*index > 0 && !is_space(line[*index - 1])) // Önceki karakter boşluk değilse
+			{
+				char *temp = ft_substr(line, start, (*index) - start);
+				char *temp2 = process_quoted_content(line, index, c, length);
+				if (!temp2) // Eğer alıntı hatalı veya eksikse
+				{
+					free(temp);
+					return NULL;
+				}
+				char *result = ft_strjoin(temp, temp2);
+				free(temp);
+				free(temp2);
+				return result;
+			}
 			return process_quoted_content(line, index, c, length);
+		}
 		if (c == '$')
 			return handle_dollar_sign(line, index, start);
 		if (is_space(c) || is_two_char_operator(c) || c == '(' || c == ')' || c == '\n')
@@ -266,22 +282,11 @@ char *handle_env_variable_without_space(const char *line, int *index, int start)
 	return result;
 }
 
-char *handle_pid_variable(int *index)
-{
-	int pid_number = getpid();
-	char *result = ft_itoa(pid_number);
-	if (!result)
-		return NULL;
-	(*index) += 2; // `$$`
-	return result;
-}
 
 char *handle_dollar_sign(const char *line, int *index, int start)
 {
 	char *result;
-	if (line[*index + 1] == '$')
-		result = handle_pid_variable(index);
-	else if (is_space(line[*index - 1])) // Eğer boşluktan sonra `$` geliyorsa
+	if (is_space(line[*index - 1])) // Eğer boşluktan sonra `$` geliyorsa
 		result = get_env_var_value(line, index);
 	else
 		result = handle_env_variable_without_space(line, index, start);
