@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:34:26 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/10 12:42:48 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/02/10 16:28:39 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,14 +211,14 @@ char *read_word_range(const char *line, int *index, int length)
 	while (*index < length)
 	{
 		c = line[*index];
-		if ((c == '"' || c == '\'')) /*minishell$ ec"ho" 5 ----> "ho" 5*/
+		if ((c == '"' || c == '\'')) // If the character is a quote
 		{
-			if (*index > 0 && !is_space(line[*index - 1])) // Önceki karakter boşluk değilse
-				return join_string_with_quoted_if_no_space(line, index, start, c, length);
+			if (*index > 0 && !is_space(line[*index - 1])) // Quote is not preceded by a space
+				return join_string_with_quoted_if_no_space(line, index, start, c, length); // Join string with the quoted content eg. ec"ho"
 			return process_quoted_content(line, index, c, length);
 		}
-		if (c == '$')
-			return handle_dollar_sign(line, index, start);
+		if (c == '$') // If the character is a dollar sign
+			return handle_dollar_sign(line, index, start); // Expand the environment variable
 		if (is_space(c) || is_two_char_operator(c) || c == '(' || c == ')' || c == '\n')
 			break;
 		(*index)++;
@@ -289,7 +289,7 @@ char *join_string_with_quoted_if_no_space(const char *line, int *index, int star
 	char *temp2;
 
 	result = NULL;
-	if (*index > 0 && !is_space(line[*index - 1])) // Önceki karakter boşluk değilse
+	if (*index > 0 && !is_space(line[*index - 1]))
 	{
 		temp = ft_substr(line, start, (*index) - start);
 		temp2 = process_quoted_content(line, index, c, length);
