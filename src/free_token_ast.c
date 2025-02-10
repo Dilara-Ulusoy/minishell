@@ -25,12 +25,12 @@ void free_ast(t_ast_node *root)
 		return;
 	if (root->left)
 	{
-		free(root->left);
+		free_ast(root->left);
 		root->left = NULL;
 	}
 	if (root->right)
 	{
-		free(root->right);
+		free_ast(root->right);
 		root->right = NULL;
 	}
 	if (root->cmd_args)

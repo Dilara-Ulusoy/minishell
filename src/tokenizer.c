@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:34:26 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/07 12:01:59 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/02/10 12:42:48 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,19 +214,7 @@ char *read_word_range(const char *line, int *index, int length)
 		if ((c == '"' || c == '\'')) /*minishell$ ec"ho" 5 ----> "ho" 5*/
 		{
 			if (*index > 0 && !is_space(line[*index - 1])) // Önceki karakter boşluk değilse
-			{
-				char *temp = ft_substr(line, start, (*index) - start);
-				char *temp2 = process_quoted_content(line, index, c, length);
-				if (!temp2) // Eğer alıntı hatalı veya eksikse
-				{
-					free(temp);
-					return NULL;
-				}
-				char *result = ft_strjoin(temp, temp2);
-				free(temp);
-				free(temp2);
-				return result;
-			}
+				return join_string_with_quoted_if_no_space(line, index, start, c, length);
 			return process_quoted_content(line, index, c, length);
 		}
 		if (c == '$')
@@ -282,7 +270,6 @@ char *handle_env_variable_without_space(const char *line, int *index, int start)
 	return result;
 }
 
-
 char *handle_dollar_sign(const char *line, int *index, int start)
 {
 	char *result;
@@ -293,4 +280,27 @@ char *handle_dollar_sign(const char *line, int *index, int start)
 	if (!result)
 		return NULL; // Eğer malloc başarısız olduysa NULL dön
 	return result;
+}
+
+char *join_string_with_quoted_if_no_space(const char *line, int *index, int start, char c, int length)
+{
+	char *result;
+	char *temp;
+	char *temp2;
+
+	result = NULL;
+	if (*index > 0 && !is_space(line[*index - 1])) // Önceki karakter boşluk değilse
+	{
+		temp = ft_substr(line, start, (*index) - start);
+		temp2 = process_quoted_content(line, index, c, length);
+		if (!temp2)
+		{
+			free(temp);
+			return NULL;
+		}
+		result = ft_strjoin(temp, temp2);
+		free(temp);
+		free(temp2);
+	}
+	return (result);
 }
