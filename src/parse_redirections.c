@@ -1,20 +1,22 @@
 #include "minishell.h"
 
-void parse_redirections(t_parser *p, t_io_node **io_list)
+int parse_redirections(t_parser *p, t_io_node **io_list)
 {
+	int parsed = 0; // En az bir redirection parse edilirse 1 olacak
+
 	while (p->current_token && is_redirection(p->current_token->type))
 	{
 		t_io_type kind;
 		t_io_node *new_io;
 
-		kind = map_token_to_io_type(p->current_token->type); /* map token -> io type */
-		get_next_token(p); /* consume the redirection token */
+		kind = map_token_to_io_type(p->current_token->type); // map token -> io type
+		get_next_token(p); // consume the redirection token
 
-		/* now we expect a WORD for the filename (or here-doc delimiter) */
+		// now we expect a WORD for the filename (or here-doc delimiter)
 		if (!p->current_token || p->current_token->type != TOKEN_WORD)
 		{
 			p->error_status = PARSE_SYNTAX_ERROR;
-			return;
+			return -1; // Hata durumunda -1 döndür
 		}
 		if (kind == IO_HEREDOC)
 		{
@@ -24,12 +26,16 @@ void parse_redirections(t_parser *p, t_io_node **io_list)
 		if (!new_io)
 		{
 			free_io_list(*io_list);
-			return ;
+			return -1; // Bellek tahsis hatasında -1 döndür
 		}
 		attach_io_node(io_list, new_io);
 		get_next_token(p); // Consume the filename/WORD token
+
+		parsed = 1; // En az bir redirection parse edildiğini işaretle
 	}
+	return parsed;
 }
+
 /*
    map_token_to_io_type:
    - Convert a token type for redirection (<, >, >>, <<)

@@ -103,7 +103,7 @@ t_ast_node	*parse_expression(t_parser *p, int min_prec);
 t_ast_node	*parse_term(t_parser *p);
 t_ast_node	*parse_command(t_parser *p);
 t_ast_node	*parse_parenthesized_expression(t_parser *p);
-void		parse_redirections(t_parser *p, t_io_node **io_list);
+int		parse_redirections(t_parser *p, t_io_node **io_list);
 int			process_redirections(t_parser *p, char **cmd_args, t_io_node **io_list);
 void		cleanup_resources(char *cmd_args, t_io_node *io_list);
 

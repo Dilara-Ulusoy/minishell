@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:34:26 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/10 16:28:39 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/02/11 15:07:04 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,20 +186,14 @@ int parse_word(t_token **head, const char *line, int *pos, int length)
 }
 
 /**
- * @brief Extracts a word from the input line, handling special cases like quotes.
+ * read_word_range - Extracts a word from a given position in the input line.
+ * It handles quoted words, environment variables, and operators.
  *
- * This function reads a sequence of characters (a "word") starting from the
- * current index and ending at the next delimiter (e.g., whitespace, operator).
- * If quotes are encountered, it processes the quoted string correctly.
+ * @line: The input string from which to extract the word.
+ * @index: Pointer to the current position in the string (updated during parsing).
+ * @length: The total length of the input line.
  *
- * @param line The input string being parsed.
- * @param index A pointer to the current position in the input string. Updated
- *              to the position just after the end of the word on exit.
- * @param length The total length of the input string. Used to ensure bounds safety.
- *
- * @return A dynamically allocated string containing the extracted word,
- *         or NULL if no valid word is found. The caller is responsible for
- *         freeing the returned string.
+ * Return: A newly allocated string containing the extracted word.
  */
 char *read_word_range(const char *line, int *index, int length)
 {
@@ -282,6 +276,18 @@ char *handle_dollar_sign(const char *line, int *index, int start)
 	return result;
 }
 
+/**
+ * join_string_with_quoted_if_no_space - Concatenates a word with quoted content
+ * if there is no space between them. Eg. echo"hello" -> echohello
+ *
+ * @line: The input string.
+ * @index: Pointer to the current position in the string.
+ * @start: The starting position of the word.
+ * @quote: The type of quote (single or double).
+ * @length: The total length of the input string.
+ *
+ * Return: A newly allocated string containing the concatenated word.
+ */
 char *join_string_with_quoted_if_no_space(const char *line, int *index, int start, char c, int length)
 {
 	char *result;

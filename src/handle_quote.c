@@ -1,5 +1,16 @@
 #include "minishell.h"
 
+/**
+ * expand_env_variable - Expands an environment variable found in the input string.
+ *
+ * @line: The input string.
+ * @index: Pointer to the current position in the string (updated after expansion).
+ * @buffer: Pointer to the buffer where expanded content is stored.
+ * @res_index: Pointer to the buffer index where content should be added.
+ * @buffer_size: Pointer to the size of the buffer (expanded if needed).
+ *
+ * Return: 1 if expansion is successful, -1 if an error occurs.
+ */
 static int expand_env_variable(const char *line, int *index, char **buffer, int *res_index, int *buffer_size)
 {
 	char	*env_value;
@@ -24,35 +35,58 @@ static int expand_env_variable(const char *line, int *index, char **buffer, int 
 	free(env_value);
 	return (1);
 }
-
-static int extract_quoted_content(const char *line, int *index, char quote, char **buffer, int *res_index)
+/**
+ * extract_quoted_content - Extracts content from within quotes.
+ *
+ * @line: The input string.
+ * @index: Pointer to the current position in the string (updated during parsing).
+ * @quote: The type of quote (single or double).
+ * @result: Pointer to the buffer where the extracted content is stored.
+ * @res_index: Pointer to the index in the result buffer where content should be added.
+ *
+ * Return: 0 if successful, -1 if an error occurs.
+ */
+static int extract_quoted_content(const char *line, int *index, char quote, char **result, int *res_index)
 {
-	int buffer_size = 32;
+	int	buffer_size;
+	char *new_buffer;
 
+	buffer_size = 32;
 	while (*index < buffer_size && line[*index] != quote)
 	{
 		if (quote == '"' && line[*index] == '$')
 		{
-			if (expand_env_variable(line, index, buffer, res_index, &buffer_size) == -1)
-				return -1;
+			if (expand_env_variable(line, index, result, res_index, &buffer_size) == -1)
+				return (-1);
 			continue;
 		}
 		if (*res_index >= buffer_size - 1)
 		{
 			buffer_size *= 2; // Double the buffer size
-			char *new_buffer = ft_realloc(*buffer, buffer_size);
+			new_buffer = ft_realloc(*result, buffer_size);
 			if (!new_buffer)
 			{
-				free(*buffer); // Prevent memory leak
-				return -1;
+				free(*result); // Prevent memory leak
+				return (-1);
 			}
-			*buffer = new_buffer;
+			*result = new_buffer;
 		}
-		(*buffer)[(*res_index)++] = line[(*index)++];
+		(*result)[(*res_index)++] = line[(*index)++];
 	}
 	return 0;
 }
 
+/**
+ * handle_nested_quotes - Processes nested quotes within quoted content.
+ *
+ * @line: The input string.
+ * @index: Pointer to the current position in the string (updated during parsing).
+ * @len: The total length of the input string.
+ * @buffer: Pointer to the buffer where extracted content is stored.
+ * @res_index: Pointer to the index in the result buffer.
+ *
+ * Return: The updated buffer if successful, NULL if an error occurs.
+ */
 static char *handle_nested_quotes(const char *line, int *index, int len, char *buffer, int *res_index)
 {
 	char inner_quote;
@@ -79,6 +113,17 @@ static char *handle_nested_quotes(const char *line, int *index, int len, char *b
 	return buffer;
 }
 
+/**
+ * check_closing_quote - Ensures that a quoted section has a proper closing quote.
+ *
+ * @line: The input string.
+ * @index: Pointer to the current position in the string.
+ * @len: The total length of the input string.
+ * @buffer: The buffer containing the quoted content.
+ * @quote: The expected closing quote character.
+ *
+ * Return: 0 if successful, -1 if an error occurs.
+ */
 static int check_closing_quote(const char *line, int *index, int len, char *buffer, char quote)
 {
 	if (*index >= len || line[*index] != quote)
@@ -91,28 +136,38 @@ static int check_closing_quote(const char *line, int *index, int len, char *buff
 	return (0);
 }
 
+/**
+ * process_quoted_content - Extracts and processes content enclosed within quotes.
+ *
+ * @line: The input string.
+ * @index: Pointer to the current position in the string (updated during parsing).
+ * @quote: The type of quote (single or double).
+ * @len: The total length of the input string.
+ *
+ * Return: A newly allocated string containing the extracted quoted content.
+ */
 char *process_quoted_content(const char *line, int *index, char quote, int len)
 {
-	int res_index;
-	char *buffer;
+	int i;
+	char *result;
 
-	res_index = 0;
-	buffer = (char *)malloc(len + 1);
-	if (!buffer)
+	i = 0;
+	result = (char *)malloc(len + 1);
+	if (!result)
 		return (NULL);
 	(*index)++; // İlk tırnağı atla
-	if (extract_quoted_content(line, index, quote, &buffer, &res_index) == -1)
+	if (extract_quoted_content(line, index, quote, &result, &i) == -1)
 	{
-		free(buffer);
+		free(result);
 		return (NULL);
 	}
-	if (check_closing_quote(line, index, len, buffer, quote) == -1)
+	if (check_closing_quote(line, index, len, result, quote) == -1)
 		return (NULL);
 
-	buffer = handle_nested_quotes(line, index, len, buffer, &res_index);
-	if (!buffer)
+	result = handle_nested_quotes(line, index, len, result, &i);
+	if (!result)
 		return NULL;
 
-	buffer[res_index] = '\0';
-	return (buffer);
+	result[i] = '\0';
+	return (result);
 }

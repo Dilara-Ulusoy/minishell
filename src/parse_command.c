@@ -193,9 +193,10 @@ int	process_redirections(t_parser *p, char **cmd_args, t_io_node **io_list)
 		new_args = build_command_string(p);
 		if (!new_args)
 			return (0);
-
+		new_args = ft_strjoin(" ", new_args);
+		char *tmp = ft_strjoin(*cmd_args, new_args);
 		free(*cmd_args);
-		*cmd_args = new_args;
+		*cmd_args = tmp;
 		parse_redirections(p, io_list);
 	}
 	if(p->error_status != PARSE_OK)
