@@ -23,30 +23,6 @@ void	setup_signal_handlers(void)
 */
 
 
-void find_ast_pipes(t_ast_node *node)
-{
-	if (!node)
-		return;
-    if (node->node_type == AST_PIPE)
-    {
-        printf("✅ Found AST_PIPE node at %p\n", (void *)node);
-
-        // Sol ve sağ düğümlerin cmd_args değerlerini yazdır
-        if (node->left && node->left->cmd_args)
-            printf("  ├── Left Command: %s\n", node->left->cmd_args);
-        else
-            printf("  ├── Left Command: NULL\n");
-
-        if (node->right && node->right->cmd_args)
-            printf("  └── Right Command: %s\n", node->right->cmd_args);
-        else
-            printf("  └── Right Command: NULL\n");
-    }
-    find_ast_pipes(node->left);
-    find_ast_pipes(node->right);
-}
-
-
 void parse_and_process_command(t_shell *shell)
 {
 	if (*(shell->line) == '\0') /* Handle empty input */
@@ -70,9 +46,9 @@ void parse_and_process_command(t_shell *shell)
 		return ;
 	}
 	//find_ast_pipes(shell->ast);  // -------> FOR DUBEGGING
-	debug_ast(shell->ast, 0);   // -------> FOR DUBEGGING
+	//debug_ast(shell->ast, 0);   // -------> FOR DUBEGGING
 	// execute_ast(shell->ast); /* Uncomment for actual execution */
-	//print_tokens(shell->tokens);  // -------> FOR DUBEGGING
+	print_tokens(shell->tokens);  // -------> FOR DUBEGGING
 	cleanup_shell(shell);
 }
 
@@ -100,3 +76,4 @@ int main(int argc, char **argv, char **envp)
 	cleanup_shell(&shell);
 	return (0);
 }
+

@@ -80,3 +80,25 @@ void cleanup_shell(t_shell *shell)
 		//printf("Freed AST: %p\n", (void *)shell->ast);
 	}
 }
+
+void	*free_this(char *s1, char *s2, char *s3, char *message)
+{
+	if (s1)
+	{
+		ft_putstr_fd("Memory error: ", STDERR_FILENO);
+		free(s1);
+	}
+	if (s2)
+	{
+		ft_putstr_fd("Memory error: ", STDERR_FILENO);
+		free(s2);
+	}
+	if (s3)
+	{
+		ft_putstr_fd("Memory error: ", STDERR_FILENO);
+		free(s3);
+	}
+	if (message)
+		ft_putstr_fd(message, STDERR_FILENO);
+	return (NULL);
+}

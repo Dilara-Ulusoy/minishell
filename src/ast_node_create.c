@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:16:56 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/01/31 14:07:41 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/02/14 13:20:02 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ t_ast_node	*create_ast_command_node(const char *cmd_text, t_io_node *io_list)
 	printf("Allocated AST Command Node: %p ----> %s\n", (void *)node, cmd_text);
 	node->node_type = AST_COMMAND;
 	node->cmd_args = NULL;
+	node->cmd_args_array = NULL; // ????
 	if (cmd_text && *cmd_text)
 	{
 		node->cmd_args = ft_strdup(cmd_text);

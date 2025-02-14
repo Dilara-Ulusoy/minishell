@@ -5,6 +5,7 @@
 #ifndef PARSING_H
 # define PARSING_H
 
+
 /*
     e_ast_node_type: Types of AST nodes we handle:
       - AST_COMMAND: a node that represents a command + arguments + redirections
@@ -59,6 +60,7 @@ typedef struct s_ast_node
 
 	/* If it's a command node: */
 	char		*cmd_args;      /* combined string e.g. "echo hello" */
+	char        **cmd_args_array;      /* combined string array e.g. [["echo\0"], ["-n hello\0"]] OR [["echo\0"], ["-n\0], ["hello\0"]] */
 	t_io_node	*io_redirects;  /* linked list of redirections */
 
 	/* If it's an operator node (AND, OR, PIPE): */
@@ -103,7 +105,7 @@ t_ast_node	*parse_expression(t_parser *p, int min_prec);
 t_ast_node	*parse_term(t_parser *p);
 t_ast_node	*parse_command(t_parser *p);
 t_ast_node	*parse_parenthesized_expression(t_parser *p);
-int		parse_redirections(t_parser *p, t_io_node **io_list);
+void		parse_redirections(t_parser *p, t_io_node **io_list);
 int			process_redirections(t_parser *p, char **cmd_args, t_io_node **io_list);
 void		cleanup_resources(char *cmd_args, t_io_node *io_list);
 

@@ -39,11 +39,12 @@ void init_shell(t_shell *shell);
 
 /* Environment variable expansion */
 char *get_env_var_value(const char *line, int *index);
-char *process_quoted_content(const char *line, int *index, char quote, int len);
 char *handle_env_variable_without_space(const char *line, int *index, int start);
 char *handle_dollar_sign(const char *line, int *index, int start);
 void *ft_realloc(void *ptr, size_t size);
-char *join_string_with_quoted_if_no_space(const char *line, int *index, int start, char c, int length);
+char *join_string_with_quoted_if_no_space(const char *line, int *index, int start);
+char *parse_quotes(const char *line, int *index);
+void *free_this(char *s1, char *s2, char *s3, char *message);
 
 
 /* Word Parsing */

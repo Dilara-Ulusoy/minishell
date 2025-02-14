@@ -6,11 +6,12 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:34:26 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/11 15:07:04 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/02/14 14:25:22 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
 
 /**
  * @brief tokenize
@@ -167,6 +168,7 @@ int parse_word(t_token **head, const char *line, int *pos, int length)
 	word = read_word_range(line, pos, length);
 	if (!word)
 	{
+		ft_putstr_fd("Memory error at parsing word ", STDERR_FILENO);
 		free_tokens(head);
 		return (0);
 	}
@@ -208,8 +210,8 @@ char *read_word_range(const char *line, int *index, int length)
 		if ((c == '"' || c == '\'')) // If the character is a quote
 		{
 			if (*index > 0 && !is_space(line[*index - 1])) // Quote is not preceded by a space
-				return join_string_with_quoted_if_no_space(line, index, start, c, length); // Join string with the quoted content eg. ec"ho"
-			return process_quoted_content(line, index, c, length);
+				return join_string_with_quoted_if_no_space(line, index, start); // Join string with the quoted content eg. ec"ho"
+			return parse_quotes(line, index);
 		}
 		if (c == '$') // If the character is a dollar sign
 			return handle_dollar_sign(line, index, start); // Expand the environment variable
@@ -237,43 +239,39 @@ int handle_newline(t_token **head, const char *line, int *pos)
 	return (0);
 }
 
-char *handle_env_variable_without_space(const char *line, int *index, int start)
+char	*handle_env_variable_without_space(const char *line, int *index, int start)
 {
-	char *temp;
-	char *temp2;
-	char *result;
+	char	*temp;
+	char	*temp2;
+	char	*result;
 
 	temp = ft_substr(line, start, (*index) - start);
 	if (!temp)
-		return NULL;
+		return (free_this(NULL, NULL, NULL, "substr failed"));
 	temp2 = get_env_var_value(line, index); // `$` sonrası değişkeni al
 	if (!temp2)
-	{
-		free(temp);
-		return NULL;
-	}
+		return (free_this(temp, NULL, NULL, "get_env_var_value failed"));
 	result = ft_strjoin(temp, temp2); // İkisini birleştir
 	if (!result)
-	{
-		free(temp);
-		free(temp2);
-		return NULL;
-	}
-	free(temp);
-	free(temp2);
-	return result;
+		return (free_this(temp, temp2, NULL, "strjoin failed"));
+	free_this(temp, temp2, NULL, NULL);
+	return (result);
 }
 
-char *handle_dollar_sign(const char *line, int *index, int start)
+char	*handle_dollar_sign(const char *line, int *index, int start)
 {
-	char *result;
+	char	*result;
+
 	if (is_space(line[*index - 1])) // Eğer boşluktan sonra `$` geliyorsa
 		result = get_env_var_value(line, index);
 	else
 		result = handle_env_variable_without_space(line, index, start);
 	if (!result)
-		return NULL; // Eğer malloc başarısız olduysa NULL dön
-	return result;
+	{
+		ft_putstr_fd("Memory error at handling dollar sign ", STDERR_FILENO);
+		return NULL;
+	}
+	return (result);
 }
 
 /**
@@ -288,25 +286,25 @@ char *handle_dollar_sign(const char *line, int *index, int start)
  *
  * Return: A newly allocated string containing the concatenated word.
  */
-char *join_string_with_quoted_if_no_space(const char *line, int *index, int start, char c, int length)
+char	*join_string_with_quoted_if_no_space(const char *line, int *index, int start)
 {
-	char *result;
-	char *temp;
-	char *temp2;
+	char	*result;
+	char	*temp;
+	char	*temp2;
 
 	result = NULL;
 	if (*index > 0 && !is_space(line[*index - 1]))
 	{
 		temp = ft_substr(line, start, (*index) - start);
-		temp2 = process_quoted_content(line, index, c, length);
+		if (!temp)
+			return(free_this(NULL, NULL, NULL, "substr failed"));
+		temp2 = parse_quotes(line, index);
 		if (!temp2)
-		{
-			free(temp);
-			return NULL;
-		}
+			return (free_this(temp, NULL, NULL, "temp2 failed"));
 		result = ft_strjoin(temp, temp2);
-		free(temp);
-		free(temp2);
+		if (!result)
+			return (free_this(temp, temp2, NULL, "strjoin failed"));
+		free_this(temp, temp2, NULL, NULL);
 	}
 	return (result);
 }

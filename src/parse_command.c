@@ -1,5 +1,6 @@
 #include "minishell.h"
 
+
 /*****************************************************************************/
 /*                              parse_command                                 */
 /*****************************************************************************/
@@ -50,13 +51,14 @@
 
 static	t_ast_node *handle_ast_command_creation(char *cmd_args, t_io_node *io_list, t_parser *p)
 {
-	t_ast_node *cmd_node;
+	t_ast_node	*cmd_node;
+
 	cmd_node = create_ast_command_node(cmd_args, io_list);
 	if (!cmd_node)
 	{
 		free_io_list(io_list);
 		p->error_status = PARSE_MEMORY_ERROR;
-		return NULL;
+		return (NULL);
 	}
 	return (cmd_node);
 }
@@ -129,34 +131,28 @@ static int append_to_buffer(char **buffer, size_t *buffer_size, size_t *buf_pos,
 	return 1; // Başarı
 }
 
-char *build_command_string(t_parser *p)
+char	*build_command_string(t_parser *p)
 {
-	size_t buffer_size = 256;
-	size_t buf_pos = 0;
-	size_t word_len = 0;
-	char *buffer;
-	const char *word_value;
-
+	size_t	buffer_size;
+	size_t	buf_pos;
+	char	*buffer;
+	
+	buffer_size = 256;
+	buf_pos = 0;
 	buffer = ft_calloc(buffer_size, 1);
 	if (!buffer)
-	{
-		p->error_status = PARSE_MEMORY_ERROR;
-		return NULL;
-	}
+		return (p->error_status = PARSE_MEMORY_ERROR, NULL);
 	while (p->current_token && p->current_token->type == TOKEN_WORD)
 	{
-		word_value = p->current_token->value;
-		word_len = ft_strlen(word_value);
-
-		if (!append_to_buffer(&buffer, &buffer_size, &buf_pos, word_value, word_len))
-		{
-			p->error_status = PARSE_MEMORY_ERROR;
-			return NULL;
-		}
-		get_next_token(p); // Sonraki token'a geç
+		if (!append_to_buffer(&buffer, &buffer_size, &buf_pos,
+				p->current_token->value, ft_strlen(p->current_token->value)))
+			return (p->error_status = PARSE_MEMORY_ERROR, NULL);
+		get_next_token(p);
 	}
-	return buffer;
+	return (buffer);
 }
+
+
 /**
  * process_redirections - Handles input/output redirections and updates command arguments.
  *
