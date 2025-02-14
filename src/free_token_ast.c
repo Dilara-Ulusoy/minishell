@@ -85,17 +85,14 @@ void	*free_this(char *s1, char *s2, char *s3, char *message)
 {
 	if (s1)
 	{
-		ft_putstr_fd("Memory error: ", STDERR_FILENO);
 		free(s1);
 	}
 	if (s2)
 	{
-		ft_putstr_fd("Memory error: ", STDERR_FILENO);
 		free(s2);
 	}
 	if (s3)
 	{
-		ft_putstr_fd("Memory error: ", STDERR_FILENO);
 		free(s3);
 	}
 	if (message)
