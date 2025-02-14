@@ -1,38 +1,78 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   handle_quote.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/14 18:18:52 by dakcakoc          #+#    #+#             */
+/*   Updated: 2025/02/14 18:37:56 by dakcakoc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-static int	deal_evn(const char *line, int *index, int *result_index, char *result)
+static char	*check_unmatched_quote(int quote, char *result)
+{
+	if (quote != 0)
+	{
+		ft_putstr_fd("Unmatched quote\n", STDERR_FILENO);
+		free(result);
+		return (NULL);
+	}
+	return (result);
+}
+
+static int	handle_quotes(const char *line, int *index, char *quote)
+{
+	if (*quote == 0)
+	{
+		*quote = line[*index];
+		(*index)++;
+		return (1);
+	}
+	else if (*quote == line[*index])
+	{
+		*quote = 0;
+		(*index)++;
+		return (1);
+	}
+	return (0);
+}
+
+static int	deal_evn(const char *line, int *index,
+		int *result_index, char **result)
 {
 	char	*evn;
 	int		env_len;
 	int		result_size;
 
-	result_size = ft_strlen(result);
+	result_size = ft_strlen(line) + 1;
 	evn = handle_dollar_sign(line, (index), (*index));
 	if (evn)
 	{
 		env_len = ft_strlen(evn);
-		while((*result_index) + env_len >= result_size)
+		while (*result_index + env_len >= result_size)
 		{
 			result_size *= 2;
-			result = ft_realloc(result, result_size);
+			*result = ft_realloc(*result, result_size);
 			if (!result)
 			{
 				free(evn);
 				return (1);
 			}
 		}
-		ft_strlcpy(result + (*result_index), evn, ft_strlen(evn) + 1); // Çözümlenmiş değişkeni kopyala
-		(*result_index) += ft_strlen(evn); // result_index'i güncelle
-		free(evn); // handle_dollar_sign'dan dönen bellek tahsisini temizle
+		ft_strlcpy(*result + (*result_index), evn, ft_strlen(evn) + 1);
+		(*result_index) += ft_strlen(evn);
+		free(evn);
 	}
 	return (0);
 }
 
-char *parse_quotes(const char *line, int *index)
+char	*parse_quotes(const char *line, int *index, char quote)
 {
-	char quote;
-	int result_index;
-	char *result;
+	int		result_index;
+	char	*result;
 
 	quote = 0;
 	result_index = 0;
@@ -41,103 +81,19 @@ char *parse_quotes(const char *line, int *index)
 		return (NULL);
 	while (line[(*index)] && line[(*index)] != ' ')
 	{
-		if (line[(*index)] == '"' || line[(*index)] == '\'') // Quote karakteri mi?
+		if ((line[(*index)] == '"' || line[(*index)] == '\'')
+			&& handle_quotes(line, index, &quote) == 1)
+			continue ;
+		if (quote == '"' && line[(*index)] == '$'
+			&& deal_evn(line, index, &result_index, &result) == 1)
 		{
-			if (quote == 0) // Henüz quote kaydedilmemişse, ilk quote'u al
-			{
-				quote = line[(*index)];
-				(*index)++; // Açılış quote'unu atla
-				continue;
-			}
-			else if (quote == line[(*index)]) // Kapatıcı quote bulundu
-			{
-				quote = 0; // Quote kapatıldı
-				(*index)++; // Kapanış quote'unu atla
-				continue;
-			}
+			free(result);
+			return (NULL);
 		}
-		if (quote == '"' && line[(*index)] == '$')
-		{
-			if (deal_evn(line, index, &result_index, result) == 1)
-				return (NULL);
-			continue;
-		}
-		result[result_index++] = line[(*index)];
-		(*index)++;
+		continue ;
+		result[result_index++] = line[(*index++)];
 	}
-	if (quote != 0) // Eğer açık quote kaldıysa
-	{
-		ft_putstr_fd("Unmatched quote\n", STDERR_FILENO);
-		return (NULL);
-	}
-	result[result_index] = '\0'; // Sonuç stringini null-terminate et
+	return (check_unmatched_quote(quote, result));
+	result[result_index] = '\0';
 	return (result);
 }
-
-
-/*
-  char *parse_quotes(const char *line, int *index)
-{
-	int env_len = 0;
-	int i = *index;
-	int result_index = 0;
-	char quote = 0;
-	char *env;
-	int result_size = ft_strlen(line) + 1;
-	char *result = malloc(result_size);
-
-	if (!result)
-		return NULL;
-
-	while (line[i] && !is_space(line[i]))
-	{
-		if (line[i] == '"' || line[i] == '\'') // Quote karakteri mi?
-		{
-			if (quote == 0) // Henüz quote kaydedilmemişse, ilk quote'u al
-			{
-				quote = line[i];
-				i++; // Açılış quote'unu atla
-				continue;
-			}
-			else if (quote == line[i]) // Kapatıcı quote bulundu
-			{
-				quote = 0; // Quote kapatıldı
-				i++;	   // Kapanış quote'unu atla
-				continue;
-			}
-		}
-		if (quote == '"' && line[i] == '$')
-		{
-			env = handle_dollar_sign(line, &i, i); // Değişken çözümleme fonksiyonunu çağır
-			if (env)
-			{
-				env_len = ft_strlen(env);
-				while (result_index + env_len >= result_size)
-				{
-					result_size *= 2;
-					result = ft_realloc(result, result_size);
-					if (!result)
-					{
-						free(env);
-						return NULL;
-					}
-				}
-				ft_strlcpy(result + result_index, env, ft_strlen(env) + 1); // Çözümlenmiş değişkeni kopyala
-				result_index += ft_strlen(env);								// result_index'i güncelle
-				free(env);													// handle_dollar_sign'dan dönen bellek tahsisini temizle
-			}
-			continue;
-		}
-		result[result_index++] = line[i];
-		i++;
-	}
-	if (quote != 0) // Eğer açık quote kaldıysa
-	{
-		ft_putstr_fd("Unmatched quote\n", STDERR_FILENO);
-		return (NULL);
-	}
-	result[result_index] = '\0'; // Sonuç stringini null-terminate et
-	*index = i;					 // Dış indexi güncelle
-	return result;
-} */
-
