@@ -75,8 +75,6 @@ char *parse_quotes(const char *line, int *index)
 }
 
 
-
-
 /*
   char *parse_quotes(const char *line, int *index)
 {
