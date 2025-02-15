@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:34:26 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/14 14:25:22 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/02/15 09:26:32 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,7 +211,7 @@ char *read_word_range(const char *line, int *index, int length)
 		{
 			if (*index > 0 && !is_space(line[*index - 1])) // Quote is not preceded by a space
 				return join_string_with_quoted_if_no_space(line, index, start); // Join string with the quoted content eg. ec"ho"
-			return parse_quotes(line, index);
+			return parse_quotes(line, index); // Parse the quoted content
 		}
 		if (c == '$') // If the character is a dollar sign
 			return handle_dollar_sign(line, index, start); // Expand the environment variable

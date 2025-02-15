@@ -6,13 +6,13 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 18:18:52 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/14 18:37:56 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/02/15 09:42:06 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*check_unmatched_quote(int quote, char *result)
+static char *check_unmatched_quote(char quote, char *result)
 {
 	if (quote != 0)
 	{
@@ -23,7 +23,7 @@ static char	*check_unmatched_quote(int quote, char *result)
 	return (result);
 }
 
-static int	handle_quotes(const char *line, int *index, char *quote)
+static int handle_quotes(const char *line, int *index, char *quote)
 {
 	if (*quote == 0)
 	{
@@ -40,12 +40,13 @@ static int	handle_quotes(const char *line, int *index, char *quote)
 	return (0);
 }
 
-static int	deal_evn(const char *line, int *index,
-		int *result_index, char **result)
+
+static int deal_evn(const char *line, int *index, int *result_index, char **result)
 {
-	char	*evn;
-	int		env_len;
-	int		result_size;
+	char *evn;
+	int env_len;
+	int result_size;
+	char *new_result;
 
 	result_size = ft_strlen(line) + 1;
 	evn = handle_dollar_sign(line, (index), (*index));
@@ -55,12 +56,13 @@ static int	deal_evn(const char *line, int *index,
 		while (*result_index + env_len >= result_size)
 		{
 			result_size *= 2;
-			*result = ft_realloc(*result, result_size);
-			if (!result)
+			new_result = ft_realloc(*result, result_size);
+			if (!new_result)
 			{
 				free(evn);
 				return (1);
 			}
+			*result = new_result;
 		}
 		ft_strlcpy(*result + (*result_index), evn, ft_strlen(evn) + 1);
 		(*result_index) += ft_strlen(evn);
@@ -69,10 +71,11 @@ static int	deal_evn(const char *line, int *index,
 	return (0);
 }
 
-char	*parse_quotes(const char *line, int *index, char quote)
+char *parse_quotes(const char *line, int *index)
 {
-	int		result_index;
-	char	*result;
+	char quote;
+	int result_index;
+	char *result;
 
 	quote = 0;
 	result_index = 0;
@@ -81,19 +84,18 @@ char	*parse_quotes(const char *line, int *index, char quote)
 		return (NULL);
 	while (line[(*index)] && line[(*index)] != ' ')
 	{
-		if ((line[(*index)] == '"' || line[(*index)] == '\'')
-			&& handle_quotes(line, index, &quote) == 1)
-			continue ;
-		if (quote == '"' && line[(*index)] == '$'
-			&& deal_evn(line, index, &result_index, &result) == 1)
+		if ((line[(*index)] == '"' || line[(*index)] == '\'') && handle_quotes(line, index, &quote) == 1)
+			continue;
+		if (quote == '"' && line[(*index)] == '$' && deal_evn(line, index, &result_index, &result) == 1)
 		{
 			free(result);
 			return (NULL);
 		}
-		continue ;
+		continue;
 		result[result_index++] = line[(*index++)];
 	}
-	return (check_unmatched_quote(quote, result));
+	if (quote != 0)
+		return check_unmatched_quote(quote, result);
 	result[result_index] = '\0';
 	return (result);
 }
