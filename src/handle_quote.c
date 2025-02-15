@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 18:18:52 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/15 11:22:27 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/02/15 11:25:56 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,41 +82,34 @@ static int handle_env_variable(const char *line, int *index, int *result_index, 
 
 char *parse_quotes(const char *line, int *index)
 {
-    char quote = 0;
-    int quote_in_use = 0;  // Bir kez bile çift tırnak içine girildi mi?
-    int result_index = 0;
-    char *result;
+	char quote = 0;
+	int quote_in_use = 0; // Bir kez bile çift tırnak içine girildi mi?
+	int result_index = 0;
+	char *result;
 
-    result = ft_calloc((ft_strlen(line) + 1), sizeof(char));
-    if (!result)
-        return (NULL);
+	result = ft_calloc((ft_strlen(line) + 1), sizeof(char));
+	if (!result)
+		return (NULL);
 
-    while (line[(*index)] && line[(*index)] != ' ')
-    {
-        // Quote başlangıcı veya sonu
-        if ((line[*index] == '"' || line[*index] == '\'') && handle_quotes(line, index, &quote))
-        {
-            if (quote == '"') // Bir kez bile çift tırnak içine girdiysek işaretle
-                quote_in_use = 1;
-            continue;
-        }
+	while (line[(*index)] && line[(*index)] != ' ')
+	{
+		if ((line[*index] == '"' || line[*index] == '\'') && handle_quotes(line, index, &quote))
+		{
+			if (quote == '"') // Bir kez bile çift tırnak içine girdiysek işaretle
+				quote_in_use = 1;
+			continue;
+		}
+		if ((quote == '"' || quote_in_use) && line[*index] == '$')
+		{
+			if (handle_env_variable(line, index, &result_index, &result) == 1)
+				return (NULL);
+			continue;
+		}
+		result[result_index++] = line[(*index)++];
+	}
+	if (quote != 0)
+		return check_unmatched_quote(quote, result);
 
-        // Eğer "$" ve en az bir kere çift tırnak içine girilmişse expand etmeye devam et
-        if ((quote == '"' || quote_in_use) && line[*index] == '$')
-        {
-            if (handle_env_variable(line, index, &result_index, &result) == 1)
-                return (NULL);
-            continue;
-        }
-
-        result[result_index++] = line[(*index)++];
-    }
-
-    // Eğer eşleşmeyen quote kaldıysa hata ver
-    if (quote != 0)
-        return check_unmatched_quote(quote, result);
-
-    result[result_index] = '\0';
-    return (result);
+	result[result_index] = '\0';
+	return (result);
 }
-
