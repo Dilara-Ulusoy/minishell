@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 18:18:52 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/15 09:42:06 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/02/15 11:08:26 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ static int handle_quotes(const char *line, int *index, char *quote)
 	}
 	return (0);
 }
-
 
 static int deal_evn(const char *line, int *index, int *result_index, char **result)
 {
@@ -86,13 +85,16 @@ char *parse_quotes(const char *line, int *index)
 	{
 		if ((line[(*index)] == '"' || line[(*index)] == '\'') && handle_quotes(line, index, &quote) == 1)
 			continue;
-		if (quote == '"' && line[(*index)] == '$' && deal_evn(line, index, &result_index, &result) == 1)
+		if (quote == '"' && line[(*index)] == '$')
 		{
-			free(result);
-			return (NULL);
+			if (deal_evn(line, index, &result_index, &result) == 1)
+			{
+				free(result);
+				return (NULL);
+			}
+			continue;
 		}
-		continue;
-		result[result_index++] = line[(*index++)];
+		result[result_index++] = line[(*index)++];
 	}
 	if (quote != 0)
 		return check_unmatched_quote(quote, result);
