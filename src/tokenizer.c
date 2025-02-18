@@ -6,12 +6,11 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:34:26 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/15 09:26:32 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/02/15 20:00:24 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 /**
  * @brief tokenize
@@ -21,9 +20,9 @@
  * @param line The user line (e.g. "echo hello && cat < file.txt").
  * @return Pointer to the first token in a linked list, or NULL if empty.
  */
-t_token *tokenize(t_token *head, const char *line, int length)
+t_token	*tokenize(t_token *head, const char *line, int length)
 {
-	int i;
+	int	i;
 
 	if (!line || !*line)
 	{
@@ -35,11 +34,11 @@ t_token *tokenize(t_token *head, const char *line, int length)
 	{
 		i = skip_whitespace(line, i);
 		if (i >= length)
-			break; // no more content left
-		if (parse_two_char_operator(&head, line, &i, length) ||
-			parse_single_char_operator(&head, line, &i, length) ||
-			handle_newline(&head, line, &i))
-			continue;
+			break ;
+		if (parse_two_char_operator(&head, line, &i, length)
+			|| parse_single_char_operator(&head, line, &i, length)
+			|| handle_newline(&head, line, &i))
+			continue ;
 		if (!parse_word(&head, line, &i, length))
 		{
 			free_tokens(&head);
@@ -64,12 +63,13 @@ t_token *tokenize(t_token *head, const char *line, int length)
  *   - Returns 0 to indicate no operator was handled.
 
 **/
-int parse_two_char_operator(t_token **head, const char *line, int *pos, int length)
+int	parse_two_char_operator(t_token **head, const char *line,
+	int *pos, int length)
 {
-	t_token_type doublechar;
-	t_token *opToken;
-	int i;
-	int operator_length;
+	t_token_type	doublechar;
+	t_token			*op_token;
+	int				i;
+	int				operator_length;
 
 	i = *pos;
 	if (is_two_char_operator(line[i]) && (i + 1 < length))
@@ -78,9 +78,10 @@ int parse_two_char_operator(t_token **head, const char *line, int *pos, int leng
 		if (doublechar != TOKEN_UNKNOWN)
 		{
 			operator_length = 2;
-			opToken = create_new_token_range(doublechar, line, i, operator_length); /* Create the new token */
-			append_token(head, opToken);
-			*pos += operator_length; /* Move pos forward by operator_length */
+			op_token = create_new_token_range(doublechar,
+					line, i, operator_length);
+			append_token(head, op_token);
+			*pos += operator_length;
 			return (1);
 		}
 	}
@@ -110,20 +111,21 @@ int parse_two_char_operator(t_token **head, const char *line, int *pos, int leng
  *
  * @return int 1 if a single-character operator was successfully parsed, 0 otherwise.
  */
-int parse_single_char_operator(t_token **head, const char *line, int *pos, int length)
+int	parse_single_char_operator(t_token **head, const char *line,
+	int *pos, int length)
 {
-	t_token_type single;
-	t_token *opToken;
-	int operator_length;
+	t_token_type	single;
+	t_token			*op_token;
+	int				operator_length;
 
-	if (*pos >= length) // Boundary check to prevent out-of-bounds access
+	if (*pos >= length)
 		return (0);
 	single = match_single_char_operator(line[*pos]);
 	if (single != TOKEN_UNKNOWN)
 	{
 		operator_length = 1;
-		opToken = create_new_token_range(single, line, *pos, operator_length);
-		append_token(head, opToken);
+		op_token = create_new_token_range(single, line, *pos, operator_length);
+		append_token(head, op_token);
 		*pos += operator_length;
 		return (1);
 	}
@@ -157,13 +159,12 @@ int parse_single_char_operator(t_token **head, const char *line, int *pos, int l
  * @return int 1 if a word was successfully parsed and added to the token list,
  *             0 otherwise (e.g., no word found or memory allocation failure).
  */
-
-int parse_word(t_token **head, const char *line, int *pos, int length)
+int	parse_word(t_token **head, const char *line, int *pos, int length)
 {
-	t_token *token;
-	char *word;
+	t_token	*token;
+	char	*word;
 
-	if (*pos >= length) // Check if *pos is within bounds
+	if (*pos >= length)
 		return (0);
 	word = read_word_range(line, pos, length);
 	if (!word)
@@ -172,7 +173,6 @@ int parse_word(t_token **head, const char *line, int *pos, int length)
 		free_tokens(head);
 		return (0);
 	}
-	// printf("Allocated Token: %p ------>%s\n", (void *)word, word);
 	token = (t_token *)malloc(sizeof(t_token));
 	if (!token)
 	{
@@ -197,37 +197,38 @@ int parse_word(t_token **head, const char *line, int *pos, int length)
  *
  * Return: A newly allocated string containing the extracted word.
  */
-char *read_word_range(const char *line, int *index, int length)
+char	*read_word_range(const char *line, int *index, int length)
 {
-	int start;
-	int wordLength;
-	char c;
+	int		start;
+	int		wordlength;
+	char	c;
 
 	start = *index;
 	while (*index < length)
 	{
 		c = line[*index];
-		if ((c == '"' || c == '\'')) // If the character is a quote
+		if ((c == '"' || c == '\''))
 		{
-			if (*index > 0 && !is_space(line[*index - 1])) // Quote is not preceded by a space
-				return join_string_with_quoted_if_no_space(line, index, start); // Join string with the quoted content eg. ec"ho"
-			return parse_quotes(line, index); // Parse the quoted content
+			if (*index > 0 && !is_space(line[*index - 1]))
+				return (join_string_with_quoted_if_no_space(line,
+						index, start));
+			return (parse_quotes(line, index));
 		}
-		if (c == '$') // If the character is a dollar sign
-			return handle_dollar_sign(line, index, start); // Expand the environment variable
-		if (is_space(c) || is_two_char_operator(c) || c == '(' || c == ')' || c == '\n')
-			break;
+		if (c == '$')
+			return (handle_dollar_sign(line, index, start));
+		if (is_space(c) || is_two_char_operator(c) || c == '(' || c == ')')
+			break ;
 		(*index)++;
 	}
-	wordLength = (*index) - start;
-	if (wordLength == 0)
-		return NULL;
-	return ft_substr(line, start, wordLength);
+	wordlength = (*index) - start;
+	if (wordlength == 0)
+		return (NULL);
+	return (ft_substr(line, start, wordlength));
 }
 
-int handle_newline(t_token **head, const char *line, int *pos)
+int	handle_newline(t_token **head, const char *line, int *pos)
 {
-	t_token *nl_token;
+	t_token	*nl_token;
 
 	if (line[*pos] == '\n')
 	{
@@ -239,7 +240,8 @@ int handle_newline(t_token **head, const char *line, int *pos)
 	return (0);
 }
 
-char	*handle_env_variable_without_space(const char *line, int *index, int start)
+char	*handle_env_variable_without_space(const char
+	*line, int *index, int start)
 {
 	char	*temp;
 	char	*temp2;
@@ -248,10 +250,10 @@ char	*handle_env_variable_without_space(const char *line, int *index, int start)
 	temp = ft_substr(line, start, (*index) - start);
 	if (!temp)
 		return (free_this(NULL, NULL, NULL, "substr failed"));
-	temp2 = get_env_var_value(line, index); // `$` sonrası değişkeni al
+	temp2 = get_env_var_value(line, index);
 	if (!temp2)
 		return (free_this(temp, NULL, NULL, "get_env_var_value failed"));
-	result = ft_strjoin(temp, temp2); // İkisini birleştir
+	result = ft_strjoin(temp, temp2);
 	if (!result)
 		return (free_this(temp, temp2, NULL, "strjoin failed"));
 	free_this(temp, temp2, NULL, NULL);
@@ -262,14 +264,14 @@ char	*handle_dollar_sign(const char *line, int *index, int start)
 {
 	char	*result;
 
-	if (is_space(line[*index - 1])) // Eğer boşluktan sonra `$` geliyorsa
+	if (is_space(line[*index - 1]))
 		result = get_env_var_value(line, index);
 	else
 		result = handle_env_variable_without_space(line, index, start);
 	if (!result)
 	{
 		ft_putstr_fd("Memory error at handling dollar sign ", STDERR_FILENO);
-		return NULL;
+		return (NULL);
 	}
 	return (result);
 }
@@ -286,7 +288,8 @@ char	*handle_dollar_sign(const char *line, int *index, int start)
  *
  * Return: A newly allocated string containing the concatenated word.
  */
-char	*join_string_with_quoted_if_no_space(const char *line, int *index, int start)
+char	*join_string_with_quoted_if_no_space(const char *line,
+	int *index, int start)
 {
 	char	*result;
 	char	*temp;
@@ -297,7 +300,7 @@ char	*join_string_with_quoted_if_no_space(const char *line, int *index, int star
 	{
 		temp = ft_substr(line, start, (*index) - start);
 		if (!temp)
-			return(free_this(NULL, NULL, NULL, "substr failed"));
+			return (free_this(NULL, NULL, NULL, "substr failed"));
 		temp2 = parse_quotes(line, index);
 		if (!temp2)
 			return (free_this(temp, NULL, NULL, "temp2 failed"));

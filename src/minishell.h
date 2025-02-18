@@ -27,6 +27,24 @@ typedef struct s_shell
 
 } t_shell;
 
+typedef struct s_parse_quote
+{
+	const char	*line;
+	int			index;
+	char		quote;
+	int			quote_is_double;
+	int			result_index;
+	char		*result;
+	size_t		result_size;
+}				t_parse_quote;
+
+typedef struct s_buffer
+{
+	char	*data;
+	size_t	size;
+	size_t	pos;
+}	t_buffer;
+
 /*****************************************************************************/
 /*                         FUNCTION DECLARATIONS                             */
 /*****************************************************************************/
@@ -35,15 +53,16 @@ typedef struct s_shell
 char *get_input(const char *prompt);
 void init_shell(t_shell *shell);
 
-
 /* Environment variable expansion */
 char *get_env_var_value(const char *line, int *index);
 char *handle_env_variable_without_space(const char *line, int *index, int start);
 char *handle_dollar_sign(const char *line, int *index, int start);
-void *ft_realloc(void *ptr, size_t size);
+
+
+/* Quote Parsing */
 char *join_string_with_quoted_if_no_space(const char *line, int *index, int start);
 char *parse_quotes(const char *line, int *index);
-void *free_this(char *s1, char *s2, char *s3, char *message);
+int	init_parse_quote(t_parse_quote *p, const char *line, int *index);
 
 
 /* Word Parsing */
@@ -68,9 +87,11 @@ int parse_single_char_operator(t_token **head, const char *line, int *pos, int l
 int parse_word(t_token **head, const char *line, int *pos, int length);
 int  handle_newline(t_token **head, const char *line, int *pos);
 
-
 // Cleanup
 void cleanup_shell(t_shell *shell);
 
+// Utility
+void *ft_realloc(void *ptr, size_t size);
+void *free_this(char *s1, char *s2, char *s3, char *message);
 
 #endif

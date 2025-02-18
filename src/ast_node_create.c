@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:16:56 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/14 13:20:02 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/02/15 21:34:40 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ t_ast_node	*create_ast_command_node(const char *cmd_text, t_io_node *io_list)
 		free_ast(node); // Prevent memory leak
 		return (NULL);
 	}
-	printf("Allocated AST Command Node: %p ----> %s\n", (void *)node, cmd_text);
+	printf("Actual----> %s\n", cmd_text);
 	node->node_type = AST_COMMAND;
 	node->cmd_args = NULL;
 	node->cmd_args_array = NULL; // ????

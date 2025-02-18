@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_expression.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/18 10:49:26 by dakcakoc          #+#    #+#             */
+/*   Updated: 2025/02/18 10:50:59 by dakcakoc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-static	t_ast_node *parse_right_node(t_parser *p, int op_prec)
+static	t_ast_node	*parse_right_node(t_parser *p, int op_prec)
 {
 	t_ast_node	*right_node;
 	int			next_prec;
@@ -10,14 +22,11 @@ static	t_ast_node *parse_right_node(t_parser *p, int op_prec)
 	if (!right_node)
 	{
 		handle_parse_error(p, NULL, NULL, "Expected expression after operator");
-		return NULL;
+		return (NULL);
 	}
 	return (right_node);
 }
 
-/*****************************************************************************/
-/*                             PARSE EXPRESSION                               */
-/*****************************************************************************/
 /*
 	parse_expression(min_prec):
 	---------------------------
@@ -123,12 +132,9 @@ t_ast_node	*parse_expression(t_parser *p, int min_prec)
 		if (!left_node)
 			return (NULL);
 	}
-	return left_node; /* 6) Once we see an operator with lower precedence or no more tokens, we stop. */
+	return (left_node); /* 6) Once we see an operator with lower precedence or no more tokens, we stop. */
 }
 
-/*****************************************************************************/
-/*                                parse_term                                 */
-/*****************************************************************************/
 /*
 	parse_term():
 	-------------
@@ -170,14 +176,14 @@ t_ast_node	*parse_term(t_parser *p)
 {
 	if (!p->current_token || p->error_status != PARSE_OK)
 		return (NULL);
-
 	if (p->current_token->type == TOKEN_PAREN_OPEN)
-		return (parse_parenthesized_expression(p));  /* CASE 1: Parenthesized expression */
+		return (parse_parenthesized_expression(p));
 	else
-		return (parse_command(p)); /* CASE 2: If not '(', we parse a command (like "echo hello" or "ls -l") */
+		return (parse_command(p));
 }
 
-// Built operator node function is used to create an operator node with left and right nodes.
+// Built operator node function is used to create an
+//operator node with left and right nodes.
 t_ast_node	*built_operator_node(t_ast_node *left_node, t_ast_node *right_node, t_token_type operator_type, t_parser *p)
 {
 	t_ast_node_type	ast_type;
@@ -186,15 +192,15 @@ t_ast_node	*built_operator_node(t_ast_node *left_node, t_ast_node *right_node, t
 	ast_type = get_ast_node_type(operator_type);
 	if (ast_type == AST_INVALID)
 	{
-		return handle_parse_error(p, left_node, right_node, "unexpected operator");
+		return (handle_parse_error(p, left_node, right_node, "unexpected operator"));
 	}
 	op_node = create_ast_operator_node(ast_type, left_node, right_node);
 	if (!op_node)
 	{
 		p->error_status = PARSE_MEMORY_ERROR;
-		return handle_parse_error(p, left_node, right_node, "memory allocation failed");
+		return (handle_parse_error(p, left_node, right_node, "memory allocation failed"));
 	}
-	return op_node;
+	return (op_node);
 }
 
 t_ast_node	*parse_parenthesized_expression(t_parser *p)
@@ -202,7 +208,7 @@ t_ast_node	*parse_parenthesized_expression(t_parser *p)
 	t_ast_node	*sub_expr;
 
 	get_next_token(p);
-	sub_expr = parse_expression(p, 0); /* min_prec = 0 ile yeni bir ifade ayrıştır */
+	sub_expr = parse_expression(p, 0);
 	if (!sub_expr)
 		return (NULL);
 	if (!p->current_token || p->current_token->type != TOKEN_PAREN_CLOSE)
@@ -212,5 +218,5 @@ t_ast_node	*parse_parenthesized_expression(t_parser *p)
 		return (NULL);
 	}
 	get_next_token(p);
-	return (sub_expr); /* Tüm parantezli ifade tek bir "term" olarak döndürülür */
+	return (sub_expr);
 }

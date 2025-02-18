@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 14:04:08 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/10 12:26:10 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/02/15 19:59:53 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int skip_whitespace(const char *line, int i)
 
 int is_space(char c)
 {
-	if (c == ' ' || c == '\t' || c == '\r' || c == '\v' || c == '\f')
+	if (c == ' ' || c == '\t' || c == '\r' || c == '\v' || c == '\f' || c == '\n')
 		return (1);
 	return (0);
 }

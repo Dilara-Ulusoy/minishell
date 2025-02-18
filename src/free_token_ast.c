@@ -99,3 +99,11 @@ void	*free_this(char *s1, char *s2, char *s3, char *message)
 		ft_putstr_fd(message, STDERR_FILENO);
 	return (NULL);
 }
+
+void	cleanup_resources(char *cmd_args, t_io_node *io_list)
+{
+	if (cmd_args)
+		free(cmd_args);
+	if (io_list)
+		free_io_list(io_list);
+}

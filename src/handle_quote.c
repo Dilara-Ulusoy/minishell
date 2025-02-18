@@ -6,110 +6,130 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 18:18:52 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/15 11:25:56 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/02/18 14:54:25 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char *check_unmatched_quote(char quote, char *result)
+static char	*check_unmatched_quote(t_parse_quote *p)
 {
-	if (quote != 0)
+	if (p->quote != 0)
 	{
-		ft_putstr_fd("Unmatched quote\n", STDERR_FILENO);
-		free(result);
+		ft_putstr_fd("Error: Unmatched quote detected\n", STDERR_FILENO);
+		free(p->result);
 		return (NULL);
 	}
-	return (result);
+	return (p->result);
 }
 
-static int handle_quotes(const char *line, int *index, char *quote)
+static int	update_quote_status(t_parse_quote *p)
 {
-	if (*quote == 0)
+	if (p->quote == 0)
 	{
-		*quote = line[*index];
-		(*index)++;
+		p->quote = p->line[p->index];
+		if (p->quote == '"')
+			p->quote_is_double = 1;
+		p->index++;
 		return (1);
 	}
-	else if (*quote == line[*index])
+	else if (p->quote == p->line[p->index])
 	{
-		*quote = 0;
-		(*index)++;
+		p->quote = 0;
+		p->index++;
 		return (1);
 	}
 	return (0);
 }
 
-static int deal_evn(const char *line, int *index, int *result_index, char **result)
+static int	expand_env_variable(t_parse_quote *p)
 {
-	char *evn;
-	int env_len;
-	int result_size;
-	char *new_result;
+	char	*env;
+	size_t	result_size;
+	char	*new_result;
 
-	result_size = ft_strlen(line) + 1;
-	evn = handle_dollar_sign(line, (index), (*index));
-	if (evn)
+	result_size = ft_strlen(p->line) + 1;
+	env = handle_dollar_sign(p->line, &p->index, p->index);
+	if (env)
 	{
-		env_len = ft_strlen(evn);
-		while (*result_index + env_len >= result_size)
+		while (p->result_index + ft_strlen(env) >= result_size)
 		{
 			result_size *= 2;
-			new_result = ft_realloc(*result, result_size);
+			new_result = ft_realloc(p->result, result_size);
 			if (!new_result)
 			{
-				free(evn);
+				free(env);
+				free(p->result);
 				return (1);
 			}
-			*result = new_result;
+			p->result = new_result;
 		}
-		ft_strlcpy(*result + (*result_index), evn, ft_strlen(evn) + 1);
-		(*result_index) += ft_strlen(evn);
-		free(evn);
+		ft_strlcpy(p->result + p->result_index, env, ft_strlen(env) + 1);
+		p->result_index += ft_strlen(env);
+		free(env);
 	}
 	return (0);
 }
 
-static int handle_env_variable(const char *line, int *index, int *result_index, char **result)
+static int	process_character(t_parse_quote *p)
 {
-	if (deal_evn(line, index, result_index, result) == 1)
+	char	current;
+
+	current = p->line[p->index];
+	if ((current == '"' || current == '\'') && update_quote_status(p))
 	{
-		free(*result);
-		return (1);
+		if (p->quote == 0 && p->line[p->index] == ' ')
+			return (1);
+		return (0);
 	}
+	if ((p->quote == '"' && p->quote_is_double) && current == '$')
+	{
+		if (expand_env_variable(p))
+			return (-1);
+		return (0);
+	}
+	p->result[p->result_index++] = p->line[p->index++];
 	return (0);
 }
 
-char *parse_quotes(const char *line, int *index)
+/**
+ * parse_quotes - Parses a string while handling quoted substrings.
+ *
+ * This function processes a given input string, handling both single ('') and
+ * double ("") quotes. It ensures that quotes are properly matched, expands
+ * environment variables if necessary, and constructs a processed output string.
+ *
+ * @line: The input string to be parsed.
+ * @index: A pointer to an integer that keeps track of the current
+ * position in the input string.
+ *
+ * Return: A newly allocated string with processed content, or NULL
+ */
+char	*parse_quotes(const char *line, int *index)
 {
-	char quote = 0;
-	int quote_in_use = 0; // Bir kez bile çift tırnak içine girildi mi?
-	int result_index = 0;
-	char *result;
+	t_parse_quote	p;
+	int				status;
 
-	result = ft_calloc((ft_strlen(line) + 1), sizeof(char));
-	if (!result)
+	if (init_parse_quote(&p, line, index) == 1)
 		return (NULL);
-
-	while (line[(*index)] && line[(*index)] != ' ')
+	if (!p.result)
+		return (NULL);
+	while (p.line[p.index])
 	{
-		if ((line[*index] == '"' || line[*index] == '\'') && handle_quotes(line, index, &quote))
+		status = process_character(&p);
+		// If a quote is closed and followed by a space, exit the loop
+		if (status == 1)
+			break ;
+		// If an error occurred clean up and return NULL
+		if (status == -1)
 		{
-			if (quote == '"') // Bir kez bile çift tırnak içine girdiysek işaretle
-				quote_in_use = 1;
-			continue;
+			free(p.result);
+			return (NULL);
 		}
-		if ((quote == '"' || quote_in_use) && line[*index] == '$')
-		{
-			if (handle_env_variable(line, index, &result_index, &result) == 1)
-				return (NULL);
-			continue;
-		}
-		result[result_index++] = line[(*index)++];
 	}
-	if (quote != 0)
-		return check_unmatched_quote(quote, result);
-
-	result[result_index] = '\0';
-	return (result);
+	if (p.quote != 0)
+		return (check_unmatched_quote(&p));
+	p.result[p.result_index] = '\0';
+	*index = p.index;
+	return (p.result);
 }

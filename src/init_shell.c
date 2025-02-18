@@ -41,3 +41,28 @@ char	*get_input(const char *prompt)
 	return (trimmed_line);
 }
 
+/*
+** p->line: The input string to be parsed.
+** p->index: A pointer to an integer that keeps track of the current position in the input string.
+** p->quote: The type of quote (single or double).
+** p->quote_in_use: A flag to indicate if the quote is in use. Prevents variable expansion inside single quotes.
+** p->result_index: The current position in the result string.
+** p->result: An array to store the processed output string. Eg. "$HOME" -> "/home/user"
+** p->result_size: The length of the result array. We use this to reallocate memory result array needs to expand.
+*/
+int	init_parse_quote(t_parse_quote *p, const char *line, int *index)
+{
+	p->line = line;
+	p->index = *index;
+	p->quote = 0;
+	p->quote_is_double = 0;
+	p->result_index = 0;
+	p->result = ft_calloc(ft_strlen(line) + 1, sizeof(char));
+	p->result_size = ft_strlen(line) + 1;
+	if (!p->result)
+	{
+		ft_putstr_fd("Memory allocation failed in init_parse_quote\n", STDERR_FILENO);
+		return (1);
+	}
+	return (0);
+}
