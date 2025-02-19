@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 14:04:22 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/01/30 14:04:36 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/02/18 15:19:51 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,14 @@ void	append_token(t_token **head, t_token *new_token)
 	token->next = new_token;
 }
 
+/*
+   create_new_token_range:
+   - Allocates and initializes a new token with a substring from the input line.
+   - Copies the specified range
+   (`startIndex` to `startIndex + length`) into the token's value.
+   - Ensures proper memory allocation and null-terminates the value.
+   - Returns a pointer to the newly created token or NULL on failure.
+*/
 t_token	*create_new_token_range(t_token_type type, const char *line,
 		int startIndex, int length)
 {
@@ -43,14 +51,14 @@ t_token	*create_new_token_range(t_token_type type, const char *line,
 	if (!new_token)
 		return (NULL);
 	new_token->type = type;
-	new_token->value = (char *)malloc((length + 1) * sizeof(char)); // 2. Allocate memory for the token's value string
+	new_token->value = (char *)malloc((length + 1) * sizeof(char));
 	if (!new_token->value)
 	{
 		free_tokens(&new_token);
 		return (NULL);
 	}
-	ft_memcpy(new_token->value, &line[startIndex], length + 1); // 3. Copy the substring from line into new_token->value
+	ft_memcpy(new_token->value, &line[startIndex], length + 1);
 	new_token->value[length] = '\0';
-	new_token->next = NULL; // 4. Initialize next pointer to NULL
+	new_token->next = NULL;
 	return (new_token);
 }

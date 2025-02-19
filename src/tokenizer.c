@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:34:26 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/15 20:00:24 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/02/18 15:15:27 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,8 @@ int	parse_two_char_operator(t_token **head, const char *line,
  * @param length The total length of the input string `line`.
  *               Used to prevent out-of-bounds access.
  *
- * @return int 1 if a single-character operator was successfully parsed, 0 otherwise.
+ * @return int 1 if a single-character operator was successfully parsed,
+ * 0 otherwise.
  */
 int	parse_single_char_operator(t_token **head, const char *line,
 	int *pos, int length)
@@ -127,6 +128,20 @@ int	parse_single_char_operator(t_token **head, const char *line,
 		op_token = create_new_token_range(single, line, *pos, operator_length);
 		append_token(head, op_token);
 		*pos += operator_length;
+		return (1);
+	}
+	return (0);
+}
+
+int	handle_newline(t_token **head, const char *line, int *pos)
+{
+	t_token	*nl_token;
+
+	if (line[*pos] == '\n')
+	{
+		nl_token = create_new_token_range(TOKEN_NL, "\\n", 0, 2);
+		append_token(head, nl_token);
+		(*pos)++;
 		return (1);
 	}
 	return (0);
@@ -185,129 +200,4 @@ int	parse_word(t_token **head, const char *line, int *pos, int length)
 	token->next = NULL;
 	append_token(head, token);
 	return (1);
-}
-
-/**
- * read_word_range - Extracts a word from a given position in the input line.
- * It handles quoted words, environment variables, and operators.
- *
- * @line: The input string from which to extract the word.
- * @index: Pointer to the current position in the string (updated during parsing).
- * @length: The total length of the input line.
- *
- * Return: A newly allocated string containing the extracted word.
- */
-char	*read_word_range(const char *line, int *index, int length)
-{
-	int		start;
-	int		wordlength;
-	char	c;
-
-	start = *index;
-	while (*index < length)
-	{
-		c = line[*index];
-		if ((c == '"' || c == '\''))
-		{
-			if (*index > 0 && !is_space(line[*index - 1]))
-				return (join_string_with_quoted_if_no_space(line,
-						index, start));
-			return (parse_quotes(line, index));
-		}
-		if (c == '$')
-			return (handle_dollar_sign(line, index, start));
-		if (is_space(c) || is_two_char_operator(c) || c == '(' || c == ')')
-			break ;
-		(*index)++;
-	}
-	wordlength = (*index) - start;
-	if (wordlength == 0)
-		return (NULL);
-	return (ft_substr(line, start, wordlength));
-}
-
-int	handle_newline(t_token **head, const char *line, int *pos)
-{
-	t_token	*nl_token;
-
-	if (line[*pos] == '\n')
-	{
-		nl_token = create_new_token_range(TOKEN_NL, "\\n", 0, 2);
-		append_token(head, nl_token);
-		(*pos)++;
-		return (1);
-	}
-	return (0);
-}
-
-char	*handle_env_variable_without_space(const char
-	*line, int *index, int start)
-{
-	char	*temp;
-	char	*temp2;
-	char	*result;
-
-	temp = ft_substr(line, start, (*index) - start);
-	if (!temp)
-		return (free_this(NULL, NULL, NULL, "substr failed"));
-	temp2 = get_env_var_value(line, index);
-	if (!temp2)
-		return (free_this(temp, NULL, NULL, "get_env_var_value failed"));
-	result = ft_strjoin(temp, temp2);
-	if (!result)
-		return (free_this(temp, temp2, NULL, "strjoin failed"));
-	free_this(temp, temp2, NULL, NULL);
-	return (result);
-}
-
-char	*handle_dollar_sign(const char *line, int *index, int start)
-{
-	char	*result;
-
-	if (is_space(line[*index - 1]))
-		result = get_env_var_value(line, index);
-	else
-		result = handle_env_variable_without_space(line, index, start);
-	if (!result)
-	{
-		ft_putstr_fd("Memory error at handling dollar sign ", STDERR_FILENO);
-		return (NULL);
-	}
-	return (result);
-}
-
-/**
- * join_string_with_quoted_if_no_space - Concatenates a word with quoted content
- * if there is no space between them. Eg. echo"hello" -> echohello
- *
- * @line: The input string.
- * @index: Pointer to the current position in the string.
- * @start: The starting position of the word.
- * @quote: The type of quote (single or double).
- * @length: The total length of the input string.
- *
- * Return: A newly allocated string containing the concatenated word.
- */
-char	*join_string_with_quoted_if_no_space(const char *line,
-	int *index, int start)
-{
-	char	*result;
-	char	*temp;
-	char	*temp2;
-
-	result = NULL;
-	if (*index > 0 && !is_space(line[*index - 1]))
-	{
-		temp = ft_substr(line, start, (*index) - start);
-		if (!temp)
-			return (free_this(NULL, NULL, NULL, "substr failed"));
-		temp2 = parse_quotes(line, index);
-		if (!temp2)
-			return (free_this(temp, NULL, NULL, "temp2 failed"));
-		result = ft_strjoin(temp, temp2);
-		if (!result)
-			return (free_this(temp, temp2, NULL, "strjoin failed"));
-		free_this(temp, temp2, NULL, NULL);
-	}
-	return (result);
 }

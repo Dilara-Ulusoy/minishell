@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/19 15:00:56 by dakcakoc          #+#    #+#             */
+/*   Updated: 2025/02/19 15:00:58 by dakcakoc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /*
@@ -46,7 +58,7 @@ void parse_and_process_command(t_shell *shell)
 		return ;
 	}
 	//find_ast_pipes(shell->ast);  // -------> FOR DUBEGGING
-	//debug_ast(shell->ast, 0);   // -------> FOR DUBEGGING
+	debug_ast(shell->ast, 0);   // -------> FOR DUBEGGING
 	// execute_ast(shell->ast); /* Uncomment for actual execution */
 	//print_tokens(shell->tokens);  // -------> FOR DUBEGGING
 	cleanup_shell(shell);

@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_error.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/19 12:09:11 by dakcakoc          #+#    #+#             */
+/*   Updated: 2025/02/19 12:10:41 by dakcakoc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-int set_syntax_error(t_parser *parser, const char *token_value)
+int	set_syntax_error(t_parser *parser, const char *token_value)
 {
 	parser->error_status = PARSE_SYNTAX_ERROR;
 	ft_putstr_fd("zsh: parse error near '", STDERR_FILENO);
@@ -8,15 +20,15 @@ int set_syntax_error(t_parser *parser, const char *token_value)
 	ft_putstr_fd("'\n", STDERR_FILENO);
 	return (1);
 }
-
-int set_error_number(t_parser *parser, int number)
+/* int	set_error_number(t_parser *parser, int number)
 {
 	if(parser->error_number == 0)
 		parser->error_number = number;
 	exit(number);
-}
+} */
 
-void	*handle_parse_error(t_parser *p, t_ast_node *left_node, t_ast_node *right_node, const char *error_message)
+void	*handle_parse_error(t_parser *p, t_ast_node *left_node,
+	t_ast_node *right_node, const char *error_message)
 {
 	if (p->error_status == PARSE_OK)
 		p->error_status = PARSE_SYNTAX_ERROR;
@@ -26,10 +38,11 @@ void	*handle_parse_error(t_parser *p, t_ast_node *left_node, t_ast_node *right_n
 		free_ast(left_node);
 	if (right_node)
 		free_ast(right_node);
-	return (void *)NULL;
+	return ((void *) NULL);
 }
 
-char	*handle_allocation_error(t_parser *parser, char *var_name, const char *error_message)
+char	*handle_allocation_error(t_parser *parser, char *var_name,
+	const char *error_message)
 {
 	if (error_message)
 		printf("Error: %s\n", error_message);
@@ -37,5 +50,5 @@ char	*handle_allocation_error(t_parser *parser, char *var_name, const char *erro
 		free(var_name);
 	if (parser)
 		parser->error_status = PARSE_MEMORY_ERROR;
-	return NULL;
+	return (NULL);
 }

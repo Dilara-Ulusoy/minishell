@@ -6,36 +6,37 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 14:04:08 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/15 19:59:53 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/02/18 15:16:20 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int skip_whitespace(const char *line, int i)
+int	skip_whitespace(const char *line, int i)
 {
 	while (line[i] && is_space(line[i]))
 		i++;
 	return (i);
 }
 
-int is_space(char c)
+int	is_space(char c)
 {
-	if (c == ' ' || c == '\t' || c == '\r' || c == '\v' || c == '\f' || c == '\n')
+	if (c == ' ' || c == '\t' || c == '\r'
+		|| c == '\v' || c == '\f' || c == '\n')
 		return (1);
 	return (0);
 }
 
-int is_two_char_operator(char c)
+int	is_two_char_operator(char c)
 {
 	if ((c == '&' || c == '|' || c == '<' || c == '>'))
 		return (1);
 	return (0);
 }
 
-void *ft_realloc(void *ptr, size_t size)
+void	*ft_realloc(void *ptr, size_t size)
 {
-	void *new_ptr;
+	void	*new_ptr;
 
 	new_ptr = malloc(size);
 	if (!new_ptr)

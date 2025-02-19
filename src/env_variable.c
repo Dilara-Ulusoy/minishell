@@ -1,30 +1,69 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   env_variable.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/18 15:23:12 by dakcakoc          #+#    #+#             */
+/*   Updated: 2025/02/18 16:27:13 by dakcakoc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-
-static char	*handle_special_cases(const char *line, int *index)
+/*
+📌 handle_special_cases(line, index, start)
+Purpose: Handles special cases where the $ sign appears in an unusual way.
+Examples:
+If the $ is surrounded by spaces (e.g., "echo $"), it returns "$".
+If $ is followed by an invalid variable name
+(e.g., "echo $123invalid"), it skips invalid characters and
+returns an empty string ("").
+Effect: Updates index accordingly and returns
+a dynamically allocated string if a special case is found.
+*/
+static char	*handle_special_cases(const char *line, int *index, int start)
 {
-	int	start;
+	char	*result;
 
-	start = *index + 1;
-	if (is_space(line[*index - 1]) && (line[*index + 1] == '\0' || is_space(line[*index + 1]))) // eg "echo $"
+	if (is_space(line[*index - 1]) && (line[*index + 1] == '\0'
+			|| is_space(line[*index + 1])))
 	{
 		(*index)++;
-		return (ft_strdup("$"));
+		result = ft_strdup("$");
+		if (!result)
+			return (NULL);
+		return (result);
 	}
-	if (is_space(line[*index - 1]) && !ft_isalpha(line[start]) && line[start] != '_') // eg "echo $123gegegeg"
+	if (is_space(line[*index - 1]) && !ft_isalpha(line[start])
+		&& line[start] != '_')
 	{
 		(*index)++;
-		while (!ft_isalpha(line[*index]) && line[*index] != '_' && line[*index] != '\0') // skip until the next word
+		while (!ft_isalpha(line[*index]) && line[*index] != '_'
+			&& line[*index] != '\0')
 			(*index)++;
-		return ft_strdup("");
+		result = ft_strdup("");
+		if (!result)
+			return (NULL);
+		return (result);
 	}
-	return NULL;
+	return (NULL);
 }
 
+/*
+📌 get_var_name(line, index)
+Purpose: Extracts a valid environment variable name starting after $.
+Example:
+If line = "$HOME" → get_var_name() returns "HOME", updating index
+If line = "$123var", it returns NULL
+Effect: Moves index forward to the character after the variable name
+*/
 static char	*get_var_name(const char *line, int *index)
 {
 	int		start;
 	int		len;
+	char	*var_name;
 
 	start = *index;
 	len = 0;
@@ -34,9 +73,22 @@ static char	*get_var_name(const char *line, int *index)
 	if (len == 0)
 		return (NULL);
 	*index += len;
-	return (ft_substr(line, start, len));
+	var_name = ft_substr(line, start, len);
+	if (!var_name)
+		return (NULL);
+	return (var_name);
 }
 
+/*
+📌 append_env_value(&result, var_name)
+
+Purpose: Retrieves the actual value of the environment variable
+and appends it to result.
+Example:
+If var_name = "HOME" and $HOME="/home/user", then result becomes "/home/user".
+
+Effect: Expands environment variables in the parsed string.
+*/
 static void	append_env_value(char **result, char *var_name)
 {
 	char	*var_value;
@@ -51,27 +103,50 @@ static void	append_env_value(char **result, char *var_name)
 	free_this(temp, var_name, NULL, NULL);
 }
 
+/*
+📌 append_dollar_if_no_var(&result)
+
+Purpose: If no valid variable name is found, appends "$" to result.
+Example:
+Input: "echo $123invalid"
+
+If get_var_name() fails (returns NULL), result is updated to " $".
+Effect: Ensures $ signs remain in the output
+when they are not part of valid variable names.
+*/
 static void	append_dollar_if_no_var(char **result)
 {
 	char	*temp;
 
 	temp = *result;
 	*result = ft_strjoin(*result, "$");
-	if(!*result)
+	if (!*result)
 		*result = ft_strdup("");
 	free(temp);
 }
 
+/*
+   get_env_var_value:
+
+- Extracts and expands an environment variable from the input string.
+- Handles special cases (e.g., isolated `$` or invalid variable names).
+- Allocates memory for the resulting expanded value using `ft_calloc()`.
+- Iterates through consecutive `$` signs, retrives and appends variable values.
+- Returns a dynamically allocated string containing the processed variable value,
+or NULL if memory allocation fails.
+*/
 char	*get_env_var_value(const char *line, int *index)
 {
 	char	*result;
 	char	*special;
 	char	*var_name;
+	int		start;
 
-	special = handle_special_cases(line, index);
+	start = *index + 1;
+	special = handle_special_cases(line, index, start);
 	if (special)
 		return (special);
-	result = ft_strdup("");
+	result = ft_calloc(1, sizeof(char));
 	if (!result)
 		return (NULL);
 	while (line[*index] == '$')
@@ -85,5 +160,3 @@ char	*get_env_var_value(const char *line, int *index)
 	}
 	return (result);
 }
-
-

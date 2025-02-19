@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init_shell.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/18 15:21:29 by dakcakoc          #+#    #+#             */
+/*   Updated: 2025/02/18 15:22:37 by dakcakoc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /**
@@ -27,9 +39,9 @@ char	*get_input(const char *prompt)
 	char	*trimmed_line;
 
 	line = readline(prompt);
-	if (!line) /* If user pressed Ctrl+D or EOF occurred */
+	if (!line)
 		return (NULL);
-	trimmed_line = ft_strtrim(line, " \t\n");     /* Trim whitespace (assuming ft_strtrim is defined somewhere) */
+	trimmed_line = ft_strtrim(line, " \t\n");
 	free(line);
 	if (!trimmed_line)
 	{
@@ -43,12 +55,16 @@ char	*get_input(const char *prompt)
 
 /*
 ** p->line: The input string to be parsed.
-** p->index: A pointer to an integer that keeps track of the current position in the input string.
+** p->index: A pointer to an integer that
+keeps track of the current position in the input string.
 ** p->quote: The type of quote (single or double).
-** p->quote_in_use: A flag to indicate if the quote is in use. Prevents variable expansion inside single quotes.
+** p->quote_in_use: A flag to indicate if the quote is in use.
+Prevents variable expansion inside single quotes.
 ** p->result_index: The current position in the result string.
-** p->result: An array to store the processed output string. Eg. "$HOME" -> "/home/user"
-** p->result_size: The length of the result array. We use this to reallocate memory result array needs to expand.
+** p->result: An array to store the processed output string.
+Eg. "$HOME" -> "/home/user"
+** p->result_size: The length of the result array. We use this to reallocate
+memory result array needs to expand.
 */
 int	init_parse_quote(t_parse_quote *p, const char *line, int *index)
 {
@@ -61,7 +77,8 @@ int	init_parse_quote(t_parse_quote *p, const char *line, int *index)
 	p->result_size = ft_strlen(line) + 1;
 	if (!p->result)
 	{
-		ft_putstr_fd("Memory allocation failed in init_parse_quote\n", STDERR_FILENO);
+		ft_putstr_fd("Memory allocation failed in init_parse_quote\n",
+			STDERR_FILENO);
 		return (1);
 	}
 	return (0);

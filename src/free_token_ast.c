@@ -1,16 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free_token_ast.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/18 15:04:51 by dakcakoc          #+#    #+#             */
+/*   Updated: 2025/02/18 15:20:25 by dakcakoc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-/*****************************************************************************/
-/*                         FREE                                               */
-/*****************************************************************************/
-
-void free_tokens(t_token **head)
+void	free_tokens(t_token **head)
 {
-	t_token *temp;
+	t_token	*temp;
 
 	while (*head)
 	{
-		//printf("Freeing Token: %p -------> %s\n", (void *)(*head), (*head)->value ? (*head)->value : "(null)");
 		temp = (*head)->next;
 		if ((*head)->value)
 			free((*head)->value);
@@ -19,10 +26,10 @@ void free_tokens(t_token **head)
 	}
 }
 
-void free_ast(t_ast_node *root)
+void	free_ast(t_ast_node *root)
 {
 	if (!root)
-		return;
+		return ;
 	if (root->left)
 	{
 		free_ast(root->left);
@@ -46,12 +53,15 @@ void free_ast(t_ast_node *root)
 	free(root);
 }
 
-void free_io_list(t_io_node *io_list)
+void	free_io_list(t_io_node *io_list)
 {
+	t_io_node	*temp;
+
 	while (io_list)
 	{
-		t_io_node *temp = io_list->next;
-		printf("Freeing I/O List for AST Node: %p ----> %s\n", (void *)io_list, io_list->filename);
+		temp = io_list->next;
+		printf("Freeing I/O List for AST Node: %p ----> %s\n",
+			(void *)io_list, io_list->filename);
 		if (io_list->filename)
 			free(io_list->filename);
 		free(io_list);
@@ -59,45 +69,23 @@ void free_io_list(t_io_node *io_list)
 	}
 }
 
-void cleanup_shell(t_shell *shell)
+void	cleanup_shell(t_shell *shell)
 {
 	if (shell->line)
 	{
 		free(shell->line);
-		//printf("Freed Line: %p\n", (void *)shell->line);
 		shell->line = NULL;
 	}
 	if (shell->tokens)
 	{
 		free_tokens(&shell->tokens);
-		//printf("Freed Tokens: %p\n", (void *)shell->tokens);
 		shell->tokens = NULL;
 	}
-	if(shell->ast)
+	if (shell->ast)
 	{
 		free_ast(shell->ast);
 		shell->ast = NULL;
-		//printf("Freed AST: %p\n", (void *)shell->ast);
 	}
-}
-
-void	*free_this(char *s1, char *s2, char *s3, char *message)
-{
-	if (s1)
-	{
-		free(s1);
-	}
-	if (s2)
-	{
-		free(s2);
-	}
-	if (s3)
-	{
-		free(s3);
-	}
-	if (message)
-		ft_putstr_fd(message, STDERR_FILENO);
-	return (NULL);
 }
 
 void	cleanup_resources(char *cmd_args, t_io_node *io_list)

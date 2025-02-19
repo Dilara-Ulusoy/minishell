@@ -1,19 +1,30 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_redirections.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/19 12:57:34 by dakcakoc          #+#    #+#             */
+/*   Updated: 2025/02/19 12:58:06 by dakcakoc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-void parse_redirections(t_parser *p, t_io_node **io_list)
+void	parse_redirections(t_parser *p, t_io_node **io_list)
 {
+	t_io_type	kind;
+	t_io_node	*new_io;
+
 	while (p->current_token && is_redirection(p->current_token->type))
 	{
-		t_io_type kind;
-		t_io_node *new_io;
-
-		kind = map_token_to_io_type(p->current_token->type); // map token -> io type
+		kind = map_token_to_io_type(p->current_token->type);
 		get_next_token(p);
-		// now we expect a WORD for the filename (or here-doc delimiter)
 		if (!p->current_token || p->current_token->type != TOKEN_WORD)
 		{
 			p->error_status = PARSE_SYNTAX_ERROR;
-			return; // Hata durumunda -1 döndür
+			return ;
 		}
 		if (kind == IO_HEREDOC)
 		{
@@ -23,10 +34,10 @@ void parse_redirections(t_parser *p, t_io_node **io_list)
 		if (!new_io)
 		{
 			free_io_list(*io_list);
-			return; // Bellek tahsis hatasında -1 döndür
+			return ;
 		}
 		attach_io_node(io_list, new_io);
-		get_next_token(p); // Consume the filename/WORD token
+		get_next_token(p);
 	}
 }
 
@@ -48,6 +59,7 @@ t_io_type	map_token_to_io_type(t_token_type type)
 	else
 		return (IO_IN);
 }
+
 /* Helper function: Attach a new IO node to the IO list */
 void	attach_io_node(t_io_node **io_list, t_io_node *new_io)
 {

@@ -6,11 +6,26 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 10:22:37 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/18 12:36:30 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/02/19 12:07:45 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static t_ast_node	*handle_ast_command_creation(char *cmd_args,
+	t_io_node *io_list, t_parser *p)
+{
+	t_ast_node	*cmd_node;
+
+	cmd_node = create_ast_command_node(cmd_args, io_list);
+	if (!cmd_node)
+	{
+		free_io_list(io_list);
+		p->error_status = PARSE_MEMORY_ERROR;
+		return (NULL);
+	}
+	return (cmd_node);
+}
 
 /*
 	parse_command():
@@ -56,22 +71,6 @@
 	  2) parse_redirections => attach them to a linked list for io_redirects
 	  3) create an AST_COMMAND node and return it.
 */
-
-static t_ast_node	*handle_ast_command_creation(char *cmd_args,
-	t_io_node *io_list, t_parser *p)
-{
-	t_ast_node	*cmd_node;
-
-	cmd_node = create_ast_command_node(cmd_args, io_list);
-	if (!cmd_node)
-	{
-		free_io_list(io_list);
-		p->error_status = PARSE_MEMORY_ERROR;
-		return (NULL);
-	}
-	return (cmd_node);
-}
-
 t_ast_node	*parse_command(t_parser *p)
 {
 	t_io_node	*io_list;
@@ -95,36 +94,44 @@ t_ast_node	*parse_command(t_parser *p)
 	return (cmd_node);
 }
 
-static char	*resize_buffer(char *buffer, size_t *buffer_size)
-{
-	size_t	new_size;
-	char	*new_buffer;
+/*
+📌 append_to_buffer(buf, word_value)
+Purpose: Appends a new word to a growing buffer,
+resizing it dynamically if needed.
 
-	new_size = *buffer_size * 2;
-	new_buffer = ft_calloc(new_size, 1);
-	if (!new_buffer)
-	{
-		free(buffer);
-		return (NULL);
-	}
-	ft_memcpy(new_buffer, buffer, *buffer_size);
-	free(buffer);
-	*buffer_size = new_size;
-	return (new_buffer);
-}
+Steps:
+1) Calculates the length of `word_value`.
+2) Ensures the buffer has enough space:
+   - If needed, calls `resize_buffer()` to increase `buf->size`.
+   - If memory allocation fails, returns `0`.
+3) Adds a space before appending `word_value`,
+but only if it's **not the first word**.
+4) Copies `word_value` into `buf->data`,
+updates `buf->pos`, and null-terminates the string.
+5) Returns `1` on success, `0` on failure.
 
-// Bu fonksiyon, gerekli durumlarda buffer'ı yeniden boyutlandırarak bir kelimeyi buffer'a ekler.
-static int	append_to_buffer(t_buffer *buf,
-	const char *word_value)
+Example:
+- **Initial buffer:** `"echo"`
+- `append_to_buffer(buf, "hello")` → `"echo hello"`
+- `append_to_buffer(buf, "world")` → `"echo hello world"`
+
+Effect:
+- Ensures words are correctly spaced.
+- Dynamically resizes the buffer when needed.
+- Maintains a **null-terminated** string for safe usage.
+*/
+static int	append_to_buffer(t_buffer *buf, const char *word_value)
 {
 	size_t	word_len;
+	char	*tmp;
 
 	word_len = ft_strlen(word_value);
 	while (buf->pos + word_len + 2 >= buf->size)
 	{
-		buf->data = resize_buffer(buf->data, &(buf->size));
-		if (!buf->data)
+		tmp = resize_buffer(buf->data, &(buf->size));
+		if (!tmp)
 			return (0);
+		buf->data = tmp;
 	}
 	if (buf->pos > 0)
 		buf->data[buf->pos++] = ' ';
@@ -134,29 +141,50 @@ static int	append_to_buffer(t_buffer *buf,
 	return (1);
 }
 
+/*
+📌 build_command_string(p)
+Purpose: Constructs a single command string by
+concatenating consecutive WORD tokens.
+
+Steps:
+1) Initializes a dynamic buffer (`cmd_buffer`) with an initial size of 256 bytes.
+2) Iterates through `TOKEN_WORD` tokens, appending their values to `cmd_buffer`.
+3) Expands the buffer if needed using `append_to_buffer()`.
+4) Stops when a non-WORD token is encountered.
+5) Returns the built command string or NULL on memory allocation failure.
+
+Example:
+- Tokens: [ WORD("echo"), WORD("hello"), WORD("world") ]
+- Returns: `"echo hello world"`
+
+Effect:
+- Moves `p->current_token` forward past the processed WORD tokens.
+- If memory allocation fails,
+sets `p->error_status = PARSE_MEMORY_ERROR` and returns NULL.
+*/
 char	*build_command_string(t_parser *p)
 {
-	t_buffer	buf;
+	t_buffer	cmd_buffer;
 
-	buf.size = 256;
-	buf.pos = 0;
-	buf.data = ft_calloc(buf.size, 1);
-	if (!buf.data)
+	cmd_buffer.size = 256;
+	cmd_buffer.pos = 0;
+	cmd_buffer.data = ft_calloc(cmd_buffer.size, 1);
+	if (!cmd_buffer.data)
 	{
 		p->error_status = PARSE_MEMORY_ERROR;
 		return (NULL);
 	}
 	while (p->current_token && p->current_token->type == TOKEN_WORD)
 	{
-		if (!append_to_buffer(&buf, p->current_token->value))
-			{
-				p->error_status = PARSE_MEMORY_ERROR;
-			free(buf.data);
-				return (NULL);
-			}
+		if (!append_to_buffer(&cmd_buffer, p->current_token->value))
+		{
+			p->error_status = PARSE_MEMORY_ERROR;
+			free(cmd_buffer.data);
+			return (NULL);
+		}
 		get_next_token(p);
 	}
-	return (buf.data);
+	return (cmd_buffer.data);
 }
 
 int	process_redirections(t_parser *p, char **cmd_args, t_io_node **io_list)
@@ -170,16 +198,17 @@ int	process_redirections(t_parser *p, char **cmd_args, t_io_node **io_list)
 		new_args = build_command_string(p);
 		if (!new_args)
 			return (0);
-		new_args = ft_strjoin(" ", new_args);
+		tmp = ft_strjoin(" ", new_args);
+		free(new_args);
+		if (!tmp)
+			return (0);
+		new_args = ft_strjoin(*cmd_args, tmp);
+		free(tmp);
+		free(*cmd_args);
 		if (!new_args)
 			return (0);
-		tmp = ft_strjoin(*cmd_args, new_args);
-		free(*cmd_args);
-		*cmd_args = tmp;
+		*cmd_args = new_args;
 		parse_redirections(p, io_list);
 	}
-	if (p->error_status != PARSE_OK)
-		return (0);
-	return (1);
+	return (p->error_status == PARSE_OK);
 }
-

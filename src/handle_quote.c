@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 18:18:52 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/18 14:54:25 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/02/18 16:21:05 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ static int	process_character(t_parse_quote *p)
 			return (1);
 		return (0);
 	}
-	if ((p->quote == '"' && p->quote_is_double) && current == '$')
+	if (p->quote_is_double && current == '$')
 	{
 		if (expand_env_variable(p))
 			return (-1);

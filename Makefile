@@ -17,13 +17,13 @@ SRC_DIR     = src/
 LIBFT_DIR   = libft/
 LIBFT       = $(LIBFT_DIR)libft.a
 
-
 # Source and object files
 SRCS        = $(SRC_DIR)main.c \
               $(SRC_DIR)tokenizer.c  \
 			  $(SRC_DIR)tokenizer_utils.c \
 			  $(SRC_DIR)tokenizer_appender.c \
 			  $(SRC_DIR)tokenizer_handler.c \
+			  $(SRC_DIR)tokenize_word.c \
 			  $(SRC_DIR)parse_command.c \
 			  $(SRC_DIR)parsing_utils.c \
 			  $(SRC_DIR)ast_built.c \
