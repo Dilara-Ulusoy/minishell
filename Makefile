@@ -7,7 +7,7 @@ NAME        = minishell
 
 # Compiler and flags
 CC          = cc
-CFLAGS      = -Wall -Wextra -Werror -g -fsanitize=address
+CFLAGS      = -Wall -Wextra -Werror # -g -fsanitize=address
 READLINE    = -I /opt/homebrew/opt/readline/include/readline -lreadline # -L/opt/homebrew/opt/readline/lib
 #READLINE    = -I/usr/include/readline -lreadline
 
@@ -37,6 +37,11 @@ SRCS        = $(SRC_DIR)main.c \
 			  $(SRC_DIR)parse_error.c \
 			  $(SRC_DIR)syntax_error_check.c \
 			  $(SRC_DIR)handle_quote.c \
+			  $(SRC_DIR)exec_utils.c \
+			  $(SRC_DIR)pipes.c \
+			  $(SRC_DIR)print_error_messages.c \
+			  $(SRC_DIR)pipex.c \
+			  $(SRC_DIR)execution.c \
 
 
 

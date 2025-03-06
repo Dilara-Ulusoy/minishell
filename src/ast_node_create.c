@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_node_create.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:16:56 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/19 14:53:59 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/06 22:00:38 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ t_ast_node	*create_ast_command_node(const char *cmd_text, t_io_node *io_list)
 		free_ast(node);
 		return (NULL);
 	}
-	printf("Actual----> %s\n", cmd_text);
+	//printf("Actual----> %s\n", cmd_text);
 	node->node_type = AST_COMMAND;
 	node->cmd_args = NULL;
 	node->cmd_args = allocate_command_string(cmd_text, node, io_list);
@@ -110,8 +110,8 @@ t_io_node	*create_io_node(t_io_type kind, const char *filename, t_parser *p)
 	t_io_node	*new_io;
 
 	new_io = (t_io_node *)malloc(sizeof(t_io_node));
-	printf("Allocated AST IO Node: %p ----> %s\n",
-		(void *)new_io, filename);
+	//printf("Allocated AST IO Node: %p ----> %s\n",
+	//	(void *)new_io, filename);
 	if (!new_io)
 	{
 		p->error_status = PARSE_MEMORY_ERROR;

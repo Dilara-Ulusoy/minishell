@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 15:00:56 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/19 15:00:58 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/06 21:55:37 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "execution.h"
 
 /*
 void	handle_sigint(int sig)
@@ -35,8 +36,10 @@ void	setup_signal_handlers(void)
 */
 
 
-void parse_and_process_command(t_shell *shell)
+void parse_and_process_command(t_shell *shell, char **envp)
 {
+	int num_commands;
+
 	if (*(shell->line) == '\0') /* Handle empty input */
 	{
 		free(shell->line);
@@ -58,9 +61,12 @@ void parse_and_process_command(t_shell *shell)
 		return ;
 	}
 	//find_ast_pipes(shell->ast);  // -------> FOR DUBEGGING
-	debug_ast(shell->ast, 0);   // -------> FOR DUBEGGING
+	//debug_ast(shell->ast, 0);   // -------> FOR DUBEGGING
 	// execute_ast(shell->ast); /* Uncomment for actual execution */
 	//print_tokens(shell->tokens);  // -------> FOR DUBEGGING
+	num_commands = get_num_commands(shell);
+	if (num_commands > 0)
+		execute_commands(shell, num_commands, envp);
 	cleanup_shell(shell);
 }
 
@@ -83,7 +89,7 @@ int main(int argc, char **argv, char **envp)
 		if (!shell.line) /* Exit condition (Ctrl+D or EOF) */
 			break ;
 		shell.line_length = ft_strlen(shell.line);
-		parse_and_process_command(&shell);
+		parse_and_process_command(&shell, envp);
 	}
 	cleanup_shell(&shell);
 	return (0);
