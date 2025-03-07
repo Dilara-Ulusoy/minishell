@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 13:33:50 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/07 10:47:05 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/07 20:13:40 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,9 +96,13 @@ int	execute_commands(t_shell *shell, int num_commands, char **envp)
 {
 	int		wstatus;
 	int		j;
+	int		k;
 	t_args	*arg_struct;
 	t_cmd_parts *cmd_parts;
 	int used_execve[num_commands];
+	int last_exit_code;
+	pid_t exited_pid;
+	int exit_code;
 
 	//printf("num_commands: %d\n", num_commands);
 	arg_struct = prepare_struct(num_commands, envp);
@@ -121,33 +125,35 @@ int	execute_commands(t_shell *shell, int num_commands, char **envp)
 		free(cmd_parts);
 	}
 	close_and_free(arg_struct, 0);
-	// j = -1;
-	// while (++j < num_commands)
-	// 	waitpid(arg_struct->pids[j], &wstatus, 0);
+	// Wait for all child processes
+	last_exit_code = EXIT_FAILURE;
 	j = -1;
 	while (++j < num_commands)
 	{
-		pid_t exited_pid = waitpid(-1, &wstatus, 0);
-		if (exited_pid > 0)
+		exited_pid = waitpid(-1, &wstatus, 0);
+		if (exited_pid > 0 && WIFEXITED(wstatus))
 		{
-			if (WIFEXITED(wstatus))
+			exit_code = WEXITSTATUS(wstatus);
+			k = -1;
+			while (++k < num_commands)
 			{
-				int exit_code = WEXITSTATUS(wstatus);
-				free(arg_struct->pids);
-				free(arg_struct);
-				if (used_execve[j] == 1)
-					return (exit_code);
-				else
-					exit(exit_code); // Exit parent with the same status
+				if (arg_struct->pids[k] == exited_pid)
+				{
+					if (used_execve[k] == 1)
+						last_exit_code = exit_code;
+					else
+					{
+						free(arg_struct->pids);
+						free(arg_struct);
+						exit(exit_code); // Exit parent
+					}
+					break ;
+				}
 			}
-			return (EXIT_FAILURE); 
 		}
 	}
+	// Cleanup and return last exit code
 	free(arg_struct->pids);
 	free(arg_struct);
-	if (WIFEXITED(wstatus))
-		return (WEXITSTATUS(wstatus)); //exit
-	return (EXIT_FAILURE); //exit
+	return (last_exit_code);
 }
-
-
