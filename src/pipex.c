@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 13:33:50 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/06 21:49:41 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/07 10:47:05 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ int	execute_commands(t_shell *shell, int num_commands, char **envp)
 	int		j;
 	t_args	*arg_struct;
 	t_cmd_parts *cmd_parts;
+	int used_execve[num_commands];
 
 	//printf("num_commands: %d\n", num_commands);
 	arg_struct = prepare_struct(num_commands, envp);
@@ -108,6 +109,10 @@ int	execute_commands(t_shell *shell, int num_commands, char **envp)
 	{
 		cmd_parts = get_command_array(shell->tokens, j + 1);
 		cmd_parts->num_commands = num_commands;
+		if (is_builtin(cmd_parts) == 1)
+			used_execve[j] = 0;
+		else
+			used_execve[j] = 1;
 		arg_struct->pids[j] = fork();
 		if (arg_struct->pids[j] < 0)
 			return (display_error_message(2, arg_struct)); // exit
@@ -116,9 +121,28 @@ int	execute_commands(t_shell *shell, int num_commands, char **envp)
 		free(cmd_parts);
 	}
 	close_and_free(arg_struct, 0);
+	// j = -1;
+	// while (++j < num_commands)
+	// 	waitpid(arg_struct->pids[j], &wstatus, 0);
 	j = -1;
 	while (++j < num_commands)
-		waitpid(arg_struct->pids[j], &wstatus, 0);
+	{
+		pid_t exited_pid = waitpid(-1, &wstatus, 0);
+		if (exited_pid > 0)
+		{
+			if (WIFEXITED(wstatus))
+			{
+				int exit_code = WEXITSTATUS(wstatus);
+				free(arg_struct->pids);
+				free(arg_struct);
+				if (used_execve[j] == 1)
+					return (exit_code);
+				else
+					exit(exit_code); // Exit parent with the same status
+			}
+			return (EXIT_FAILURE); 
+		}
+	}
 	free(arg_struct->pids);
 	free(arg_struct);
 	if (WIFEXITED(wstatus))
