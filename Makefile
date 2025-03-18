@@ -14,7 +14,7 @@ READLINE    = -I /opt/homebrew/opt/readline/include/readline -lreadline # -L/opt
 # Directories
 OBJ_DIR     = obj/
 SRC_DIR     = src/
-LIBFT_DIR   = libft/
+LIBFT_DIR   = Libft/
 LIBFT       = $(LIBFT_DIR)libft.a
 
 # Source and object files

@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:15 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/07 10:35:57 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/18 16:25:40 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,12 @@
 # include <sys/types.h>
 # include <fcntl.h>
 # include <stdio.h>
+# include <limits.h>
 
 typedef struct	s_cmd_parts
 {
-	int command_number;
 	int num_commands;
+	int command_number;
 	int n_cmd;
 	int n_in;
 	int n_out;
@@ -41,7 +42,7 @@ typedef struct s_args
 	int		argc;
 	char	**envp;
 	int		**fd;
-	int		*pids;
+	pid_t		*pids;
 }	t_args;
 
 void find_ast_pipes(t_ast_node *node);
@@ -68,4 +69,5 @@ char	*find_command_path(char *cmd, char **envp);
 int	display_error_message(int i, t_args *arg_struct);
 int	check_dup2(int file_d, t_args *arg_struct, int std_type);
 int is_builtin(t_cmd_parts *cmd_parts);
+void free_cmd_parts(t_cmd_parts *cmd_parts);
 #endif

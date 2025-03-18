@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:03 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/06 22:03:06 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/18 14:52:37 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,15 +50,16 @@ t_cmd_parts *count_tokens(const t_token *head, int command_number)
 {
 	t_cmd_parts *cmd_parts;
 	int pipe_number;
+	const t_token *curr; // = head;
 
 	cmd_parts = malloc(sizeof(t_cmd_parts));
-	const t_token *curr = head;
 	pipe_number = 0;
+	curr = head;
 	while (pipe_number < (command_number -1))
 	{
-		while (curr && curr->type != 3)
+		while (curr && curr->type != TOKEN_PIPE)
 			curr = curr->next;
-		if (curr->type == 3)
+		if (curr->type == TOKEN_PIPE)
 		{
 			pipe_number++;
 			curr = curr->next;
@@ -67,17 +68,17 @@ t_cmd_parts *count_tokens(const t_token *head, int command_number)
 	cmd_parts->n_cmd = 0;
 	cmd_parts->n_in = 0;
 	cmd_parts->n_out = 0;
-    while (curr && curr->type != 3)
+    while (curr && curr->type != TOKEN_PIPE)
     {
-		if (curr->type >= 4 && curr->type <= 7)
+		if (curr->type >= TOKEN_REDIR_IN && curr->type <= TOKEN_REDIR_HERE)
 		{
-			if (curr->type == 4)
+			if (curr->type == TOKEN_REDIR_IN)
 				(cmd_parts->n_in)++;
-			if (curr->type == 5 || curr->type == 6)
+			if (curr->type == TOKEN_REDIR_OUT || curr->type == TOKEN_REDIR_APPEND)
 				(cmd_parts->n_out)++;
 			curr = curr->next->next;
 		}
-		if (curr && curr->type == 0)
+		if (curr && curr->type == TOKEN_WORD)
 		{
 			(cmd_parts->n_cmd)++;
         	curr = curr->next;
@@ -93,8 +94,8 @@ t_cmd_parts *get_command_array(const t_token *head, int command_number)
 	int j;
 	int k;
 	int pipe_number;
-	const t_token *curr = head;
-
+	const t_token *curr;
+	
 	cmd_parts = count_tokens(head, command_number);
 	//printf("Count of tokens: %d\n", cmd_parts->n_cmd);
 	cmd_parts->cmd_array = malloc(sizeof(char *) * (cmd_parts->n_cmd + 1));
@@ -103,11 +104,12 @@ t_cmd_parts *get_command_array(const t_token *head, int command_number)
 	cmd_parts->outfiles_types = malloc(sizeof(int) * (cmd_parts->n_out));
 	cmd_parts->command_number = command_number - 1;
 	pipe_number = 0;
+	curr = head;
 	while (pipe_number < (command_number - 1))
 	{
-		while (curr && curr->type != 3)
+		while (curr && curr->type != TOKEN_PIPE)
 			curr = curr->next;
-		if (curr->type == 3)
+		if (curr->type == TOKEN_PIPE)
 		{
 			pipe_number++;
 			curr = curr->next;
@@ -116,19 +118,19 @@ t_cmd_parts *get_command_array(const t_token *head, int command_number)
 	i = 0;
 	j = 0;
 	k = 0;
-    while (curr && curr->type != 3)
+    while (curr && curr->type != TOKEN_PIPE)
     {
-		if (curr->type >= 4 && curr->type <= 7)
+		if (curr->type >= TOKEN_REDIR_IN && curr->type <= TOKEN_REDIR_HERE)
 		{
-			if (curr->type == 4)
+			if (curr->type == TOKEN_REDIR_IN)
 			{
 				cmd_parts->infiles_array[i] = curr->next->value;
 				i++;
 			}
-			if (curr->type == 5 || curr->type == 6)
+			if (curr->type == TOKEN_REDIR_OUT || curr->type == TOKEN_REDIR_APPEND)
 			{
 				cmd_parts->outfiles_array[k] = curr->next->value;
-				if (curr->type == 5)
+				if (curr->type == TOKEN_REDIR_OUT)
 					cmd_parts->outfiles_types[k] = 1;
 				else
 					cmd_parts->outfiles_types[k] = 2;
@@ -136,7 +138,7 @@ t_cmd_parts *get_command_array(const t_token *head, int command_number)
 			}
 			curr = curr->next->next;
 		}
-		if (curr && curr->type == 0)
+		if (curr && curr->type == TOKEN_WORD)
 		{
 			cmd_parts->cmd_array[j] = curr->value;
 			j++;
