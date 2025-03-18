@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 13:33:50 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/18 17:03:15 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/18 17:28:10 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ static int	command_not_found(t_cmd_parts *cmd_parts, t_args *arg_struct)
 		free(arg_struct->pids);
 	if (arg_struct->fd != NULL)
 		free(arg_struct->fd);
-	free(arg_struct);
+	if (arg_struct != NULL)
+		free(arg_struct);
 	return (127);
 }
 
