@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:24 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/18 14:16:47 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/19 15:41:33 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,10 @@ void	close_pipes(int **fd, int j)
 	{
 		if (fd[i] != NULL)
 		{
-			close(fd[i][0]);
-			close(fd[i][1]);
+			if (fd[i][0] != -1)
+				close(fd[i][0]);
+			if (fd[i][1] != -1)
+				close(fd[i][1]);
 		}
 	}
 }

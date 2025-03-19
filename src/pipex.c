@@ -15,6 +15,7 @@ static int	command_not_found(t_cmd_parts *cmd_parts, t_args *arg_struct)
 		ft_putstr_fd(": command not found\n", 2);
 	}
 	//free_cmd_parts(cmd_parts);
+	//cmd_parts = NULL;
 	//free_array((void **)(cmd_parts->cmd_array), 0, -1);
 	if (arg_struct->pids != NULL)
 		free(arg_struct->pids);
@@ -75,6 +76,8 @@ static int	run_pid(t_args *arg_struct, t_cmd_parts *cmd_parts, t_shell *shell, i
 	if (check_status == -1)
 	{
 		//free_array((void **)command_array, 0, -1);
+		free_cmd_parts(cmd_parts);
+		cmd_parts = NULL;
 		free(path);
 		return (EXIT_FAILURE); // exit
 	}
@@ -90,13 +93,13 @@ int	execute_commands(t_shell *shell, int num_commands, char **envp)
 {
 	int		wstatus;
 	int		j;
-	int		k;
+	//int		k;
 	t_args	*arg_struct;
 	t_cmd_parts *cmd_parts;
 	int used_execve[num_commands];
-	int last_exit_code;
-	pid_t exited_pid;
-	int exit_code;
+	//int last_exit_code;
+	//pid_t exited_pid;
+	//int exit_code;
 
 	//printf("num_commands: %d\n", num_commands);
 	arg_struct = prepare_struct(num_commands, envp);
@@ -124,53 +127,61 @@ int	execute_commands(t_shell *shell, int num_commands, char **envp)
 		cmd_parts = NULL;
 	}
 	close_and_free(arg_struct, 0);
-	// Wait for all child processes
-	last_exit_code = EXIT_FAILURE;
 	j = -1;
 	while (++j < num_commands)
-	{
-		exited_pid = waitpid(-1, &wstatus, 0);
-		if (exited_pid > 0 && WIFEXITED(wstatus))
-		{
-			exit_code = WEXITSTATUS(wstatus);
-			k = -1;
-			while (++k < num_commands)
-			{
-				if (arg_struct->pids[k] == exited_pid)
-				{
-					if (used_execve[k] == 1)
-						last_exit_code = exit_code;
-					else
-					{
-						if (arg_struct->pids != NULL)
-						{
-							free(arg_struct->pids);
-							arg_struct->pids = NULL;
-						}
-						if (arg_struct != NULL)
-						{
-							free(arg_struct);
-							arg_struct = NULL;
-						}
-						exit(exit_code); // Exit parent
-					}
-					break ;
-				}
-			}
-		}
-	}
-	// Cleanup and return last exit code
-	if (arg_struct->pids != NULL)
-	{
-		free(arg_struct->pids);
-		arg_struct->pids = NULL;
-	}
-	if (arg_struct != NULL)
-	{
-		free(arg_struct);
-		arg_struct = NULL;
-	}
-	return (last_exit_code);
+		waitpid(arg_struct->pids[j], &wstatus, 0);
+	free(arg_struct->pids);
+	free(arg_struct);
+	if (WIFEXITED(wstatus))
+		return (WEXITSTATUS(wstatus));
+	return (EXIT_FAILURE);
+	// // Wait for all child processes
+	// last_exit_code = EXIT_FAILURE;
+	// j = -1;
+	// while (++j < num_commands)
+	// {
+	// 	exited_pid = waitpid(-1, &wstatus, 0);
+	// 	if (exited_pid > 0 && WIFEXITED(wstatus))
+	// 	{
+	// 		exit_code = WEXITSTATUS(wstatus);
+	// 		k = -1;
+	// 		while (++k < num_commands)
+	// 		{
+	// 			if (arg_struct->pids[k] == exited_pid)
+	// 			{
+	// 				if (used_execve[k] == 1)
+	// 					last_exit_code = exit_code;
+	// 				else
+	// 				{
+	// 					if (arg_struct->pids != NULL)
+	// 					{
+	// 						free(arg_struct->pids);
+	// 						arg_struct->pids = NULL;
+	// 					}
+	// 					if (arg_struct != NULL)
+	// 					{
+	// 						free(arg_struct);
+	// 						arg_struct = NULL;
+	// 					}
+	// 					exit(exit_code); // Exit parent
+	// 				}
+	// 				break ;
+	// 			}
+	// 		}
+	// 	}
+	// }
+	// // Cleanup and return last exit code
+	// if (arg_struct->pids != NULL)
+	// {
+	// 	free(arg_struct->pids);
+	// 	arg_struct->pids = NULL;
+	// }
+	// if (arg_struct != NULL)
+	// {
+	// 	free(arg_struct);
+	// 	arg_struct = NULL;
+	// }
+	// return (last_exit_code);
 }
 
 
