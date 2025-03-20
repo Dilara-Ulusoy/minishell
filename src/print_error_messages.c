@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 12:58:25 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/19 13:15:10 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/20 13:01:27 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,17 +87,63 @@ int	check_dup2(int file_d, t_args *arg_struct, int std_type)
 // 		return (0);
 // }
 
+// void free_cmd_parts(t_cmd_parts *cmd_parts)
+// {
+// 	if (cmd_parts == NULL)
+// 		return ;
+// 	if (cmd_parts->cmd_array != NULL)
+// 		free(cmd_parts->cmd_array);
+// 	if (cmd_parts->infiles_array != NULL)
+// 		free(cmd_parts->infiles_array);
+// 	if (cmd_parts->outfiles_array != NULL)
+// 		free(cmd_parts->outfiles_array);
+// 	if (cmd_parts->outfiles_types != NULL)
+// 		free(cmd_parts->outfiles_types);
+// 	free(cmd_parts);
+// }
+
 void free_cmd_parts(t_cmd_parts *cmd_parts)
 {
-	if (cmd_parts == NULL)
-		return ;
-	if (cmd_parts->cmd_array != NULL)
-		free(cmd_parts->cmd_array);
-	if (cmd_parts->infiles_array != NULL)
-		free(cmd_parts->infiles_array);
-	if (cmd_parts->outfiles_array != NULL)
-		free(cmd_parts->outfiles_array);
-	if (cmd_parts->outfiles_types != NULL)
-		free(cmd_parts->outfiles_types);
-	free(cmd_parts);
+    int i;
+
+    if (cmd_parts == NULL)
+        return;
+
+    if (cmd_parts->cmd_array != NULL)
+    {
+        i = 0;
+        while (cmd_parts->cmd_array[i] != NULL)
+        {
+            free(cmd_parts->cmd_array[i]);
+            i++;
+        }
+        free(cmd_parts->cmd_array);
+    }
+
+    if (cmd_parts->infiles_array != NULL)
+    {
+        i = 0;
+        while (cmd_parts->infiles_array[i] != NULL)
+        {
+            free(cmd_parts->infiles_array[i]);
+            i++;
+        }
+        free(cmd_parts->infiles_array);
+    }
+
+    if (cmd_parts->outfiles_array != NULL)
+    {
+        i = 0;
+        while (cmd_parts->outfiles_array[i] != NULL)
+        {
+            free(cmd_parts->outfiles_array[i]);
+            i++;
+        }
+        free(cmd_parts->outfiles_array);
+    }
+
+    if (cmd_parts->outfiles_types != NULL)
+        free(cmd_parts->outfiles_types);
+
+    free(cmd_parts);
 }

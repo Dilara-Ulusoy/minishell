@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:24 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/19 15:41:33 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/20 13:25:36 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,8 @@ t_args	*prepare_struct(int num_commands, char **envp)
 		{
 			close_pipes(arg_struct->fd, j);
 			free_array((void **)arg_struct->fd, 1, num_commands + 1);
+			free(arg_struct->pids); // Ensure proper cleanup
+			free(arg_struct);
 			display_error_message(1, arg_struct);
 			return (NULL);
 		}

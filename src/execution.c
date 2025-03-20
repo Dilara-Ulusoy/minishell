@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:03 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/18 14:52:37 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/20 13:23:49 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,11 +97,23 @@ t_cmd_parts *get_command_array(const t_token *head, int command_number)
 	const t_token *curr;
 	
 	cmd_parts = count_tokens(head, command_number);
+	if (cmd_parts == NULL)
+		return (NULL);
 	//printf("Count of tokens: %d\n", cmd_parts->n_cmd);
 	cmd_parts->cmd_array = malloc(sizeof(char *) * (cmd_parts->n_cmd + 1));
 	cmd_parts->infiles_array = malloc(sizeof(char *) * (cmd_parts->n_in + 1));
 	cmd_parts->outfiles_array = malloc(sizeof(char *) * (cmd_parts->n_out + 1));
 	cmd_parts->outfiles_types = malloc(sizeof(int) * (cmd_parts->n_out));
+	if (!cmd_parts->cmd_array || !cmd_parts->infiles_array || !cmd_parts->outfiles_array || !cmd_parts->outfiles_types)
+	{
+		// Free everything in case of allocation failure
+		free(cmd_parts->cmd_array);
+		free(cmd_parts->infiles_array);
+		free(cmd_parts->outfiles_array);
+		free(cmd_parts->outfiles_types);
+		free(cmd_parts);
+		return NULL;
+	}
 	cmd_parts->command_number = command_number - 1;
 	pipe_number = 0;
 	curr = head;
@@ -124,12 +136,14 @@ t_cmd_parts *get_command_array(const t_token *head, int command_number)
 		{
 			if (curr->type == TOKEN_REDIR_IN)
 			{
-				cmd_parts->infiles_array[i] = curr->next->value;
+				//cmd_parts->infiles_array[i] = curr->next->value;
+				cmd_parts->infiles_array[i] = ft_strdup(curr->next->value);
 				i++;
 			}
 			if (curr->type == TOKEN_REDIR_OUT || curr->type == TOKEN_REDIR_APPEND)
 			{
-				cmd_parts->outfiles_array[k] = curr->next->value;
+				//cmd_parts->outfiles_array[k] = curr->next->value;
+				cmd_parts->outfiles_array[k] = ft_strdup(curr->next->value);
 				if (curr->type == TOKEN_REDIR_OUT)
 					cmd_parts->outfiles_types[k] = 1;
 				else
@@ -140,7 +154,8 @@ t_cmd_parts *get_command_array(const t_token *head, int command_number)
 		}
 		if (curr && curr->type == TOKEN_WORD)
 		{
-			cmd_parts->cmd_array[j] = curr->value;
+			//cmd_parts->cmd_array[j] = curr->value;
+			cmd_parts->cmd_array[j] = ft_strdup(curr->value);
 			j++;
         	curr = curr->next;
 		}
@@ -276,7 +291,8 @@ int check_and_run_builtins(t_shell *shell, t_cmd_parts *cmd_parts, char **envp)
 		if ((cmd_parts->cmd_array[1]) && (ft_strncmp(cmd_parts->cmd_array[1], "-n\0", 3) != 0))
 			ft_putstr_fd("\n", STDOUT_FILENO);
 			//printf("\n");
-		free(cmd_parts->cmd_array);
+		free_cmd_parts(cmd_parts);
+		cmd_parts = NULL;
 	}
 	else if (ft_strncmp(cmd_parts->cmd_array[0], "exit\0", 5) == 0) // exit code number or if nonnumeric give error, 1'den fazla argument : too many arguments
 	{
@@ -286,14 +302,16 @@ int check_and_run_builtins(t_shell *shell, t_cmd_parts *cmd_parts, char **envp)
 		printf("exit\n");
 		if (len == 1)
 		{
-			free(cmd_parts->cmd_array);
+			free_cmd_parts(cmd_parts);
+			cmd_parts = NULL;
 			cleanup_shell(shell);
 			exit(EXIT_SUCCESS);
 		}
 		else if (len == 2)
 		{
 			exit_code = ft_exit(cmd_parts->cmd_array[1]);
-			free(cmd_parts->cmd_array);
+			free_cmd_parts(cmd_parts);
+			cmd_parts = NULL;
 			cleanup_shell(shell);
 			exit(exit_code);
 		}
@@ -302,14 +320,16 @@ int check_and_run_builtins(t_shell *shell, t_cmd_parts *cmd_parts, char **envp)
 			if (is_number(cmd_parts->cmd_array[1]))
 			{
 				printf("exit: too many arguments\n");
-				free(cmd_parts->cmd_array);
+				free_cmd_parts(cmd_parts);
+				cmd_parts = NULL;
 				//cleanup_shell(shell);
 				return (EXIT_FAILURE);
 			}
 			else
 			{
 				printf("exit: %s: numeric argument required\n", cmd_parts->cmd_array[1]);
-				free(cmd_parts->cmd_array);
+				free_cmd_parts(cmd_parts);
+				cmd_parts = NULL;
 				cleanup_shell(shell);
 				exit(255);
 			}
@@ -327,17 +347,20 @@ int check_and_run_builtins(t_shell *shell, t_cmd_parts *cmd_parts, char **envp)
 		}
 		else
 			ft_env(envp);
-		free(cmd_parts->cmd_array);
+		free_cmd_parts(cmd_parts);
+		cmd_parts = NULL;
 	}
 	else if (ft_strncmp(cmd_parts->cmd_array[0], "pwd\0", 4) == 0)
 	{
 		ft_pwd();
-		free(cmd_parts->cmd_array);
+		free_cmd_parts(cmd_parts);
+		cmd_parts = NULL;
 	}
 	else if (ft_strncmp(cmd_parts->cmd_array[0], "cd\0", 3) == 0)
 	{
 		ft_cd(cmd_parts->cmd_array[1]);
-		free(cmd_parts->cmd_array);
+		free_cmd_parts(cmd_parts);
+		cmd_parts = NULL;
 	}
 	return (0);
 }

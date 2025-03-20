@@ -17,12 +17,27 @@ static int	command_not_found(t_cmd_parts *cmd_parts, t_args *arg_struct)
 	//free_cmd_parts(cmd_parts);
 	//cmd_parts = NULL;
 	//free_array((void **)(cmd_parts->cmd_array), 0, -1);
-	if (arg_struct->pids != NULL)
-		free(arg_struct->pids);
-	if (arg_struct->fd != NULL)
-		free(arg_struct->fd);
+	if (cmd_parts != NULL)
+	{
+		free_cmd_parts(cmd_parts);
+		cmd_parts = NULL;
+	}
 	if (arg_struct != NULL)
+	{
+		if (arg_struct->pids != NULL)
+		{
+			free(arg_struct->pids);
+			arg_struct->pids = NULL;
+		}
+		if (arg_struct->fd != NULL)
+		{
+			free_array((void **)arg_struct->fd, 1, arg_struct->argc + 1);
+			arg_struct->fd = NULL;
+			//free(arg_struct->fd);
+		}
 		free(arg_struct);
+		arg_struct = NULL;
+	}
 	return (127);
 }
 
@@ -48,6 +63,12 @@ static int	execute_command(char *path, t_cmd_parts *cmd_parts,
 		ft_putstr_fd(path, 2);
 		ft_putstr_fd(": ", 2);
 		ft_putstr_fd(strerror(21), 2);
+		// Free before returning
+		free(path);
+		free_cmd_parts(cmd_parts);
+		free(arg_struct->pids);
+		free_array((void **)arg_struct->fd, 1, arg_struct->argc + 1);
+		free(arg_struct);
 		//free(arg_struct->pids);
 		//free(arg_struct);
 		//free_array((void **)(cmd_parts->cmd_array), 0, -1);
@@ -58,6 +79,12 @@ static int	execute_command(char *path, t_cmd_parts *cmd_parts,
 		execve(path, cmd_parts->cmd_array, arg_struct->envp);
 		perror(cmd_parts->cmd_array[0]);
 	}
+	// Free before returning
+	free(path);
+	free_cmd_parts(cmd_parts);
+	free(arg_struct->pids);
+	free_array((void **)arg_struct->fd, 1, arg_struct->argc + 1);
+	free(arg_struct);
 	//free(arg_struct->pids);
 	//free(arg_struct);
 	//free_array((void **)(cmd_parts->cmd_array), 0, -1);
@@ -69,6 +96,7 @@ static int	run_pid(t_args *arg_struct, t_cmd_parts *cmd_parts, t_shell *shell, i
 	char	*path;
 	char	**command_array;
 	int		check_status;
+	int ret;
 
 	command_array = cmd_parts->cmd_array;
 	path = find_command_path(command_array[0], arg_struct->envp);
@@ -76,13 +104,20 @@ static int	run_pid(t_args *arg_struct, t_cmd_parts *cmd_parts, t_shell *shell, i
 	if (check_status == -1)
 	{
 		//free_array((void **)command_array, 0, -1);
-		free_cmd_parts(cmd_parts);
-		cmd_parts = NULL;
+		if (cmd_parts)
+		{
+			free_cmd_parts(cmd_parts);
+			cmd_parts = NULL;
+		}
 		free(path);
 		return (EXIT_FAILURE); // exit
 	}
 	if (is_builtin == 1)
-		return (check_and_run_builtins(shell, cmd_parts, arg_struct->envp));
+	{
+		ret = check_and_run_builtins(shell, cmd_parts, arg_struct->envp);
+		free(path);
+		return (ret);
+	}
 	else if (path != NULL)
 		return (execute_command(path, cmd_parts, arg_struct)); // exit
 	else
@@ -99,7 +134,7 @@ int	execute_commands(t_shell *shell, int num_commands, char **envp)
 	int used_execve[num_commands];
 	//int last_exit_code;
 	//pid_t exited_pid;
-	//int exit_code;
+	int exit_code;
 
 	//printf("num_commands: %d\n", num_commands);
 	arg_struct = prepare_struct(num_commands, envp);
@@ -118,13 +153,30 @@ int	execute_commands(t_shell *shell, int num_commands, char **envp)
 		if (arg_struct->pids[j] < 0)
 		{
 			free_cmd_parts(cmd_parts);
-			cmd_parts = NULL;
-			return (display_error_message(2, arg_struct)); // exit
+			// if (cmd_parts)
+			// {
+			// 	free_cmd_parts(cmd_parts);
+			// 	cmd_parts = NULL;
+			// }
+			exit(display_error_message(2, arg_struct)); // exit
 		}
 		if (arg_struct->pids[j] == 0)
-			run_pid(arg_struct, cmd_parts, shell, is_builtin(cmd_parts));
-		free_cmd_parts(cmd_parts);
-		cmd_parts = NULL;
+		{
+			exit_code = run_pid(arg_struct, cmd_parts, shell, is_builtin(cmd_parts));
+			free_cmd_parts(cmd_parts);
+			// if (cmd_parts)
+			// {
+			// 	free_cmd_parts(cmd_parts);
+			// 	cmd_parts = NULL;
+			// }
+			exit(exit_code);
+		}
+		free_cmd_parts(cmd_parts); // Always free after use
+		// if (cmd_parts)
+		// {
+		// 	free_cmd_parts(cmd_parts);
+		// 	cmd_parts = NULL;
+		// }
 	}
 	close_and_free(arg_struct, 0);
 	j = -1;

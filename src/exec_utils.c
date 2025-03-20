@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 13:01:11 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/17 12:22:34 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/20 11:21:27 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 void	free_array(void **arr, int is_int, int j)
 {
+	if (arr == NULL)
+		return ;
 	if (j == -1)
 	{
 		while (arr[++j] != NULL)
@@ -36,6 +38,7 @@ void	free_array(void **arr, int is_int, int j)
 		}
 	}
 	free(arr);
+	arr = NULL;
 }
 
 int	close_and_free(t_args *arg_struct, int free_pid)
