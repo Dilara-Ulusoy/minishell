@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoce@student.hive.fi>       +#+  +:+       +#+        */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:03:04 by dakcakoc          #+#    #+#             */
-/*   Updated: 2024/04/22 10:11:35 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/18 14:22:20 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "libft.h"
 
 void	*ft_memcpy(void *dest, const void *src, size_t n)
@@ -17,10 +18,11 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	const unsigned char	*s;
 	size_t				i;
 
-	if (!dest && !src)
+	if (!dest || !src)
 		return (NULL);
+
 	d = (unsigned char *)dest;
-	s = (unsigned char *)src;
+	s = (const unsigned char *)src;
 	i = 0;
 	while (i < n)
 	{
@@ -29,8 +31,9 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	}
 	return (dest);
 }
+
 /*
-This function copies n bytes from memory area src 
+This function copies n bytes from memory area src
 to memory area dest.
 */
 /*
@@ -44,7 +47,7 @@ int main()
    printf("Destination = %s\n", x);
    ft_memcpy(x, y, 5);
    printf("Destination after ft_memcpy =  %s\n\n",x);
-    
+
     //Test case for memcpy
     char a[40];
     char b[] = "Hello Wolrd!";

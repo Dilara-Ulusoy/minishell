@@ -6,13 +6,13 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 12:57:34 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/19 12:58:06 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/18 14:06:42 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	parse_redirections(t_parser *p, t_io_node **io_list)
+int	parse_redirections(t_parser *p, t_io_node **io_list)
 {
 	t_io_type	kind;
 	t_io_node	*new_io;
@@ -24,7 +24,7 @@ void	parse_redirections(t_parser *p, t_io_node **io_list)
 		if (!p->current_token || p->current_token->type != TOKEN_WORD)
 		{
 			p->error_status = PARSE_SYNTAX_ERROR;
-			return ;
+			return (-1);
 		}
 		if (kind == IO_HEREDOC)
 		{
@@ -34,11 +34,13 @@ void	parse_redirections(t_parser *p, t_io_node **io_list)
 		if (!new_io)
 		{
 			free_io_list(*io_list);
-			return ;
+			return (-1);
 		}
-		attach_io_node(io_list, new_io);
+		if (attach_io_node(io_list, new_io) == -1)
+			return (-1);
 		get_next_token(p);
 	}
+	return (0);
 }
 
 /*
@@ -61,10 +63,12 @@ t_io_type	map_token_to_io_type(t_token_type type)
 }
 
 /* Helper function: Attach a new IO node to the IO list */
-void	attach_io_node(t_io_node **io_list, t_io_node *new_io)
+int	attach_io_node(t_io_node **io_list, t_io_node *new_io)
 {
 	t_io_node	*tmp;
 
+	if (!new_io)
+		return (-1);
 	if (!*io_list)
 		*io_list = new_io;
 	else
@@ -74,6 +78,7 @@ void	attach_io_node(t_io_node **io_list, t_io_node *new_io)
 			tmp = tmp->next;
 		tmp->next = new_io;
 	}
+	return (0);
 }
 
 void	get_next_token(t_parser *p)

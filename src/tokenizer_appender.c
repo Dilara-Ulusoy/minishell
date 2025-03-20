@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 14:04:22 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/18 15:19:51 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/17 15:45:37 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,21 +17,22 @@
    - Adds 'new_token' to the end of the linked list whose head is '*head'.
    - If *head is NULL, then new_token becomes the first and only element.
 */
-void	append_token(t_token **head, t_token *new_token)
+int	append_token(t_token **head, t_token *new_token)
 {
 	t_token	*token;
 
 	if (!new_token)
-		return ;
+		return (-1);
 	if (!*head)
 	{
 		*head = new_token;
-		return ;
+		return (1);
 	}
 	token = *head;
 	while (token->next)
 		token = token->next;
 	token->next = new_token;
+	return (1);
 }
 
 /*
@@ -43,7 +44,7 @@ void	append_token(t_token **head, t_token *new_token)
    - Returns a pointer to the newly created token or NULL on failure.
 */
 t_token	*create_new_token_range(t_token_type type, const char *line,
-		int startIndex, int length)
+		int startIndex, int op_length)
 {
 	t_token	*new_token;
 
@@ -51,14 +52,18 @@ t_token	*create_new_token_range(t_token_type type, const char *line,
 	if (!new_token)
 		return (NULL);
 	new_token->type = type;
-	new_token->value = (char *)malloc((length + 1) * sizeof(char));
+	new_token->value = (char *)malloc((op_length + 1) * sizeof(char));
 	if (!new_token->value)
 	{
 		free_tokens(&new_token);
 		return (NULL);
 	}
-	ft_memcpy(new_token->value, &line[startIndex], length + 1);
-	new_token->value[length] = '\0';
+	if (ft_memcpy(new_token->value, &line[startIndex], op_length + 1) == NULL)
+	{
+		free_tokens(&new_token);
+		return NULL;
+	}
+	new_token->value[op_length] = '\0';
 	new_token->next = NULL;
 	return (new_token);
 }

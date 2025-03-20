@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:56:35 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/19 14:57:32 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/17 12:33:30 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,36 +22,29 @@ int	is_operator(t_token_type type)
 }
 
 /*
-   is_binary_operator:
-   - returns 1 if it's &&, ||, or |,
-   - 0 otherwise
-*/
-int	is_binary_operator(t_token_type ttype)
-{
-	if (ttype == TOKEN_AND || ttype == TOKEN_OR || ttype == TOKEN_PIPE)
-		return (1);
-	return (0);
-}
-/*
    get_precedence:
    - a simple numeric precedence system
-	 OR (||) -> 10
-	 AND (&&) -> 20
-	 PIPE (|) -> 30
+	 PIPE (|) -> 10
    - higher => parse first
 */
-
 int	get_precedence(t_token_type type)
 {
-	if (type == TOKEN_OR)
+
+	if (type == TOKEN_PIPE)
 		return (10);
-	else if (type == TOKEN_AND)
-		return (20);
-	else if (type == TOKEN_PIPE)
-		return (30);
 	else
 		return (0);
 }
+
+/*
+int get_precedence(t_token_type type)
+{
+    if (type == TOKEN_PIPE)  // Sadece | operatörü için öncelik döndürülür
+        return (30);
+    else
+        return (0);  // Diğer operatörler için öncelik yoktur
+}
+*/
 
 char	*resize_buffer(char *buffer, size_t *buffer_size)
 {

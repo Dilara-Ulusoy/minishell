@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 14:05:19 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/19 09:16:08 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/20 12:56:25 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ static int	handle_initial_token_check(t_parser *parser, t_token *current)
 			set_syntax_error(parser, current->value);
 		else
 			set_syntax_error(parser, "\\n");
-		//set_error_number(parser, 1);
 		return (0);
 	}
 	return (1);
@@ -60,8 +59,38 @@ static int	handle_consecutive_operators(t_parser *parser, t_token *current)
 	if (is_operator(current->type) && is_operator(current->next->type))
 	{
 		set_syntax_error(parser, current->next->value);
-		//set_error_number(parser, 1);
 		return (0);
+	}
+	return (1);
+}
+
+static int handle_and_or(t_parser *parser, t_token *current)
+{
+	if (current->type == TOKEN_WORD)
+	{
+		if(current->next && current->next->type == TOKEN_AND)
+		{
+			set_syntax_error(parser, current->value);
+			return (0);
+		}
+		if(current->next && current->next->type == TOKEN_OR)
+		{
+			set_syntax_error(parser, current->value);
+			return (0);
+		}
+	}
+	return (1);
+}
+
+static int handle_parantesis(t_parser *parser, t_token *current)
+{
+	if (is_operator(current->type) || current->type == TOKEN_WORD)
+	{
+		if(current->next && current->next->type == TOKEN_PAREN_OPEN)
+		{
+			set_syntax_error(parser, current->value);
+			return (0);
+		}
 	}
 	return (1);
 }
@@ -113,7 +142,6 @@ static int	handle_trailing_operator(t_parser *parser, t_token *current)
 			set_syntax_error(parser, (current)->value);
 		else
 			set_syntax_error(parser, "\\n");
-		//set_error_number(parser, 1);
 		return (0);
 	}
 	return (1);
@@ -133,6 +161,10 @@ int	check_syntax_errors(t_parser *parser)
 		if (!handle_consecutive_operators(parser, current))
 			return (0);
 		if (!handle_redir_followed_by_word(parser, current))
+			return (0);
+		if (!handle_parantesis(parser, current))
+			return (0);
+		if (!handle_and_or(parser, current))
 			return (0);
 		current = current->next;
 	}

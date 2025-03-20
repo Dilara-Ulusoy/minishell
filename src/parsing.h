@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 13:18:55 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/19 13:26:31 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/18 14:03:40 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ t_ast_node		*create_ast_operator_node(t_ast_node_type type,
 					t_ast_node *left, t_ast_node *right);
 t_io_node		*create_io_node(t_io_type kind, const char *filename,
 					struct s_parser *p);
-void			attach_io_node(t_io_node **io_list, t_io_node *new_io);
+int			attach_io_node(t_io_node **io_list, t_io_node *new_io);
 t_ast_node		*built_operator_node(t_ast_node *left_node,
 					t_ast_node *right_node, t_token_type operator_type,
 					struct s_parser *p);
@@ -123,10 +123,7 @@ t_ast_node		*build_ast(t_token *token_list);
 t_ast_node		*parse_expression(t_parser *p, int min_prec);
 t_ast_node		*parse_term(t_parser *p);
 t_ast_node		*parse_command(t_parser *p);
-t_ast_node		*parse_parenthesized_expression(t_parser *p);
-void			parse_redirections(t_parser *p, t_io_node **io_list);
-int				process_redirections(t_parser *p, char **cmd_args,
-					t_io_node **io_list);
+int			parse_redirections(t_parser *p, t_io_node **io_list);
 void			cleanup_resources(char *cmd_args, t_io_node *io_list);
 
 /* Syntax validation */

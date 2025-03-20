@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:16:56 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/19 14:53:59 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/17 16:00:27 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,7 @@
 
 t_ast_node_type	get_ast_node_type(t_token_type operator_type)
 {
-	if (operator_type == TOKEN_AND)
-		return (AST_AND);
-	else if (operator_type == TOKEN_OR)
-		return (AST_OR);
-	else if (operator_type == TOKEN_PIPE)
+	if (operator_type == TOKEN_PIPE)
 		return (AST_PIPE);
 	else
 		return (AST_INVALID);
@@ -81,9 +77,7 @@ static char	*allocate_command_string(const char *cmd_text,
 	'io_list' to node->io_redirects.
    - left/right remain NULL because a command node doesn't have children.
 
-   free_io_list:
-   - Iterate over the t_io_node linked list,
-   free each filename, and free the node.
+   Returns the newly created AST node.
 */
 t_ast_node	*create_ast_command_node(const char *cmd_text, t_io_node *io_list)
 {
@@ -92,6 +86,7 @@ t_ast_node	*create_ast_command_node(const char *cmd_text, t_io_node *io_list)
 	node = (t_ast_node *)malloc(sizeof(t_ast_node));
 	if (!node)
 	{
+		ft_putstr_fd("Memory allocation failed at create_ast_cmd_node.\n", 2);
 		free_ast(node);
 		return (NULL);
 	}
@@ -110,8 +105,6 @@ t_io_node	*create_io_node(t_io_type kind, const char *filename, t_parser *p)
 	t_io_node	*new_io;
 
 	new_io = (t_io_node *)malloc(sizeof(t_io_node));
-	printf("Allocated AST IO Node: %p ----> %s\n",
-		(void *)new_io, filename);
 	if (!new_io)
 	{
 		p->error_status = PARSE_MEMORY_ERROR;
@@ -119,12 +112,13 @@ t_io_node	*create_io_node(t_io_type kind, const char *filename, t_parser *p)
 	}
 	new_io->io_kind = kind;
 	new_io->filename = ft_strdup(filename);
-	new_io->next = NULL;
 	if (!new_io->filename)
 	{
+		ft_putstr_fd("Memory allocation failed at create_io_node.\n", 2);
 		free(new_io);
 		p->error_status = PARSE_MEMORY_ERROR;
 		return (NULL);
 	}
+	new_io->next = NULL;
 	return (new_io);
 }

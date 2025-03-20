@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 15:00:56 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/19 15:00:58 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/20 12:53:25 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	setup_signal_handlers(void)
 
 void parse_and_process_command(t_shell *shell)
 {
-	if (*(shell->line) == '\0') /* Handle empty input */
+	if (*(shell->line) == '\0')
 	{
 		free(shell->line);
 		shell->line = NULL;
@@ -46,18 +46,17 @@ void parse_and_process_command(t_shell *shell)
 	shell->tokens = tokenize(shell->tokens, shell->line, shell->line_length);
 	if (!shell->tokens)
 	{
-		printf("Error: Tokenization failed.\n");
+		//printf("Error: Tokenization failed.\n");
 		cleanup_shell(shell);
 		return ;
 	}
 	shell->ast = build_ast(shell->tokens); /* Build the AST */
 	if (!shell->ast)
 	{
-		printf("Error: Parsing failed.\n");
+		//printf("Error: Parsing failed.\n");
 		cleanup_shell(shell);
 		return ;
 	}
-	//find_ast_pipes(shell->ast);  // -------> FOR DUBEGGING
 	debug_ast(shell->ast, 0);   // -------> FOR DUBEGGING
 	// execute_ast(shell->ast); /* Uncomment for actual execution */
 	//print_tokens(shell->tokens);  // -------> FOR DUBEGGING

@@ -6,27 +6,47 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:34:26 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/18 15:15:27 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/20 14:25:57 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/**
- * @brief tokenize
- * Splits the line string into a linked list of tokens.
- * Uses smaller helper methods for readability and memory correctness.
- *
- * @param line The user line (e.g. "echo hello && cat < file.txt").
- * @return Pointer to the first token in a linked list, or NULL if empty.
- */
+static int	process_token_parsing(t_token **head,
+		const char *line, int *i, int length)
+{
+	int	parse_result;
+
+	parse_result = parse_two_char_operator(head, line, i, length);
+	if (parse_result == -1)
+		return (-1);
+	if (parse_result)
+		return (0);
+	parse_result = parse_single_char_operator(head, line, i, length);
+	if (parse_result == -1)
+		return (-1);
+	if (parse_result)
+		return (0);
+	parse_result = handle_newline(head, line, i);
+	if (parse_result == -1)
+		return (-1);
+	if (parse_result)
+		return (0);
+	parse_result = parse_word(head, line, i, length);
+	if (parse_result == -1)
+		return (-1);
+	if (parse_result)
+		return (0);
+	return (0);
+}
+
 t_token	*tokenize(t_token *head, const char *line, int length)
 {
 	int	i;
 
 	if (!line || !*line)
 	{
-		ft_putstr_fd("Error: Empty line", STDERR_FILENO);
+		ft_putstr_fd("Error: Empty line\n", STDERR_FILENO);
 		return (NULL);
 	}
 	i = 0;
@@ -35,12 +55,9 @@ t_token	*tokenize(t_token *head, const char *line, int length)
 		i = skip_whitespace(line, i);
 		if (i >= length)
 			break ;
-		if (parse_two_char_operator(&head, line, &i, length)
-			|| parse_single_char_operator(&head, line, &i, length)
-			|| handle_newline(&head, line, &i))
-			continue ;
-		if (!parse_word(&head, line, &i, length))
+		if (process_token_parsing(&head, line, &i, length) == -1)
 		{
+			ft_putstr_fd("Error: Token parsing failed\n", STDERR_FILENO);
 			free_tokens(&head);
 			return (NULL);
 		}
@@ -64,12 +81,11 @@ t_token	*tokenize(t_token *head, const char *line, int length)
 
 **/
 int	parse_two_char_operator(t_token **head, const char *line,
-	int *pos, int length)
+							int *pos, int length)
 {
 	t_token_type	doublechar;
 	t_token			*op_token;
 	int				i;
-	int				operator_length;
 
 	i = *pos;
 	if (is_two_char_operator(line[i]) && (i + 1 < length))
@@ -77,11 +93,16 @@ int	parse_two_char_operator(t_token **head, const char *line,
 		doublechar = match_two_char_operator(line, i);
 		if (doublechar != TOKEN_UNKNOWN)
 		{
-			operator_length = 2;
 			op_token = create_new_token_range(doublechar,
-					line, i, operator_length);
-			append_token(head, op_token);
-			*pos += operator_length;
+					line, i, 2);
+			if (!op_token)
+				return (-1);
+			if (append_token(head, op_token) == -1)
+			{
+				free(op_token);
+				return (-1);
+			}
+			*pos += 2;
 			return (1);
 		}
 	}
@@ -113,21 +134,25 @@ int	parse_two_char_operator(t_token **head, const char *line,
  * 0 otherwise.
  */
 int	parse_single_char_operator(t_token **head, const char *line,
-	int *pos, int length)
+		int *pos, int length)
 {
 	t_token_type	single;
 	t_token			*op_token;
-	int				operator_length;
 
 	if (*pos >= length)
 		return (0);
 	single = match_single_char_operator(line[*pos]);
 	if (single != TOKEN_UNKNOWN)
 	{
-		operator_length = 1;
-		op_token = create_new_token_range(single, line, *pos, operator_length);
-		append_token(head, op_token);
-		*pos += operator_length;
+		op_token = create_new_token_range(single, line, *pos, 1);
+		if (!op_token)
+			return (-1);
+		if (append_token(head, op_token) == -1)
+		{
+			free(op_token);
+			return (-1);
+		}
+		*pos += 1;
 		return (1);
 	}
 	return (0);
@@ -140,7 +165,13 @@ int	handle_newline(t_token **head, const char *line, int *pos)
 	if (line[*pos] == '\n')
 	{
 		nl_token = create_new_token_range(TOKEN_NL, "\\n", 0, 2);
-		append_token(head, nl_token);
+		if (!nl_token)
+			return (-1);
+		if (append_token(head, nl_token) == -1)
+		{
+			free(nl_token);
+			return (-1);
+		}
 		(*pos)++;
 		return (1);
 	}
@@ -182,22 +213,22 @@ int	parse_word(t_token **head, const char *line, int *pos, int length)
 	if (*pos >= length)
 		return (0);
 	word = read_word_range(line, pos, length);
-	if (!word)
-	{
-		ft_putstr_fd("Memory error at parsing word ", STDERR_FILENO);
-		free_tokens(head);
-		return (0);
-	}
 	token = (t_token *)malloc(sizeof(t_token));
-	if (!token)
+	if (!word || !token)
 	{
+		ft_putstr_fd("Memory allocation error in parse_word\n", STDERR_FILENO);
 		free(word);
+		free(token);
 		free_tokens(head);
-		return (0);
+		return (-1);
 	}
 	token->type = TOKEN_WORD;
 	token->value = word;
 	token->next = NULL;
-	append_token(head, token);
+	if (append_token(head, token) == -1)
+	{
+		free(token);
+		return (-1);
+	}
 	return (1);
 }

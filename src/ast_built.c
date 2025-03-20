@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 09:03:53 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/19 09:08:37 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/20 12:58:15 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,10 @@ t_ast_node	*build_ast(t_token *token_list)
 
 	root = NULL;
 	init_parser(&parser, token_list);
-	if (!check_syntax_errors(&parser)
-		|| parser.error_status == PARSE_SYNTAX_ERROR)
+	if (!check_syntax_errors(&parser))
 		return (NULL);
 	root = parse_expression(&parser, 0);
-	if (parser.error_status != PARSE_OK)
+	if (!root || parser.error_status != PARSE_OK)
 	{
 		free_ast(root);
 		return (NULL);

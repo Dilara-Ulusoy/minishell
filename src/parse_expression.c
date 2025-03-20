@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 10:49:26 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/19 12:55:33 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/18 11:58:39 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,6 @@ t_ast_node	*parse_term(t_parser *p)
 {
 	if (!p->current_token || p->error_status != PARSE_OK)
 		return (NULL);
-	if (p->current_token->type == TOKEN_PAREN_OPEN)
-		return (parse_parenthesized_expression(p));
 	else
 		return (parse_command(p));
 }
@@ -99,23 +97,6 @@ t_ast_node	*built_operator_node(t_ast_node *left_node, t_ast_node *right_node,
 	return (op_node);
 }
 
-t_ast_node	*parse_parenthesized_expression(t_parser *p)
-{
-	t_ast_node	*sub_expr;
-
-	get_next_token(p);
-	sub_expr = parse_expression(p, 0);
-	if (!sub_expr)
-		return (NULL);
-	if (!p->current_token || p->current_token->type != TOKEN_PAREN_CLOSE)
-	{
-		p->error_status = PARSE_SYNTAX_ERROR;
-		free_ast(sub_expr);
-		return (NULL);
-	}
-	get_next_token(p);
-	return (sub_expr);
-}
 
 /*
 📌 parse_expression(min_prec)
@@ -182,7 +163,7 @@ t_ast_node	*parse_expression(t_parser *p, int min_prec)
 	left = parse_term(p);
 	if (!left)
 		return (NULL);
-	while (p->current_token && is_binary_operator(p->current_token->type))
+	while (p->current_token && p->current_token->type == TOKEN_PIPE)
 	{
 		op_prec = get_precedence(p->current_token->type);
 		if (op_prec < min_prec)

@@ -6,26 +6,11 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 10:22:37 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/19 12:07:45 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/18 14:28:43 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static t_ast_node	*handle_ast_command_creation(char *cmd_args,
-	t_io_node *io_list, t_parser *p)
-{
-	t_ast_node	*cmd_node;
-
-	cmd_node = create_ast_command_node(cmd_args, io_list);
-	if (!cmd_node)
-	{
-		free_io_list(io_list);
-		p->error_status = PARSE_MEMORY_ERROR;
-		return (NULL);
-	}
-	return (cmd_node);
-}
 
 /*
 	parse_command():
@@ -83,13 +68,18 @@ t_ast_node	*parse_command(t_parser *p)
 	cmd_args = build_command_string(p);
 	if (!cmd_args || p->error_status != PARSE_OK)
 		return (NULL);
-	if (!process_redirections(p, &cmd_args, &io_list)
-		|| p->error_status != PARSE_OK)
+	if (parse_redirections(p, &io_list) == -1)
 	{
 		cleanup_resources(cmd_args, io_list);
 		return (NULL);
 	}
-	cmd_node = handle_ast_command_creation(cmd_args, io_list, p);
+	cmd_node = create_ast_command_node(cmd_args, io_list);
+	if (!cmd_node)
+	{
+		p->error_status = PARSE_MEMORY_ERROR;
+		cleanup_resources(cmd_args, io_list);
+		return (NULL);
+	}
 	free(cmd_args);
 	return (cmd_node);
 }
@@ -125,6 +115,9 @@ static int	append_to_buffer(t_buffer *buf, const char *word_value)
 	size_t	word_len;
 	char	*tmp;
 
+	if (!buf || !buf->data || !word_value)
+		return (0);
+
 	word_len = ft_strlen(word_value);
 	while (buf->pos + word_len + 2 >= buf->size)
 	{
@@ -135,7 +128,8 @@ static int	append_to_buffer(t_buffer *buf, const char *word_value)
 	}
 	if (buf->pos > 0)
 		buf->data[buf->pos++] = ' ';
-	ft_memcpy(&buf->data[buf->pos], word_value, word_len);
+	if (ft_memcpy(&buf->data[buf->pos], word_value, word_len) == NULL)
+		return (0);
 	buf->pos += word_len;
 	buf->data[buf->pos] = '\0';
 	return (1);
@@ -185,30 +179,4 @@ char	*build_command_string(t_parser *p)
 		get_next_token(p);
 	}
 	return (cmd_buffer.data);
-}
-
-int	process_redirections(t_parser *p, char **cmd_args, t_io_node **io_list)
-{
-	char	*new_args;
-	char	*tmp;
-
-	parse_redirections(p, io_list);
-	while (p->current_token && p->current_token->type == TOKEN_WORD)
-	{
-		new_args = build_command_string(p);
-		if (!new_args)
-			return (0);
-		tmp = ft_strjoin(" ", new_args);
-		free(new_args);
-		if (!tmp)
-			return (0);
-		new_args = ft_strjoin(*cmd_args, tmp);
-		free(tmp);
-		free(*cmd_args);
-		if (!new_args)
-			return (0);
-		*cmd_args = new_args;
-		parse_redirections(p, io_list);
-	}
-	return (p->error_status == PARSE_OK);
 }
