@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:15 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/20 15:50:37 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/20 16:53:28 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int ft_exit(char *exit_code);
 int ft_env(char **envp);
 int ft_cd(char *new_path);
 int get_num_commands(t_shell *shell);
-int check_and_run_builtins(t_shell *shell, t_cmd_parts **cmd_parts, char **envp);
+int check_and_run_builtins(t_shell *shell, t_cmd_parts **cmd_parts, t_args *arg_struct);
 int execute_commands(t_shell *shell, int num_commands, char **envp);
 void	close_pipes(int **fd, int j);
 t_args	*add_fd_to_struct(t_args *arg_struct, int argc);

@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:03 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/20 16:34:13 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/20 16:55:11 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -268,11 +268,14 @@ int is_builtin(t_cmd_parts *cmd_parts)
 		return (0);
 }
 
-int check_and_run_builtins(t_shell *shell, t_cmd_parts **cmd_parts, char **envp)
+int check_and_run_builtins(t_shell *shell, t_cmd_parts **cmd_parts, t_args *arg_struct)
 {
 	int k;
 	int len;
 	int exit_code;
+	char **envp;
+
+	envp = arg_struct->envp;
 
 	if (ft_strncmp((*cmd_parts)->cmd_array[0], "echo\0", 5) == 0)
 	{
@@ -303,6 +306,8 @@ int check_and_run_builtins(t_shell *shell, t_cmd_parts **cmd_parts, char **envp)
 		if (len == 1)
 		{
 			free_cmd_parts(cmd_parts);
+			free(arg_struct->pids);
+			free(arg_struct);
 			//cmd_parts = NULL;
 			cleanup_shell(shell);
 			exit(EXIT_SUCCESS);
@@ -311,6 +316,8 @@ int check_and_run_builtins(t_shell *shell, t_cmd_parts **cmd_parts, char **envp)
 		{
 			exit_code = ft_exit((*cmd_parts)->cmd_array[1]);
 			free_cmd_parts(cmd_parts);
+			free(arg_struct->pids);
+			free(arg_struct);
 			//cmd_parts = NULL;
 			cleanup_shell(shell);
 			exit(exit_code);
@@ -330,6 +337,8 @@ int check_and_run_builtins(t_shell *shell, t_cmd_parts **cmd_parts, char **envp)
 				printf("exit: %s: numeric argument required\n", (*cmd_parts)->cmd_array[1]);
 				free_cmd_parts(cmd_parts);
 				//cmd_parts = NULL;
+				free(arg_struct->pids);
+				free(arg_struct);
 				cleanup_shell(shell);
 				exit(255);
 			}

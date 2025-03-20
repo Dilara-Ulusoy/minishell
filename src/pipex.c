@@ -118,7 +118,7 @@ static int	run_pid(t_args *arg_struct, t_cmd_parts **cmd_parts, t_shell *shell, 
 	}
 	if (is_builtin == 1)
 	{
-		ret = check_and_run_builtins(shell, cmd_parts, arg_struct->envp);
+		ret = check_and_run_builtins(shell, cmd_parts, arg_struct);
 		free(path);
 		free(arg_struct->pids);
 		free(arg_struct);
