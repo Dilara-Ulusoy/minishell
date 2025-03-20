@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:03 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/20 13:23:49 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/20 16:34:13 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -268,77 +268,77 @@ int is_builtin(t_cmd_parts *cmd_parts)
 		return (0);
 }
 
-int check_and_run_builtins(t_shell *shell, t_cmd_parts *cmd_parts, char **envp)
+int check_and_run_builtins(t_shell *shell, t_cmd_parts **cmd_parts, char **envp)
 {
 	int k;
 	int len;
 	int exit_code;
 
-	if (ft_strncmp(cmd_parts->cmd_array[0], "echo\0", 5) == 0)
+	if (ft_strncmp((*cmd_parts)->cmd_array[0], "echo\0", 5) == 0)
 	{
 		k = 1;
-		while ((cmd_parts->cmd_array[k]) && (ft_strncmp(cmd_parts->cmd_array[k], "-n\0", 3) == 0))
+		while (((*cmd_parts)->cmd_array[k]) && (ft_strncmp((*cmd_parts)->cmd_array[k], "-n\0", 3) == 0))
 			k++;
-		while(cmd_parts->cmd_array[k] != NULL)
+		while((*cmd_parts)->cmd_array[k] != NULL)
 		{
-			ft_putstr_fd(cmd_parts->cmd_array[k], STDOUT_FILENO);
+			ft_putstr_fd((*cmd_parts)->cmd_array[k], STDOUT_FILENO);
 			//printf("%s",cmd_parts->cmd_array[k]);
-			if (cmd_parts->cmd_array[k + 1] != NULL)
+			if ((*cmd_parts)->cmd_array[k + 1] != NULL)
 				ft_putstr_fd(" ", STDOUT_FILENO);
 				//printf(" ");
 			k++;
 		}
-		if ((cmd_parts->cmd_array[1]) && (ft_strncmp(cmd_parts->cmd_array[1], "-n\0", 3) != 0))
+		if (((*cmd_parts)->cmd_array[1]) && (ft_strncmp((*cmd_parts)->cmd_array[1], "-n\0", 3) != 0))
 			ft_putstr_fd("\n", STDOUT_FILENO);
 			//printf("\n");
 		free_cmd_parts(cmd_parts);
-		cmd_parts = NULL;
+		//cmd_parts = NULL;
 	}
-	else if (ft_strncmp(cmd_parts->cmd_array[0], "exit\0", 5) == 0) // exit code number or if nonnumeric give error, 1'den fazla argument : too many arguments
+	else if (ft_strncmp((*cmd_parts)->cmd_array[0], "exit\0", 5) == 0) // exit code number or if nonnumeric give error, 1'den fazla argument : too many arguments
 	{
 		len = 0;
-		while (cmd_parts->cmd_array[len] != NULL)
+		while ((*cmd_parts)->cmd_array[len] != NULL)
 			len++;
 		printf("exit\n");
 		if (len == 1)
 		{
 			free_cmd_parts(cmd_parts);
-			cmd_parts = NULL;
+			//cmd_parts = NULL;
 			cleanup_shell(shell);
 			exit(EXIT_SUCCESS);
 		}
 		else if (len == 2)
 		{
-			exit_code = ft_exit(cmd_parts->cmd_array[1]);
+			exit_code = ft_exit((*cmd_parts)->cmd_array[1]);
 			free_cmd_parts(cmd_parts);
-			cmd_parts = NULL;
+			//cmd_parts = NULL;
 			cleanup_shell(shell);
 			exit(exit_code);
 		}
 		else if (len > 2)
 		{
-			if (is_number(cmd_parts->cmd_array[1]))
+			if (is_number((*cmd_parts)->cmd_array[1]))
 			{
 				printf("exit: too many arguments\n");
 				free_cmd_parts(cmd_parts);
-				cmd_parts = NULL;
+				//cmd_parts = NULL;
 				//cleanup_shell(shell);
 				return (EXIT_FAILURE);
 			}
 			else
 			{
-				printf("exit: %s: numeric argument required\n", cmd_parts->cmd_array[1]);
+				printf("exit: %s: numeric argument required\n", (*cmd_parts)->cmd_array[1]);
 				free_cmd_parts(cmd_parts);
-				cmd_parts = NULL;
+				//cmd_parts = NULL;
 				cleanup_shell(shell);
 				exit(255);
 			}
 		}
 	}
-	else if (ft_strncmp(cmd_parts->cmd_array[0], "env\0", 4) == 0)
+	else if (ft_strncmp((*cmd_parts)->cmd_array[0], "env\0", 4) == 0)
 	{
 		len = 0;
-		while (cmd_parts->cmd_array[len] != NULL)
+		while ((*cmd_parts)->cmd_array[len] != NULL)
 			len++;
 		if (len > 1)
 		{
@@ -348,19 +348,19 @@ int check_and_run_builtins(t_shell *shell, t_cmd_parts *cmd_parts, char **envp)
 		else
 			ft_env(envp);
 		free_cmd_parts(cmd_parts);
-		cmd_parts = NULL;
+		//cmd_parts = NULL;
 	}
-	else if (ft_strncmp(cmd_parts->cmd_array[0], "pwd\0", 4) == 0)
+	else if (ft_strncmp((*cmd_parts)->cmd_array[0], "pwd\0", 4) == 0)
 	{
 		ft_pwd();
 		free_cmd_parts(cmd_parts);
-		cmd_parts = NULL;
+		//cmd_parts = NULL;
 	}
-	else if (ft_strncmp(cmd_parts->cmd_array[0], "cd\0", 3) == 0)
+	else if (ft_strncmp((*cmd_parts)->cmd_array[0], "cd\0", 3) == 0)
 	{
-		ft_cd(cmd_parts->cmd_array[1]);
+		ft_cd((*cmd_parts)->cmd_array[1]);
 		free_cmd_parts(cmd_parts);
-		cmd_parts = NULL;
+		//cmd_parts = NULL;
 	}
 	return (0);
 }

@@ -2,42 +2,45 @@
 #include "minishell.h"
 #include "execution.h"
 
-static int	command_not_found(t_cmd_parts *cmd_parts, t_args *arg_struct)
+static int	command_not_found(t_cmd_parts **cmd_parts, t_args *arg_struct)
 {
-	if (cmd_parts->cmd_array[0] == NULL)
+	if ((*cmd_parts)->cmd_array[0] == NULL)
 	{
 		//ft_putstr_fd(arg_struct->argv[i], 2);
 		ft_putstr_fd(": command not found\n", 2);
 	}
 	else
 	{
-		ft_putstr_fd(cmd_parts->cmd_array[0], 2);
+		ft_putstr_fd((*cmd_parts)->cmd_array[0], 2);
 		ft_putstr_fd(": command not found\n", 2);
 	}
 	//free_cmd_parts(cmd_parts);
 	//cmd_parts = NULL;
 	//free_array((void **)(cmd_parts->cmd_array), 0, -1);
-	if (cmd_parts != NULL)
-	{
-		free_cmd_parts(cmd_parts);
-		cmd_parts = NULL;
-	}
-	if (arg_struct != NULL)
-	{
-		if (arg_struct->pids != NULL)
-		{
-			free(arg_struct->pids);
-			arg_struct->pids = NULL;
-		}
-		if (arg_struct->fd != NULL)
-		{
-			free_array((void **)arg_struct->fd, 1, arg_struct->argc + 1);
-			arg_struct->fd = NULL;
-			//free(arg_struct->fd);
-		}
-		free(arg_struct);
-		arg_struct = NULL;
-	}
+	free_cmd_parts(cmd_parts);
+	// if (cmd_parts != NULL)
+	// {
+	// 	free_cmd_parts(cmd_parts);
+	// 	cmd_parts = NULL;
+	// }
+	free(arg_struct->pids);
+	free(arg_struct);
+	// if (arg_struct != NULL)
+	// {
+	// 	if (arg_struct->pids != NULL)
+	// 	{
+	// 		free(arg_struct->pids);
+	// 		arg_struct->pids = NULL;
+	// 	}
+	// 	if (arg_struct->fd != NULL)
+	// 	{
+	// 		free_array((void **)arg_struct->fd, 1, arg_struct->argc + 1);
+	// 		arg_struct->fd = NULL;
+	// 		//free(arg_struct->fd);
+	// 	}
+	// 	free(arg_struct);
+	// 	arg_struct = NULL;
+	// }
 	return (127);
 }
 
@@ -51,7 +54,7 @@ static int	get_exit_code(void)
 		return (errno);
 }
 
-static int	execute_command(char *path, t_cmd_parts *cmd_parts,
+static int	execute_command(char *path, t_cmd_parts **cmd_parts,
 							t_args *arg_struct)
 {
 	int	fd;
@@ -76,8 +79,8 @@ static int	execute_command(char *path, t_cmd_parts *cmd_parts,
 	}
 	else
 	{
-		execve(path, cmd_parts->cmd_array, arg_struct->envp);
-		perror(cmd_parts->cmd_array[0]);
+		execve(path, (*cmd_parts)->cmd_array, arg_struct->envp);
+		perror((*cmd_parts)->cmd_array[0]);
 	}
 	// Free before returning
 	free(path);
@@ -91,24 +94,25 @@ static int	execute_command(char *path, t_cmd_parts *cmd_parts,
 	return (get_exit_code());
 }
 
-static int	run_pid(t_args *arg_struct, t_cmd_parts *cmd_parts, t_shell *shell, int is_builtin)
+static int	run_pid(t_args *arg_struct, t_cmd_parts **cmd_parts, t_shell *shell, int is_builtin)
 {
 	char	*path;
 	char	**command_array;
 	int		check_status;
 	int ret;
 
-	command_array = cmd_parts->cmd_array;
+	command_array = (*cmd_parts)->cmd_array;
 	path = find_command_path(command_array[0], arg_struct->envp);
-	check_status = set_pipe(cmd_parts, arg_struct, path, is_builtin);
+	check_status = set_pipe((*cmd_parts), arg_struct, path, is_builtin);
 	if (check_status == -1)
 	{
 		//free_array((void **)command_array, 0, -1);
-		if (cmd_parts)
-		{
-			free_cmd_parts(cmd_parts);
-			cmd_parts = NULL;
-		}
+		// if (cmd_parts)
+		// {
+		// 	free_cmd_parts(cmd_parts);
+		// 	cmd_parts = NULL;
+		// }
+		free_cmd_parts(cmd_parts);
 		free(path);
 		return (EXIT_FAILURE); // exit
 	}
@@ -116,6 +120,8 @@ static int	run_pid(t_args *arg_struct, t_cmd_parts *cmd_parts, t_shell *shell, i
 	{
 		ret = check_and_run_builtins(shell, cmd_parts, arg_struct->envp);
 		free(path);
+		free(arg_struct->pids);
+		free(arg_struct);
 		return (ret);
 	}
 	else if (path != NULL)
@@ -152,7 +158,7 @@ int	execute_commands(t_shell *shell, int num_commands, char **envp)
 		arg_struct->pids[j] = fork();
 		if (arg_struct->pids[j] < 0)
 		{
-			free_cmd_parts(cmd_parts);
+			free_cmd_parts(&cmd_parts);
 			// if (cmd_parts)
 			// {
 			// 	free_cmd_parts(cmd_parts);
@@ -162,8 +168,8 @@ int	execute_commands(t_shell *shell, int num_commands, char **envp)
 		}
 		if (arg_struct->pids[j] == 0)
 		{
-			exit_code = run_pid(arg_struct, cmd_parts, shell, is_builtin(cmd_parts));
-			free_cmd_parts(cmd_parts);
+			exit_code = run_pid(arg_struct, &cmd_parts, shell, is_builtin(cmd_parts));
+			free_cmd_parts(&cmd_parts);
 			// if (cmd_parts)
 			// {
 			// 	free_cmd_parts(cmd_parts);
@@ -171,7 +177,7 @@ int	execute_commands(t_shell *shell, int num_commands, char **envp)
 			// }
 			exit(exit_code);
 		}
-		free_cmd_parts(cmd_parts); // Always free after use
+		free_cmd_parts(&cmd_parts); // Always free after use
 		// if (cmd_parts)
 		// {
 		// 	free_cmd_parts(cmd_parts);
