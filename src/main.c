@@ -6,14 +6,14 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 15:00:56 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/20 14:40:39 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/21 12:51:06 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "execution.h"
 
-/*
+
 void	handle_sigint(int sig)
 {
 	(void)sig;
@@ -28,13 +28,25 @@ void	handle_sigquit(int sig)
 	(void)sig;
 }
 
+void handle_child_exit(int sig)
+{
+    (void)sig;  // Mark parameter as unused
+    int status;
+    pid_t pid;
+
+    while ((pid = waitpid(-1, &status, WNOHANG)) > 0)
+    {
+        printf("Child process %d exited. Terminating parent.\n", pid);
+        exit(EXIT_SUCCESS);
+    }
+}
+
 void	setup_signal_handlers(void)
 {
 	signal(SIGINT, handle_sigint);  // `Ctrl-C` için
 	signal(SIGQUIT, handle_sigquit);  // `Ctrl-\` için
+	signal(SIGCHLD, handle_child_exit);
 }
-*/
-
 
 void parse_and_process_command(t_shell *shell, char **envp)
 {
@@ -81,7 +93,30 @@ int main(int argc, char **argv, char **envp)
 		exit(1);
 	}
 	init_shell(&shell);
-	//setup_signal_handlers();
+	setup_signal_handlers();
+	// pid_t pid = fork();
+    // if (pid == 0) 
+    // {
+    //     // Child process
+    //     printf("Child process %d running...\n", getpid());
+    //     sleep(2);  // Simulate some work
+    //     printf("Child process %d exiting...\n", getpid());
+    //     exit(0);
+    // } 
+    // else if (pid > 0) 
+    // {
+    //     // Parent process
+    //     printf("Parent process %d waiting...\n", getpid());
+    //     while (1)
+    //     {
+    //         pause();  // Wait indefinitely for signals
+    //     }
+    // } 
+    // else 
+    // {
+    //     perror("fork failed");
+    //     return 1;
+    // }
 	while (1)
 	{
 		shell.line = get_input("minishell$ ");

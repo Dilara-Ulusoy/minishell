@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:15 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/20 16:53:28 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/21 10:25:06 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ typedef struct s_args
 	pid_t		*pids;
 }	t_args;
 
-void find_ast_pipes(t_ast_node *node);
 void count_pipes(t_ast_node *node, int *i);
 t_cmd_parts *count_tokens(const t_token *head, int command_number);
 t_cmd_parts *get_command_array(const t_token *head, int command_number);

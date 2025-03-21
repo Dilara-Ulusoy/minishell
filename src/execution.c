@@ -6,35 +6,35 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:03 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/21 10:09:21 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/21 10:25:23 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "execution.h"
 
-void find_ast_pipes(t_ast_node *node)
-{
-	if (!node)
-		return;
-    if (node->node_type == AST_PIPE)
-    {
-        printf("✅ Found AST_PIPE node at %p\n", (void *)node);
+// void find_ast_pipes(t_ast_node *node)
+// {
+// 	if (!node)
+// 		return;
+//     if (node->node_type == AST_PIPE)
+//     {
+//         printf("✅ Found AST_PIPE node at %p\n", (void *)node);
 
-        // Sol ve sağ düğümlerin cmd_args değerlerini yazdır
-        if (node->left && node->left->cmd_args)
-            printf("  ├── Left Command: %s\n", node->left->cmd_args);
-        else
-            printf("  ├── Left Command: NULL\n");
+//         // Sol ve sağ düğümlerin cmd_args değerlerini yazdır
+//         if (node->left && node->left->cmd_args)
+//             printf("  ├── Left Command: %s\n", node->left->cmd_args);
+//         else
+//             printf("  ├── Left Command: NULL\n");
 
-        if (node->right && node->right->cmd_args)
-            printf("  └── Right Command: %s\n", node->right->cmd_args);
-        else
-            printf("  └── Right Command: NULL\n");
-    }
-    find_ast_pipes(node->left);
-    find_ast_pipes(node->right);
-}
+//         if (node->right && node->right->cmd_args)
+//             printf("  └── Right Command: %s\n", node->right->cmd_args);
+//         else
+//             printf("  └── Right Command: NULL\n");
+//     }
+//     find_ast_pipes(node->left);
+//     find_ast_pipes(node->right);
+// }
 
 void count_pipes(t_ast_node *node, int *i)
 {

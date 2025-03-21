@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_node_create.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:16:56 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/17 16:00:27 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/21 11:01:00 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ t_ast_node	*create_ast_command_node(const char *cmd_text, t_io_node *io_list)
 		free_ast(node);
 		return (NULL);
 	}
-	printf("Actual----> %s\n", cmd_text);
+	//printf("Actual----> %s\n", cmd_text);
 	node->node_type = AST_COMMAND;
 	node->cmd_args = NULL;
 	node->cmd_args = allocate_command_string(cmd_text, node, io_list);

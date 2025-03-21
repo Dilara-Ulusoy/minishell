@@ -146,6 +146,7 @@ int	execute_commands(t_shell *shell, int num_commands, char **envp)
 	arg_struct = prepare_struct(num_commands, envp);
 	if (arg_struct == NULL)
 		exit(EXIT_FAILURE);
+	//setup_signal_handlers();
 	j = -1;
 	while (++j < num_commands)
 	{
