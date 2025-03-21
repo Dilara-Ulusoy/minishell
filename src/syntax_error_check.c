@@ -54,9 +54,20 @@ Effect:
 and parsing stops (returns 0).
 - Otherwise, parsing continues (returns 1).
 */
+/*
 static int	handle_consecutive_operators(t_parser *parser, t_token *current)
 {
 	if (is_operator(current->type) && is_operator(current->next->type))
+	{
+		set_syntax_error(parser, current->next->value);
+		return (0);
+	}
+	return (1);
+}
+*/
+static int	handle_consecutive_operators(t_parser *parser, t_token *current)
+{
+	if(current->type == TOKEN_PIPE && !is_redir(current->next->type))
 	{
 		set_syntax_error(parser, current->next->value);
 		return (0);
