@@ -67,6 +67,7 @@ int			append_token(t_token **head, t_token *new_token);
 void			free_tokens(t_token **head);
 
 /* Token Utilities */
+int				is_redir(t_token_type type);
 int				is_operator(t_token_type type);
 int				is_binary_operator(t_token_type type);
 int				is_redirection(t_token_type type);
