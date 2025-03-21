@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 14:05:19 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/21 19:51:11 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/21 20:08:14 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,17 @@ Effect:
 and parsing stops (returns 0).
 - Otherwise, parsing continues (returns 1).
 */
+/*
+static int	handle_consecutive_operators(t_parser *parser, t_token *current)
+{
+	if (is_operator(current->type) && is_operator(current->next->type))
+	{
+		set_syntax_error(parser, current->next->value);
+		return (0);
+	}
+	return (1);
+}
+*/
 static int	handle_consecutive_operators(t_parser *parser, t_token *current)
 {
 	if(current->type == TOKEN_PIPE && !is_redir(current->next->type))
@@ -68,16 +79,6 @@ static int	handle_consecutive_operators(t_parser *parser, t_token *current)
 	} */
 	return (1);
 }
-
-// static int	handle_consecutive_operators(t_parser *parser, t_token *current)
-// {
-// 	if (is_operator(current->type) && is_operator(current->next->type))
-// 	{
-// 		set_syntax_error(parser, current->next->value);
-// 		return (0);
-// 	}
-// 	return (1);
-// }
 
 static int handle_and_or(t_parser *parser, t_token *current)
 {

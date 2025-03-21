@@ -6,24 +6,24 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:56:35 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/21 19:52:35 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/21 20:06:37 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	is_redir(t_token_type type)
+int	is_operator(t_token_type type)
 {
-	if (type == TOKEN_WORD || type == TOKEN_REDIR_IN || type == TOKEN_REDIR_OUT
+	if (type == TOKEN_AND || type == TOKEN_OR || type == TOKEN_PIPE
+		|| type == TOKEN_REDIR_IN || type == TOKEN_REDIR_OUT
 		|| type == TOKEN_REDIR_APPEND || type == TOKEN_REDIR_HERE)
 		return (1);
 	return (0);
 }
 
-int	is_operator(t_token_type type)
+int	is_redir(t_token_type type)
 {
-	if (type == TOKEN_AND || type == TOKEN_OR || type == TOKEN_PIPE
-		|| type == TOKEN_REDIR_IN || type == TOKEN_REDIR_OUT
+	if (type == TOKEN_WORD || type == TOKEN_REDIR_IN || type == TOKEN_REDIR_OUT
 		|| type == TOKEN_REDIR_APPEND || type == TOKEN_REDIR_HERE)
 		return (1);
 	return (0);
