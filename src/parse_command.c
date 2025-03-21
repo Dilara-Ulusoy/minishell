@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_command.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 10:22:37 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/18 14:28:43 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/21 19:42:47 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,18 +56,35 @@
 	  2) parse_redirections => attach them to a linked list for io_redirects
 	  3) create an AST_COMMAND node and return it.
 */
-t_ast_node	*parse_command(t_parser *p)
+
+t_ast_node *parse_command(t_parser *p)
 {
-	t_io_node	*io_list;
-	t_ast_node	*cmd_node;
-	char		*cmd_args;
+	t_io_node *io_list = NULL;
+	t_ast_node *cmd_node = NULL;
+	char *cmd_args = NULL;
 
 	if (!p->current_token || p->error_status != PARSE_OK)
 		return (NULL);
-	io_list = NULL;
+
+	if (is_redirection(p->current_token->type))
+	{
+		if (parse_redirections(p, &io_list) == -1)
+		{
+			free_io_list(io_list);
+			return (NULL);
+		}
+	}
 	cmd_args = build_command_string(p);
-	if (!cmd_args || p->error_status != PARSE_OK)
+	if (!cmd_args || p->error_status != PARSE_OK || cmd_args[0] == '\0')
+	{
+		if (io_list)
+		{
+			p->error_status = PARSE_SYNTAX_ERROR;
+			free_io_list(io_list);
+		}
+		free(cmd_args);
 		return (NULL);
+	}
 	if (parse_redirections(p, &io_list) == -1)
 	{
 		cleanup_resources(cmd_args, io_list);
@@ -83,6 +100,34 @@ t_ast_node	*parse_command(t_parser *p)
 	free(cmd_args);
 	return (cmd_node);
 }
+
+// t_ast_node	*parse_command(t_parser *p)
+// {
+// 	t_io_node	*io_list;
+// 	t_ast_node	*cmd_node;
+// 	char		*cmd_args;
+
+// 	if (!p->current_token || p->error_status != PARSE_OK)
+// 		return (NULL);
+// 	io_list = NULL;
+// 	cmd_args = build_command_string(p);
+// 	if (!cmd_args || p->error_status != PARSE_OK)
+// 		return (NULL);
+// 	if (parse_redirections(p, &io_list) == -1)
+// 	{
+// 		cleanup_resources(cmd_args, io_list);
+// 		return (NULL);
+// 	}
+// 	cmd_node = create_ast_command_node(cmd_args, io_list);
+// 	if (!cmd_node)
+// 	{
+// 		p->error_status = PARSE_MEMORY_ERROR;
+// 		cleanup_resources(cmd_args, io_list);
+// 		return (NULL);
+// 	}
+// 	free(cmd_args);
+// 	return (cmd_node);
+// }
 
 /*
 📌 append_to_buffer(buf, word_value)

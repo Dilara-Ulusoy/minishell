@@ -3,14 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:56:35 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/17 12:33:30 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/21 19:52:35 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	is_redir(t_token_type type)
+{
+	if (type == TOKEN_WORD || type == TOKEN_REDIR_IN || type == TOKEN_REDIR_OUT
+		|| type == TOKEN_REDIR_APPEND || type == TOKEN_REDIR_HERE)
+		return (1);
+	return (0);
+}
 
 int	is_operator(t_token_type type)
 {

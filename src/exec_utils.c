@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 13:01:11 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/20 11:21:27 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/21 18:22:05 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,24 @@ void	free_array(void **arr, int is_int, int j)
 	arr = NULL;
 }
 
+// int	close_and_free(t_args *arg_struct, int free_pid)
+// {
+// 	close_pipes(arg_struct->fd, arg_struct->argc + 1);
+// 	free_array((void **)arg_struct->fd, 1, arg_struct->argc + 1);
+// 	if (free_pid == 1)
+// 	{
+// 		free(arg_struct->pids);
+// 		free(arg_struct);
+// 		return (-1);
+// 	}
+// 	else
+// 		return (0);
+// }
+
 int	close_and_free(t_args *arg_struct, int free_pid)
 {
-	close_pipes(arg_struct->fd, arg_struct->argc + 1);
-	free_array((void **)arg_struct->fd, 1, arg_struct->argc + 1);
+	close_pipes(arg_struct->fd, arg_struct->argc - 1);
+	free_array((void **)arg_struct->fd, 1, arg_struct->argc - 1);
 	if (free_pid == 1)
 	{
 		free(arg_struct->pids);

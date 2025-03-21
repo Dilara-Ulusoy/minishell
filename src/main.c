@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 15:00:56 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/21 12:51:06 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/21 19:16:21 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void parse_and_process_command(t_shell *shell, char **envp)
 		cleanup_shell(shell);
 		return ;
 	}
-	//debug_ast(shell->ast, 0);   // -------> FOR DUBEGGING
+	debug_ast(shell->ast, 0);   // -------> FOR DUBEGGING
 	// execute_ast(shell->ast); /* Uncomment for actual execution */
 	//print_tokens(shell->tokens);  // -------> FOR DUBEGGING
 	num_commands = get_num_commands(shell);
@@ -93,7 +93,7 @@ int main(int argc, char **argv, char **envp)
 		exit(1);
 	}
 	init_shell(&shell);
-	setup_signal_handlers();
+	//setup_signal_handlers();
 	// pid_t pid = fork();
     // if (pid == 0) 
     // {

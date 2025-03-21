@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntax_error_check.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 14:05:19 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/20 12:56:25 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/21 19:51:11 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,13 +56,28 @@ and parsing stops (returns 0).
 */
 static int	handle_consecutive_operators(t_parser *parser, t_token *current)
 {
-	if (is_operator(current->type) && is_operator(current->next->type))
+	if(current->type == TOKEN_PIPE && !is_redir(current->next->type))
 	{
 		set_syntax_error(parser, current->next->value);
 		return (0);
 	}
+	/* if (is_operator(current->type) && is_operator(current->next->type))
+	{
+		set_syntax_error(parser, current->next->value);
+		return (0);
+	} */
 	return (1);
 }
+
+// static int	handle_consecutive_operators(t_parser *parser, t_token *current)
+// {
+// 	if (is_operator(current->type) && is_operator(current->next->type))
+// 	{
+// 		set_syntax_error(parser, current->next->value);
+// 		return (0);
+// 	}
+// 	return (1);
+// }
 
 static int handle_and_or(t_parser *parser, t_token *current)
 {

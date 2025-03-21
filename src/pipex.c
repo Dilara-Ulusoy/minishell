@@ -54,6 +54,46 @@ static int	get_exit_code(void)
 		return (errno);
 }
 
+// static int	execute_command(char *path, t_cmd_parts **cmd_parts,
+// 							t_args *arg_struct)
+// {
+// 	int	fd;
+
+// 	fd = open(path, O_DIRECTORY);
+// 	if (fd != -1)
+// 	{
+// 		close(fd);
+// 		ft_putstr_fd(path, 2);
+// 		ft_putstr_fd(": ", 2);
+// 		ft_putstr_fd(strerror(21), 2);
+// 		// Free before returning
+// 		free(path);
+// 		free_cmd_parts(cmd_parts);
+// 		free(arg_struct->pids);
+// 		free_array((void **)arg_struct->fd, 1, arg_struct->argc + 1);
+// 		free(arg_struct);
+// 		//free(arg_struct->pids);
+// 		//free(arg_struct);
+// 		//free_array((void **)(cmd_parts->cmd_array), 0, -1);
+// 		return (126);
+// 	}
+// 	else
+// 	{
+// 		execve(path, (*cmd_parts)->cmd_array, arg_struct->envp);
+// 		perror((*cmd_parts)->cmd_array[0]);
+// 	}
+// 	// Free before returning
+// 	free(path);
+// 	free_cmd_parts(cmd_parts);
+// 	free(arg_struct->pids);
+// 	free_array((void **)arg_struct->fd, 1, arg_struct->argc + 1);
+// 	free(arg_struct);
+// 	//free(arg_struct->pids);
+// 	//free(arg_struct);
+// 	//free_array((void **)(cmd_parts->cmd_array), 0, -1);
+// 	return (get_exit_code());
+// }
+
 static int	execute_command(char *path, t_cmd_parts **cmd_parts,
 							t_args *arg_struct)
 {
@@ -70,7 +110,7 @@ static int	execute_command(char *path, t_cmd_parts **cmd_parts,
 		free(path);
 		free_cmd_parts(cmd_parts);
 		free(arg_struct->pids);
-		free_array((void **)arg_struct->fd, 1, arg_struct->argc + 1);
+		free_array((void **)arg_struct->fd, 1, arg_struct->argc - 1);
 		free(arg_struct);
 		//free(arg_struct->pids);
 		//free(arg_struct);
@@ -86,7 +126,7 @@ static int	execute_command(char *path, t_cmd_parts **cmd_parts,
 	free(path);
 	free_cmd_parts(cmd_parts);
 	free(arg_struct->pids);
-	free_array((void **)arg_struct->fd, 1, arg_struct->argc + 1);
+	free_array((void **)arg_struct->fd, 1, arg_struct->argc - 1);
 	free(arg_struct);
 	//free(arg_struct->pids);
 	//free(arg_struct);

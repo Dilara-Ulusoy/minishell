@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 13:06:41 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/17 15:45:49 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/21 19:53:12 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ int			append_token(t_token **head, t_token *new_token);
 void			free_tokens(t_token **head);
 
 /* Token Utilities */
+int				is_redir(t_token_type type);
 int				is_operator(t_token_type type);
 int				is_binary_operator(t_token_type type);
 int				is_redirection(t_token_type type);
