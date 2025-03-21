@@ -164,6 +164,7 @@ int	execute_commands(t_shell *shell, int num_commands, char **envp)
 			// 	free_cmd_parts(cmd_parts);
 			// 	cmd_parts = NULL;
 			// }
+			cleanup_shell(shell);
 			exit(display_error_message(2, arg_struct)); // exit
 		}
 		if (arg_struct->pids[j] == 0)
@@ -175,6 +176,7 @@ int	execute_commands(t_shell *shell, int num_commands, char **envp)
 			// 	free_cmd_parts(cmd_parts);
 			// 	cmd_parts = NULL;
 			// }
+			cleanup_shell(shell);
 			exit(exit_code);
 		}
 		free_cmd_parts(&cmd_parts); // Always free after use
