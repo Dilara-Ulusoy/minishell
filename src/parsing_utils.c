@@ -21,6 +21,14 @@ int	is_operator(t_token_type type)
 	return (0);
 }
 
+int	is_redir(t_token_type type)
+{
+	if (type == TOKEN_WORD || type == TOKEN_REDIR_IN || type == TOKEN_REDIR_OUT
+		|| type == TOKEN_REDIR_APPEND || type == TOKEN_REDIR_HERE)
+		return (1);
+	return (0);
+}
+
 /*
    get_precedence:
    - a simple numeric precedence system
