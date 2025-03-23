@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 12:58:25 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/20 15:37:34 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/23 20:24:56 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,47 @@ void free_cmd_parts(t_cmd_parts **cmd_parts)
 
     free(*cmd_parts);
     *cmd_parts = NULL;
+}
+
+char **copy_envp(char **envp) {
+    size_t count = 0;
+    while (envp[count] != NULL) {
+        count++;
+    }
+
+    char **new_envp = malloc((count + 1) * sizeof(char *));
+    if (!new_envp) {
+        perror("malloc failed");
+        return NULL;
+    }
+
+    for (size_t i = 0; i < count; i++) {
+        new_envp[i] = ft_strdup(envp[i]);
+        if (!new_envp[i]) {
+            perror("strdup failed");
+            while (i > 0) free(new_envp[--i]);
+            free(new_envp);
+            return NULL;
+        }
+    }
+
+    new_envp[count] = NULL;  // Null-terminate the array
+    return new_envp;
+}
+
+void free_envp(char **envp) {
+	int i;
+
+    if (!envp)
+		return;  // Avoid freeing NULL
+    i = 0;
+	while (envp[i] != NULL)
+	{
+        free(envp[i]);  // Free each string
+		i++;
+    }
+	free(envp[i]); 
+    free(envp);  // Free the array itself
 }
 
 // void	free_array(void **arr, int is_int, int j)

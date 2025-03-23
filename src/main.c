@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 15:00:56 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/23 12:57:47 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/23 20:49:15 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	setup_signal_handlers(void)
 	signal(SIGCHLD, handle_child_exit);
 }
 
-void parse_and_process_command(t_shell *shell, char **envp)
+void parse_and_process_command(t_shell *shell, char ***envp_copy)
 {
 	int num_commands;
 
@@ -78,7 +78,8 @@ void parse_and_process_command(t_shell *shell, char **envp)
 	printf("Old exit code in shell: %d\n", shell->exit_code);
 	num_commands = get_num_commands(shell);
 	if (num_commands > 0)
-		shell->exit_code = execute_commands(shell, num_commands, envp);
+		shell->exit_code = execute_commands(shell, num_commands, envp_copy);
+	//printf("%c", (*envp_copy)[0][0]);
 	printf("New exit code in shell: %d\n", shell->exit_code);
 	cleanup_shell(shell);
 }
@@ -86,6 +87,9 @@ void parse_and_process_command(t_shell *shell, char **envp)
 int main(int argc, char **argv, char **envp)
 {
 	t_shell shell;
+	char **envp_copy;
+
+	envp_copy = copy_envp(envp);
 
 	(void)envp;
 	(void)argv;
@@ -95,7 +99,7 @@ int main(int argc, char **argv, char **envp)
 		exit(1);
 	}
 	init_shell(&shell);
-	//setup_signal_handlers();
+	setup_signal_handlers();
 	// pid_t pid = fork();
     // if (pid == 0) 
     // {
@@ -125,8 +129,11 @@ int main(int argc, char **argv, char **envp)
 		if (!shell.line) /* Exit condition (Ctrl+D or EOF) */
 			break ;
 		shell.line_length = ft_strlen(shell.line);
-		parse_and_process_command(&shell, envp);
+		parse_and_process_command(&shell, &envp_copy);
+		//printf("%c", (envp_copy)[0][0]);
 	}
+	free_envp(envp_copy);
+	envp_copy = NULL;
 	cleanup_shell(&shell);
 	return (0);
 }
