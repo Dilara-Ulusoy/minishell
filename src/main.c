@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 15:00:56 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/21 19:59:45 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/23 12:57:47 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,11 @@ void parse_and_process_command(t_shell *shell, char **envp)
 	//debug_ast(shell->ast, 0);   // -------> FOR DUBEGGING
 	// execute_ast(shell->ast); /* Uncomment for actual execution */
 	//print_tokens(shell->tokens);  // -------> FOR DUBEGGING
+	printf("Old exit code in shell: %d\n", shell->exit_code);
 	num_commands = get_num_commands(shell);
 	if (num_commands > 0)
-		execute_commands(shell, num_commands, envp);
+		shell->exit_code = execute_commands(shell, num_commands, envp);
+	printf("New exit code in shell: %d\n", shell->exit_code);
 	cleanup_shell(shell);
 }
 
