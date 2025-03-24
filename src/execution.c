@@ -267,7 +267,7 @@ void	ft_set(char *var_eq_value, char ***envp)
 	free((*envp)[i]);
 	//(*envp)[i] = NULL;
 	//(*envp)[i] = malloc(sizeof(char *));
-	(*envp)[i] = strdup(var_eq_value);
+	(*envp)[i] = ft_strdup(var_eq_value);
 }
 
 int ft_cd(char *new_path, char ***envp)

@@ -74,5 +74,6 @@ void free_envp(char **envp);
 void ft_add_envVar(char *var_eq_value, char ***envp);
 void	ft_set(char *var_eq_value, char ***envp);
 int check_and_run_builtins_single(t_shell *shell, t_cmd_parts **cmd_parts, char ***env);
+char *ft_getenv(char *var_name, char ***envp);
 
 #endif

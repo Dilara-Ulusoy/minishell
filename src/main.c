@@ -96,6 +96,8 @@ int main(int argc, char **argv, char **envp)
 
 	envp_copy = copy_envp(envp);
 
+	printf("\n\nOur A is %s\n\n", ft_getenv("A", &envp));
+
 	//ft_set("A=12", &envp_copy);
 	//printf("\n\n\n\n");
 	//ft_env(envp_copy);

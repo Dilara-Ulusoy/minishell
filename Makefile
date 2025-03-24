@@ -42,6 +42,7 @@ SRCS        = $(SRC_DIR)main.c \
 			  $(SRC_DIR)print_error_messages.c \
 			  $(SRC_DIR)pipex.c \
 			  $(SRC_DIR)execution.c \
+			  $(SRC_DIR)ft_getenv.c \
 
 
 
