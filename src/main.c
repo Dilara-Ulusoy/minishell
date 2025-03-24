@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 15:00:56 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/23 20:49:15 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/24 16:24:53 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,24 +28,24 @@ void	handle_sigquit(int sig)
 	(void)sig;
 }
 
-void handle_child_exit(int sig)
-{
-    (void)sig;  // Mark parameter as unused
-    int status;
-    pid_t pid;
+// void handle_child_exit(int sig)
+// {
+//     (void)sig;  // Mark parameter as unused
+//     int status;
+//     pid_t pid;
 
-    while ((pid = waitpid(-1, &status, WNOHANG)) > 0)
-    {
-        printf("Child process %d exited. Terminating parent.\n", pid);
-        exit(EXIT_SUCCESS);
-    }
-}
+//     while ((pid = waitpid(-1, &status, WNOHANG)) > 0)
+//     {
+//         printf("Child process %d exited. Terminating parent.\n", pid);
+//         exit(EXIT_SUCCESS);
+//     }
+// }
 
 void	setup_signal_handlers(void)
 {
 	signal(SIGINT, handle_sigint);  // `Ctrl-C` için
 	signal(SIGQUIT, handle_sigquit);  // `Ctrl-\` için
-	signal(SIGCHLD, handle_child_exit);
+	//signal(SIGCHLD, handle_child_exit);
 }
 
 void parse_and_process_command(t_shell *shell, char ***envp_copy)
@@ -58,7 +58,7 @@ void parse_and_process_command(t_shell *shell, char ***envp_copy)
 		shell->line = NULL;
 		return ;
 	}
-	shell->tokens = tokenize(shell->tokens, shell->line, shell->line_length);
+	shell->tokens = tokenize(shell->tokens, shell->line, shell->line_length, shell->exit_code);
 	if (!shell->tokens)
 	{
 		//printf("Error: Tokenization failed.\n");
@@ -75,12 +75,15 @@ void parse_and_process_command(t_shell *shell, char ***envp_copy)
 	//debug_ast(shell->ast, 0);   // -------> FOR DUBEGGING
 	// execute_ast(shell->ast); /* Uncomment for actual execution */
 	//print_tokens(shell->tokens);  // -------> FOR DUBEGGING
-	printf("Old exit code in shell: %d\n", shell->exit_code);
+	printf("Old exit code in shell: %d\n", shell->tokens->exit_code);
 	num_commands = get_num_commands(shell);
 	if (num_commands > 0)
+	{
 		shell->exit_code = execute_commands(shell, num_commands, envp_copy);
+		shell->tokens->exit_code = shell->exit_code;
+	}
 	//printf("%c", (*envp_copy)[0][0]);
-	printf("New exit code in shell: %d\n", shell->exit_code);
+	printf("New exit code in shell: %d\n", shell->tokens->exit_code);
 	cleanup_shell(shell);
 }
 
@@ -91,6 +94,12 @@ int main(int argc, char **argv, char **envp)
 
 	envp_copy = copy_envp(envp);
 
+	ft_set("A=12", &envp_copy);
+	printf("\n\n\n\n");
+	ft_env(envp_copy);
+	ft_cd("src", &envp_copy);
+	printf("HELLO\n");
+	ft_env(envp_copy);
 	(void)envp;
 	(void)argv;
 	if (argc != 1)

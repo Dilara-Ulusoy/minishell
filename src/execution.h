@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:15 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/23 20:51:07 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/24 14:31:36 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int ft_pwd();
 int is_number(char *str);
 int ft_exit(char *exit_code);
 int ft_env(char **envp);
-int ft_cd(char *new_path);
+int ft_cd(char *new_path, char ***envp);
 int get_num_commands(t_shell *shell);
 int check_and_run_builtins(t_shell *shell, t_cmd_parts **cmd_parts, t_args *arg_struct);
 int execute_commands(t_shell *shell, int num_commands, char ***envp);
@@ -71,5 +71,7 @@ int is_builtin(t_cmd_parts *cmd_parts);
 void	free_cmd_parts(t_cmd_parts **cmd_parts);
 char **copy_envp(char **envp);
 void free_envp(char **envp);
+void ft_add_envVar(char *var_eq_value, char ***envp);
+void	ft_set(char *var_eq_value, char ***envp);
 
 #endif

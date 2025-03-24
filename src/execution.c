@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:03 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/21 19:10:29 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/24 14:53:40 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,13 +226,80 @@ int ft_env(char **envp)
 	return (0);
 }
 
-int ft_cd(char *new_path)
+static char *copy_until_equal(char *src)
 {
+	char *dest;
+    int i;
+	
+	i = 0;
+	while (src[i] != '=' && src[i] != '\0')
+		i++;
+	dest = (char *)malloc(sizeof(char) * (i + 2));
+	i = 0;
+    while (src[i] != '=' && src[i] != '\0') {
+        dest[i] = src[i];
+        i++;
+    }
+	dest[i] = '=';
+    dest[i + 1] = '\0'; // Null-terminate the destination string
+	return (dest);
+}
+
+void	ft_set(char *var_eq_value, char ***envp)
+{
+	int		i;
+	char *name_w_equal;
+
+	name_w_equal = copy_until_equal(var_eq_value);
+	//printf("here!\n\n %s here!\n\n", name_w_equal);
+	i = 0;
+	while ((*envp)[i] != NULL && ft_strnstr((*envp)[i], name_w_equal, ft_strlen(name_w_equal)) == 0)
+		i++;
+	printf("Searched for: %s\n\n", name_w_equal);
+	free(name_w_equal);
+	if ((*envp)[i] == NULL)
+	{
+		printf("Var was not found in envp\n");
+		ft_add_envVar(var_eq_value, envp);
+		return ;
+	}
+	printf("Var was found in envp: %s\n", (*envp)[i]);
+	free((*envp)[i]);
+	//(*envp)[i] = NULL;
+	//(*envp)[i] = malloc(sizeof(char *));
+	(*envp)[i] = strdup(var_eq_value);
+}
+
+int ft_cd(char *new_path, char ***envp)
+{
+	char *old_path;
+	int		i;
+
 	if (chdir(new_path) != 0)
 	{
 		fprintf(stderr, "cd: %s: %s\n", strerror(errno), new_path);
 		return (EXIT_FAILURE);
 	}
+	
+	printf("\nFirst:\n");
+	ft_env(*envp);
+	printf("\n\n");
+	i = 0;
+	while ((*envp)[i] != NULL && ft_strnstr((*envp)[i], "PWD=", 4) == 0)
+		i++;
+	old_path = ft_strjoin("OLD",(*envp)[i]);
+	i = 0;
+	while ((*envp)[i] != NULL && ft_strnstr((*envp)[i], "OLDPWD=", 7) == 0)
+		i++;
+	free((*envp)[i]);
+	(*envp)[i] = old_path;
+	//ft_set("OLDPWD",);
+	//ft_set("PWD",)
+	printf("\nHere!!! 1\n");
+	ft_env(*envp);
+	printf("\nHere!!! 2\n");
+	printf("\n%s\n", new_path);
+	printf("\nHere!!! 3\n");
 	return (EXIT_SUCCESS);
 }
 
@@ -276,7 +343,23 @@ int check_and_run_builtins(t_shell *shell, t_cmd_parts **cmd_parts, t_args *arg_
 	char **envp;
 
 	envp = arg_struct->envp;
+	//ft_env(arg_struct->envp);
+	//ft_env(envp);
+	if (ft_strncmp((*cmd_parts)->cmd_array[0], "export\0", 7) == 0)
+	{
+		//free_cmd_parts(cmd_parts);
+		//cmd_parts = NULL;
 
+		//ft_addA(&envp);
+		//ft_addA(&(arg_struct->envp));
+		printf("HELLO1\n");
+		ft_set("A=55", &envp);
+		printf("HELLO2\n\n\n\n");
+		ft_env(envp);
+		printf("HELLO3\n");
+		//free_cmd_parts(cmd_parts);
+		//cmd_parts = NULL;
+	}
 	if (ft_strncmp((*cmd_parts)->cmd_array[0], "echo\0", 5) == 0)
 	{
 		k = 1;
@@ -367,7 +450,7 @@ int check_and_run_builtins(t_shell *shell, t_cmd_parts **cmd_parts, t_args *arg_
 	}
 	else if (ft_strncmp((*cmd_parts)->cmd_array[0], "cd\0", 3) == 0)
 	{
-		ft_cd((*cmd_parts)->cmd_array[1]);
+		ft_cd((*cmd_parts)->cmd_array[1], &envp);
 		free_cmd_parts(cmd_parts);
 		//cmd_parts = NULL;
 	}

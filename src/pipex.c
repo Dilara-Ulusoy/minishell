@@ -137,7 +137,7 @@ static int	execute_command(char *path, t_cmd_parts **cmd_parts,
 	return (get_exit_code());
 }
 
-static void ft_addA(char ***envp)
+void ft_add_envVar(char *var_eq_value, char ***envp)
 {
 	if (!envp || !*envp) return; // Safety check
 
@@ -162,7 +162,7 @@ static void ft_addA(char ***envp)
             return ;
         }
     }
-	new_envp[count] = ft_strdup("A=2");
+	new_envp[count] = ft_strdup(var_eq_value);
 	if (!new_envp[count]) {
         perror("ft_strdup failed");
         while (count > 0) free(new_envp[--count]);
@@ -232,9 +232,11 @@ int	execute_commands(t_shell *shell, int num_commands, char ***envp)
 	int exit_code;
 
 	//(*envp)[0][0] = 'H';
-	ft_addA(envp);
+	//ft_addA(envp);
+	//ft_env(*envp);
 	//printf("num_commands: %d\n", num_commands);
 	arg_struct = prepare_struct(num_commands, *envp);
+	//ft_env(arg_struct->envp);
 	//ft_addA(&(arg_struct->envp)); // NOPE
 	if (arg_struct == NULL)
 		exit(EXIT_FAILURE);
