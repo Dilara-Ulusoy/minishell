@@ -181,6 +181,19 @@ void ft_add_envVar(char *var_eq_value, char ***envp)
 	(*envp) = new_envp;
 }
 
+static int	run_single_builtin(t_cmd_parts **cmd_parts, t_shell *shell, char ***envp)
+{
+	char	*path;
+	char	**command_array;
+	int ret;
+
+	command_array = (*cmd_parts)->cmd_array;
+	path = find_command_path(command_array[0], *envp);
+	ret = check_and_run_builtins_single(shell, cmd_parts, envp);
+	free(path);
+	return (ret);
+}
+
 static int	run_pid(t_args *arg_struct, t_cmd_parts **cmd_parts, t_shell *shell, int is_builtin)
 {
 	char	*path;
@@ -231,6 +244,18 @@ int	execute_commands(t_shell *shell, int num_commands, char ***envp)
 	//pid_t exited_pid;
 	int exit_code;
 
+	if (num_commands == 1)
+	{
+		cmd_parts = get_command_array(shell->tokens, 1);
+		if (is_builtin(cmd_parts))
+		{
+			exit_code = run_single_builtin(&cmd_parts, shell, envp);
+			free_cmd_parts(&cmd_parts);
+			cleanup_shell(shell);
+			return (exit_code);
+		}
+		free_cmd_parts(&cmd_parts);
+	}
 	//(*envp)[0][0] = 'H';
 	//ft_addA(envp);
 	//ft_env(*envp);
@@ -290,6 +315,7 @@ int	execute_commands(t_shell *shell, int num_commands, char ***envp)
 	if (WIFEXITED(wstatus))
 		return (WEXITSTATUS(wstatus));
 	return (EXIT_FAILURE);
+}
 	// // Wait for all child processes
 	// last_exit_code = EXIT_FAILURE;
 	// j = -1;
@@ -337,7 +363,7 @@ int	execute_commands(t_shell *shell, int num_commands, char ***envp)
 	// 	arg_struct = NULL;
 	// }
 	// return (last_exit_code);
-}
+
 
 
 // int	execute_commands(t_shell *shell, int num_commands, char **envp)

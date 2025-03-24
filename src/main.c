@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 15:00:56 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/24 16:24:53 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/24 18:30:00 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ void parse_and_process_command(t_shell *shell, char ***envp_copy)
 		return ;
 	}
 	shell->tokens = tokenize(shell->tokens, shell->line, shell->line_length, shell->exit_code);
+	printf("Test 1: %d\n", shell->tokens->exit_code);
+	printf("Test 2: %d\n", shell->exit_code);
 	if (!shell->tokens)
 	{
 		//printf("Error: Tokenization failed.\n");
@@ -80,10 +82,10 @@ void parse_and_process_command(t_shell *shell, char ***envp_copy)
 	if (num_commands > 0)
 	{
 		shell->exit_code = execute_commands(shell, num_commands, envp_copy);
-		shell->tokens->exit_code = shell->exit_code;
+		//shell->tokens->exit_code = shell->exit_code;
 	}
 	//printf("%c", (*envp_copy)[0][0]);
-	printf("New exit code in shell: %d\n", shell->tokens->exit_code);
+	printf("New exit code in shell: %d\n", shell->exit_code);
 	cleanup_shell(shell);
 }
 
@@ -94,12 +96,12 @@ int main(int argc, char **argv, char **envp)
 
 	envp_copy = copy_envp(envp);
 
-	ft_set("A=12", &envp_copy);
-	printf("\n\n\n\n");
-	ft_env(envp_copy);
-	ft_cd("src", &envp_copy);
-	printf("HELLO\n");
-	ft_env(envp_copy);
+	//ft_set("A=12", &envp_copy);
+	//printf("\n\n\n\n");
+	//ft_env(envp_copy);
+	//ft_cd("src", &envp_copy);
+	//printf("HELLO\n");
+	//ft_env(envp_copy);
 	(void)envp;
 	(void)argv;
 	if (argc != 1)

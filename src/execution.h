@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:15 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/24 14:31:36 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/24 17:43:04 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,5 +73,6 @@ char **copy_envp(char **envp);
 void free_envp(char **envp);
 void ft_add_envVar(char *var_eq_value, char ***envp);
 void	ft_set(char *var_eq_value, char ***envp);
+int check_and_run_builtins_single(t_shell *shell, t_cmd_parts **cmd_parts, char ***env);
 
 #endif

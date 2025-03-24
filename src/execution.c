@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:03 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/24 14:53:40 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/24 19:08:59 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -273,17 +273,19 @@ void	ft_set(char *var_eq_value, char ***envp)
 int ft_cd(char *new_path, char ***envp)
 {
 	char *old_path;
+	char abs_new_path[PATH_MAX];
 	int		i;
 
+	if (new_path == NULL)
+	{
+		ft_putstr_fd("Please specify path as an argument to cd.\n",2);
+		return (EXIT_FAILURE);
+	}
 	if (chdir(new_path) != 0)
 	{
 		fprintf(stderr, "cd: %s: %s\n", strerror(errno), new_path);
 		return (EXIT_FAILURE);
 	}
-	
-	printf("\nFirst:\n");
-	ft_env(*envp);
-	printf("\n\n");
 	i = 0;
 	while ((*envp)[i] != NULL && ft_strnstr((*envp)[i], "PWD=", 4) == 0)
 		i++;
@@ -293,13 +295,21 @@ int ft_cd(char *new_path, char ***envp)
 		i++;
 	free((*envp)[i]);
 	(*envp)[i] = old_path;
-	//ft_set("OLDPWD",);
-	//ft_set("PWD",)
-	printf("\nHere!!! 1\n");
-	ft_env(*envp);
-	printf("\nHere!!! 2\n");
-	printf("\n%s\n", new_path);
-	printf("\nHere!!! 3\n");
+	if (getcwd(abs_new_path, sizeof(abs_new_path)) != NULL)
+	{
+		i = 0;
+		while ((*envp)[i] != NULL && ft_strnstr((*envp)[i], "PWD=", 4) == 0)
+			i++;
+		free((*envp)[i]);
+		(*envp)[i] = ft_strjoin("PWD=", abs_new_path);
+	}
+	else
+	{
+		printf("\nHEYOOO!!\n");
+        write(2, "getcwd() error\n", 15);
+		return (EXIT_FAILURE);
+	}
+	//ft_env(*envp);
 	return (EXIT_SUCCESS);
 }
 
@@ -352,11 +362,8 @@ int check_and_run_builtins(t_shell *shell, t_cmd_parts **cmd_parts, t_args *arg_
 
 		//ft_addA(&envp);
 		//ft_addA(&(arg_struct->envp));
-		printf("HELLO1\n");
 		ft_set("A=55", &envp);
-		printf("HELLO2\n\n\n\n");
-		ft_env(envp);
-		printf("HELLO3\n");
+		//ft_env(envp);
 		//free_cmd_parts(cmd_parts);
 		//cmd_parts = NULL;
 	}
@@ -450,8 +457,124 @@ int check_and_run_builtins(t_shell *shell, t_cmd_parts **cmd_parts, t_args *arg_
 	}
 	else if (ft_strncmp((*cmd_parts)->cmd_array[0], "cd\0", 3) == 0)
 	{
-		ft_cd((*cmd_parts)->cmd_array[1], &envp);
+		exit_code = ft_cd((*cmd_parts)->cmd_array[1], &envp);
 		free_cmd_parts(cmd_parts);
+		//cmd_parts = NULL;
+		return (exit_code);
+	}
+	return (0);
+}
+
+int check_and_run_builtins_single(t_shell *shell, t_cmd_parts **cmd_parts, char ***envp)
+{
+	int k;
+	int len;
+	int exit_code;
+
+	//ft_env(arg_struct->envp);
+	//ft_env(envp);
+	if (ft_strncmp((*cmd_parts)->cmd_array[0], "export\0", 7) == 0)
+	{
+		//free_cmd_parts(cmd_parts);
+		//cmd_parts = NULL;
+
+		//ft_addA(&envp);
+		//ft_addA(&(arg_struct->envp));
+		ft_set("A=55", envp);
+		//ft_env(*envp);
+		//free_cmd_parts(cmd_parts);
+		//cmd_parts = NULL;
+	}
+	if (ft_strncmp((*cmd_parts)->cmd_array[0], "echo\0", 5) == 0)
+	{
+		k = 1;
+		while (((*cmd_parts)->cmd_array[k]) && (ft_strncmp((*cmd_parts)->cmd_array[k], "-n\0", 3) == 0))
+			k++;
+		while((*cmd_parts)->cmd_array[k] != NULL)
+		{
+			ft_putstr_fd((*cmd_parts)->cmd_array[k], STDOUT_FILENO);
+			//printf("%s",cmd_parts->cmd_array[k]);
+			if ((*cmd_parts)->cmd_array[k + 1] != NULL)
+				ft_putstr_fd(" ", STDOUT_FILENO);
+				//printf(" ");
+			k++;
+		}
+		if (((*cmd_parts)->cmd_array[1]) && (ft_strncmp((*cmd_parts)->cmd_array[1], "-n\0", 3) != 0))
+			ft_putstr_fd("\n", STDOUT_FILENO);
+			//printf("\n");
+		free_cmd_parts(cmd_parts);
+		//cmd_parts = NULL;
+	}
+	else if (ft_strncmp((*cmd_parts)->cmd_array[0], "exit\0", 5) == 0) // exit code number or if nonnumeric give error, 1'den fazla argument : too many arguments
+	{
+		len = 0;
+		while ((*cmd_parts)->cmd_array[len] != NULL)
+			len++;
+		printf("exit\n");
+		if (len == 1)
+		{
+			free_cmd_parts(cmd_parts);
+			free_envp(*envp);
+			//cmd_parts = NULL;
+			cleanup_shell(shell);
+			exit(EXIT_SUCCESS);
+		}
+		else if (len == 2)
+		{
+			exit_code = ft_exit((*cmd_parts)->cmd_array[1]);
+			free_cmd_parts(cmd_parts);
+			free_envp(*envp);
+			//cmd_parts = NULL;
+			cleanup_shell(shell);
+			exit(exit_code);
+		}
+		else if (len > 2)
+		{
+			if (is_number((*cmd_parts)->cmd_array[1]))
+			{
+				printf("exit: too many arguments\n");
+				free_cmd_parts(cmd_parts);
+				//cmd_parts = NULL;
+				//cleanup_shell(shell);
+				return (EXIT_FAILURE);
+			}
+			else
+			{
+				printf("exit: %s: numeric argument required\n", (*cmd_parts)->cmd_array[1]);
+				free_cmd_parts(cmd_parts);
+				free_envp(*envp);
+				//cmd_parts = NULL;
+				cleanup_shell(shell);
+				exit(255);
+			}
+		}
+	}
+	else if (ft_strncmp((*cmd_parts)->cmd_array[0], "env\0", 4) == 0)
+	{
+		len = 0;
+		while ((*cmd_parts)->cmd_array[len] != NULL)
+			len++;
+		if (len > 1)
+		{
+			write(2, "env currently does not accept any options or arguments\n", 55);
+			return (EXIT_FAILURE);
+		}
+		else
+			ft_env(*envp);
+		free_cmd_parts(cmd_parts);
+		//cmd_parts = NULL;
+	}
+	else if (ft_strncmp((*cmd_parts)->cmd_array[0], "pwd\0", 4) == 0)
+	{
+		ft_pwd();
+		free_cmd_parts(cmd_parts);
+		//cmd_parts = NULL;
+	}
+	else if (ft_strncmp((*cmd_parts)->cmd_array[0], "cd\0", 3) == 0)
+	{
+		exit_code = ft_cd((*cmd_parts)->cmd_array[1], envp);
+		free_cmd_parts(cmd_parts);
+		return (exit_code);
 		//cmd_parts = NULL;
 	}
 	return (0);
