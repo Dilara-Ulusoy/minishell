@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:23:12 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/25 14:26:53 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/25 16:09:53 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,7 @@ static void	append_env_value(char **result, char *var_name, t_shell *shell)
 	else
 		*result = ft_strjoin(*result, "");
 	free_this(temp, var_name, NULL, NULL);
+	free(var_value);
 }
 
 /*
