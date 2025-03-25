@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 13:06:41 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/24 16:18:07 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/25 11:35:34 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,10 @@ typedef struct s_token
 	t_token_type	type;
 	char			*value;
 	struct s_token	*next;
-	int				exit_code;
 }	t_token;
 
 /* Token Creation and Management */
-t_token			*tokenize(t_token *head, const char *line, int length, int exit_code);
+t_token			*tokenize(t_token *head, const char *line, int length);
 t_token			*create_new_token_range(t_token_type type,
 					const char *line, int startIndex, int length);
 int			append_token(t_token **head, t_token *new_token);

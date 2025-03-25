@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:34:26 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/24 16:16:48 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/25 11:35:07 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static int	process_token_parsing(t_token **head,
 	return (0);
 }
 
-t_token	*tokenize(t_token *head, const char *line, int length, int exit_code)
+t_token	*tokenize(t_token *head, const char *line, int length)
 {
 	int	i;
 
@@ -62,7 +62,7 @@ t_token	*tokenize(t_token *head, const char *line, int length, int exit_code)
 			return (NULL);
 		}
 	}
-	head->exit_code = exit_code;
+	//head->exit_code = exit_code;
 	return (head);
 }
 

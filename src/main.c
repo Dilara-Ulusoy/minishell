@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 15:00:56 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/24 18:30:00 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/25 11:41:50 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,7 @@ void parse_and_process_command(t_shell *shell, char ***envp_copy)
 		shell->line = NULL;
 		return ;
 	}
-	shell->tokens = tokenize(shell->tokens, shell->line, shell->line_length, shell->exit_code);
-	printf("Test 1: %d\n", shell->tokens->exit_code);
-	printf("Test 2: %d\n", shell->exit_code);
+	shell->tokens = tokenize(shell->tokens, shell->line, shell->line_length);
 	if (!shell->tokens)
 	{
 		//printf("Error: Tokenization failed.\n");
@@ -77,13 +75,10 @@ void parse_and_process_command(t_shell *shell, char ***envp_copy)
 	//debug_ast(shell->ast, 0);   // -------> FOR DUBEGGING
 	// execute_ast(shell->ast); /* Uncomment for actual execution */
 	//print_tokens(shell->tokens);  // -------> FOR DUBEGGING
-	printf("Old exit code in shell: %d\n", shell->tokens->exit_code);
+	printf("Old exit code in shell: %d\n", shell->exit_code);
 	num_commands = get_num_commands(shell);
 	if (num_commands > 0)
-	{
 		shell->exit_code = execute_commands(shell, num_commands, envp_copy);
-		//shell->tokens->exit_code = shell->exit_code;
-	}
 	//printf("%c", (*envp_copy)[0][0]);
 	printf("New exit code in shell: %d\n", shell->exit_code);
 	cleanup_shell(shell);
