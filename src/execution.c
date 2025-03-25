@@ -254,19 +254,18 @@ void	ft_set(char *var_eq_value, char ***envp)
 	char *name_w_equal;
 
 	name_w_equal = copy_until_equal(var_eq_value);
-	//printf("here!\n\n %s here!\n\n", name_w_equal);
 	i = 0;
 	while ((*envp)[i] != NULL && ft_strnstr((*envp)[i], name_w_equal, ft_strlen(name_w_equal)) == 0)
 		i++;
-	printf("Searched for: %s\n\n", name_w_equal);
+	//printf("Searched for: %s\n\n", name_w_equal);
 	free(name_w_equal);
 	if ((*envp)[i] == NULL)
 	{
-		printf("Var was not found in envp\n");
+		//printf("Var was not found in envp\n");
 		ft_add_envVar(var_eq_value, envp);
 		return ;
 	}
-	printf("Var was found in envp: %s\n", (*envp)[i]);
+	//printf("Var was found in envp: %s\n", (*envp)[i]);
 	free((*envp)[i]);
 	//(*envp)[i] = NULL;
 	//(*envp)[i] = malloc(sizeof(char *));
@@ -365,7 +364,27 @@ int check_and_run_builtins(t_shell *shell, t_cmd_parts **cmd_parts, t_args *arg_
 
 		//ft_addA(&envp);
 		//ft_addA(&(arg_struct->envp));
-		ft_set("A=55\0", &envp);
+		//ft_set("A=55\0", &envp);
+		if ((*cmd_parts)->cmd_array[1] == NULL)
+		{
+			k = 0;
+			while(envp[k] != NULL)
+			{
+				ft_putstr_fd("declare -x ", 1);
+				ft_putstr_fd(envp[k], 1);
+				ft_putstr_fd("\n", 1);
+				k++;
+			}
+		}
+		else
+		{
+			k = 1;
+			while ((*cmd_parts)->cmd_array[k] != NULL)
+			{
+				ft_set((*cmd_parts)->cmd_array[k], &envp);
+				k++;
+			}
+		}
 		//ft_env(envp);
 		//free_cmd_parts(cmd_parts);
 		//cmd_parts = NULL;
@@ -490,10 +509,29 @@ int check_and_run_builtins_single(t_shell *shell, t_cmd_parts **cmd_parts, char 
 	{
 		//free_cmd_parts(cmd_parts);
 		//cmd_parts = NULL;
-
 		//ft_addA(&envp);
 		//ft_addA(&(arg_struct->envp));
-		ft_set("A=55", envp);
+		//ft_set("A=55", envp);
+		if ((*cmd_parts)->cmd_array[1] == NULL)
+		{
+			k = 0;
+			while((*envp)[k] != NULL)
+			{
+				ft_putstr_fd("declare -x ", 1);
+				ft_putstr_fd((*envp)[k], 1);
+				ft_putstr_fd("\n", 1);
+				k++;
+			}
+		}
+		else
+		{
+			k = 1;
+			while ((*cmd_parts)->cmd_array[k] != NULL)
+			{
+				ft_set((*cmd_parts)->cmd_array[k], envp);
+				k++;
+			}
+		}
 		//ft_env(*envp);
 		//free_cmd_parts(cmd_parts);
 		//cmd_parts = NULL;
