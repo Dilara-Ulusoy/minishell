@@ -99,7 +99,8 @@ static int	execute_command(char *path, t_cmd_parts **cmd_parts,
 							t_args *arg_struct)
 {
 	int	fd;
-
+	//printf("Path: %s\n", path);
+	//printf("cmdprts: %s\n", (*cmd_parts)->cmd_array[0]);
 	fd = open(path, O_DIRECTORY);
 	if (fd != -1)
 	{
@@ -108,7 +109,8 @@ static int	execute_command(char *path, t_cmd_parts **cmd_parts,
 		ft_putstr_fd(": ", 2);
 		ft_putstr_fd(strerror(21), 2);
 		// Free before returning
-		free(path);
+		if (path != (*cmd_parts)->cmd_array[0])  // Added to avoid double free in the case /test_files
+			free(path);
 		free_cmd_parts(cmd_parts);
 		free(arg_struct->pids);
 		free_array((void **)arg_struct->fd, 1, arg_struct->argc - 1);
@@ -125,7 +127,8 @@ static int	execute_command(char *path, t_cmd_parts **cmd_parts,
 		perror((*cmd_parts)->cmd_array[0]);
 	}
 	// Free before returning
-	free(path);
+	if (path != (*cmd_parts)->cmd_array[0])  // Added to avoid double free in the case /test_files
+		free(path);
 	free_cmd_parts(cmd_parts);
 	free(arg_struct->pids);
 	free_array((void **)arg_struct->fd, 1, arg_struct->argc - 1);
