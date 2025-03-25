@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:23:12 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/25 13:38:52 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/25 14:26:53 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,25 @@ static void	append_dollar_if_no_var(char **result)
 	free(temp);
 }
 
+static char	*append_remaining_text(const char *line, int *index, char *prefix)
+{
+	char	*result = prefix;
+	char	*new_result;
+	char	temp[2];
+
+	while (line[*index] && (ft_isalnum(line[*index]) || line[*index] == '_'))
+	{
+		temp[0] = line[*index];
+		temp[1] = '\0';
+		new_result = ft_strjoin(result, temp);
+		free(result);
+		if (!new_result)
+			return (NULL);
+		result = new_result;
+		(*index)++;
+	}
+	return (result);
+}
 /*
    get_env_var_value:
 
@@ -155,7 +174,7 @@ char	*get_env_var_value(const char *line, int *index, t_shell *shell)
 	start = *index + 1;
 	special = handle_special_cases(line, index, start, shell);
 	if (special)
-		return (special);
+		return (append_remaining_text(line, index, special));
 	result = ft_calloc(1, sizeof(char));
 	if (!result)
 		return (NULL);

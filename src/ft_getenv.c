@@ -29,7 +29,7 @@ static char *copy_after_equal(char *envp)
 		i++;
 		j++;
 	}
-	dest[i] = '\0';
+	dest[j] = '\0';
 	return (dest);
 }
 
