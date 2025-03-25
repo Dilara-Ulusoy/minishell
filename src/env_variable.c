@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   env_variable.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:23:12 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/18 16:27:13 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/25 13:38:52 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "execution.h"
 
 /*
 📌 handle_special_cases(line, index, start)
@@ -23,7 +24,7 @@ returns an empty string ("").
 Effect: Updates index accordingly and returns
 a dynamically allocated string if a special case is found.
 */
-static char	*handle_special_cases(const char *line, int *index, int start)
+static char	*handle_special_cases(const char *line, int *index, int start, t_shell *shell)
 {
 	char	*result;
 
@@ -32,6 +33,15 @@ static char	*handle_special_cases(const char *line, int *index, int start)
 	{
 		(*index)++;
 		result = ft_strdup("$");
+		if (!result)
+			return (NULL);
+		return (result);
+	}
+	if (line[start] == '?')
+	{
+		(*index)++;
+		result = ft_itoa(shell->exit_code);
+		(*index)++;
 		if (!result)
 			return (NULL);
 		return (result);
@@ -89,12 +99,12 @@ If var_name = "HOME" and $HOME="/home/user", then result becomes "/home/user".
 
 Effect: Expands environment variables in the parsed string.
 */
-static void	append_env_value(char **result, char *var_name)
+static void	append_env_value(char **result, char *var_name, t_shell *shell)
 {
 	char	*var_value;
 	char	*temp;
 
-	var_value = getenv(var_name);
+	var_value = ft_getenv(var_name, shell);
 	temp = *result;
 	if (var_value != NULL)
 		*result = ft_strjoin(*result, var_value);
@@ -135,7 +145,7 @@ static void	append_dollar_if_no_var(char **result)
 - Returns a dynamically allocated string containing the processed variable value,
 or NULL if memory allocation fails.
 */
-char	*get_env_var_value(const char *line, int *index)
+char	*get_env_var_value(const char *line, int *index, t_shell *shell)
 {
 	char	*result;
 	char	*special;
@@ -143,7 +153,7 @@ char	*get_env_var_value(const char *line, int *index)
 	int		start;
 
 	start = *index + 1;
-	special = handle_special_cases(line, index, start);
+	special = handle_special_cases(line, index, start, shell);
 	if (special)
 		return (special);
 	result = ft_calloc(1, sizeof(char));
@@ -156,7 +166,7 @@ char	*get_env_var_value(const char *line, int *index)
 		if (!var_name)
 			append_dollar_if_no_var(&result);
 		else
-			append_env_value(&result, var_name);
+			append_env_value(&result, var_name, shell);
 	}
 	return (result);
 }

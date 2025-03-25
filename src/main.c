@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 15:00:56 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/25 12:15:17 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/25 13:41:32 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void parse_and_process_command(t_shell *shell, char ***envp_copy)
 		shell->line = NULL;
 		return ;
 	}
-	shell->tokens = tokenize(shell->tokens, shell->line, shell->line_length);
+	shell->tokens = tokenize(shell->tokens, shell->line, shell->line_length, shell);
 	if (!shell->tokens)
 	{
 		//printf("Error: Tokenization failed.\n");
@@ -75,12 +75,12 @@ void parse_and_process_command(t_shell *shell, char ***envp_copy)
 	//debug_ast(shell->ast, 0);   // -------> FOR DUBEGGING
 	// execute_ast(shell->ast); /* Uncomment for actual execution */
 	//print_tokens(shell->tokens);  // -------> FOR DUBEGGING
-	printf("Old exit code in shell: %d\n", shell->exit_code);
+	//printf("Old exit code in shell: %d\n", shell->exit_code);
 	num_commands = get_num_commands(shell);
 	if (num_commands > 0)
 		shell->exit_code = execute_commands(shell, num_commands, envp_copy);
 	//printf("%c", (*envp_copy)[0][0]);
-	printf("New exit code in shell: %d\n", shell->exit_code);
+	//printf("New exit code in shell: %d\n", shell->exit_code);
 	cleanup_shell(shell);
 }
 
@@ -90,8 +90,6 @@ int main(int argc, char **argv, char **envp)
 	char **envp_copy;
 
 	envp_copy = copy_envp(envp);
-
-	printf("\n\nOur A is %s\n\n", ft_getenv("A", &envp_copy));
 
 	//ft_set("A=12", &envp_copy);
 	//printf("\n\n\n\n");
@@ -107,6 +105,7 @@ int main(int argc, char **argv, char **envp)
 		exit(1);
 	}
 	init_shell(&shell, &envp_copy);
+	//printf("\n\nOur A in minishell is %s\n\n", ft_getenv("A", &shell));
 	setup_signal_handlers();
 	// pid_t pid = fork();
     // if (pid == 0) 

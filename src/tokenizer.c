@@ -6,14 +6,15 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:34:26 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/25 11:35:07 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/25 13:17:56 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "token.h"
 
 static int	process_token_parsing(t_token **head,
-		const char *line, int *i, int length)
+		const char *line, int *i, int length, t_shell *shell)
 {
 	int	parse_result;
 
@@ -32,7 +33,7 @@ static int	process_token_parsing(t_token **head,
 		return (-1);
 	if (parse_result)
 		return (0);
-	parse_result = parse_word(head, line, i, length);
+	parse_result = parse_word(head, line, i, length, shell);
 	if (parse_result == -1)
 		return (-1);
 	if (parse_result)
@@ -40,7 +41,7 @@ static int	process_token_parsing(t_token **head,
 	return (0);
 }
 
-t_token	*tokenize(t_token *head, const char *line, int length)
+t_token	*tokenize(t_token *head, const char *line, int length, t_shell *shell)
 {
 	int	i;
 
@@ -55,7 +56,7 @@ t_token	*tokenize(t_token *head, const char *line, int length)
 		i = skip_whitespace(line, i);
 		if (i >= length)
 			break ;
-		if (process_token_parsing(&head, line, &i, length) == -1)
+		if (process_token_parsing(&head, line, &i, length, shell) == -1)
 		{
 			ft_putstr_fd("Error: Token parsing failed\n", STDERR_FILENO);
 			free_tokens(&head);
@@ -206,14 +207,14 @@ int	handle_newline(t_token **head, const char *line, int *pos)
  * @return int 1 if a word was successfully parsed and added to the token list,
  *             0 otherwise (e.g., no word found or memory allocation failure).
  */
-int	parse_word(t_token **head, const char *line, int *pos, int length)
+int	parse_word(t_token **head, const char *line, int *pos, int length, t_shell *shell)
 {
 	t_token	*token;
 	char	*word;
 
 	if (*pos >= length)
 		return (0);
-	word = read_word_range(line, pos, length);
+	word = read_word_range(line, pos, length, shell);
 	token = (t_token *)malloc(sizeof(t_token));
 	if (!word || !token)
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_handler.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 14:04:16 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/18 15:16:36 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/25 13:13:33 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ t_token_type	match_two_char_operator(const char *line, int i)
 */
 t_token_type	match_single_char_operator(char c)
 {
+	if (c == '&')
+		return (TOKEN_AND);
 	if (c == '<')
 		return (TOKEN_REDIR_IN);
 	if (c == '>')

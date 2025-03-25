@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:59:15 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/25 12:13:14 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/25 13:24:02 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,19 +62,19 @@ char	*get_input(const char *prompt);
 void	init_shell(t_shell *shell, char ***envp);
 
 /* Environment Variable Expansion */
-char	*get_env_var_value(const char *line, int *index);
+char	*get_env_var_value(const char *line, int *index, t_shell *shell);
 char	*handle_env_variable_without_space(const char *line,
-			int *index, int start);
-char	*handle_dollar_sign(const char *line, int *index, int start);
+			int *index, int start, t_shell *shell);
+char	*handle_dollar_sign(const char *line, int *index, int start, t_shell *shell);
 
 /* Quote Parsing */
 char	*join_string_with_quoted_if_no_space(const char *line,
-			int *index, int start);
-char	*parse_quotes(const char *line, int *index);
+			int *index, int start, t_shell *shell);
+char	*parse_quotes(const char *line, int *index, t_shell *shell);
 int		init_parse_quote(t_parse_quote *p, const char *line, int *index);
 
 /* Word Parsing */
-char	*read_word_range(const char *line, int *index, int length);
+char	*read_word_range(const char *line, int *index, int length, t_shell *shell);
 char	*resize_buffer(char *buffer, size_t *buffer_size);
 
 /* Whitespace Handling */
@@ -94,7 +94,7 @@ int		parse_single_char_operator(t_token **head, const char *line,
 			int *pos, int length);
 
 /* Step 4: Parse Word */
-int		parse_word(t_token **head, const char *line, int *pos, int length);
+int		parse_word(t_token **head, const char *line, int *pos, int length, t_shell *shell);
 int		handle_newline(t_token **head, const char *line, int *pos);
 
 /* Cleanup */

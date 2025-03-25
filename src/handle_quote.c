@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_quote.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 18:18:52 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/15 19:30:48 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/25 13:13:39 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,14 +72,14 @@ static int	update_quote_status(t_parse_quote *p)
 ** - Copies the expanded value into the result buffer and updates result_index.
 ** - Frees allocated memory for the environment variable string after copying.
 */
-static int	expand_env_variable(t_parse_quote *p)
+static int	expand_env_variable(t_parse_quote *p, t_shell *shell)
 {
 	char	*env;
 	size_t	result_size;
 	char	*new_result;
 
 	result_size = ft_strlen(p->line) + 1;
-	env = handle_dollar_sign(p->line, &p->index, p->index);
+	env = handle_dollar_sign(p->line, &p->index, p->index, shell);
 	if (env)
 	{
 		while (p->result_index + ft_strlen(env) >= result_size)
@@ -127,7 +127,7 @@ static int	expand_env_variable(t_parse_quote *p)
 ** the result buffer and moves to the next index.
 */
 
-static int	process_character(t_parse_quote *p)
+static int	process_character(t_parse_quote *p, t_shell *shell)
 {
 	char	current;
 
@@ -140,7 +140,7 @@ static int	process_character(t_parse_quote *p)
 	}
 	if (p->quote_is_double && current == '$')
 	{
-		if (expand_env_variable(p) == -1)
+		if (expand_env_variable(p, shell) == -1)
 			return (-1);
 		return (0);
 	}
@@ -161,7 +161,7 @@ static int	process_character(t_parse_quote *p)
  *
  * Return: A newly allocated string with processed content, or NULL
  */
-char	*parse_quotes(const char *line, int *index)
+char	*parse_quotes(const char *line, int *index, t_shell *shell)
 {
 	t_parse_quote	p;
 	int				status;
@@ -172,7 +172,7 @@ char	*parse_quotes(const char *line, int *index)
 		return (NULL);
 	while (p.line[p.index])
 	{
-		status = process_character(&p);
+		status = process_character(&p, shell);
 		// If a quote is closed and followed by a space, exit the loop
 		if (status == 1)
 			break ;

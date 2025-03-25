@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize_word.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:14:48 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/18 16:28:45 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/25 13:23:31 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
  *
  * Return: A newly allocated string containing the extracted word.
  */
-char	*read_word_range(const char *line, int *index, int length)
+char	*read_word_range(const char *line, int *index, int length, t_shell *shell)
 {
 	int		start;
 	int		wordlength;
@@ -37,11 +37,11 @@ char	*read_word_range(const char *line, int *index, int length)
 		{
 			if (*index > 0 && !is_space(line[*index - 1]))
 				return (join_string_with_quoted_if_no_space(line,
-						index, start));
-			return (parse_quotes(line, index));
+						index, start, shell));
+			return (parse_quotes(line, index, shell));
 		}
 		if (c == '$')
-			return (handle_dollar_sign(line, index, start));
+			return (handle_dollar_sign(line, index, start, shell));
 		if (is_space(c) || is_two_char_operator(c) || c == '(' || c == ')')
 			break ;
 		(*index)++;
@@ -53,7 +53,7 @@ char	*read_word_range(const char *line, int *index, int length)
 }
 
 char	*handle_env_variable_without_space(const char
-	*line, int *index, int start)
+	*line, int *index, int start, t_shell *shell)
 {
 	char	*temp;
 	char	*temp2;
@@ -62,7 +62,7 @@ char	*handle_env_variable_without_space(const char
 	temp = ft_substr(line, start, (*index) - start);
 	if (!temp)
 		return (free_this(NULL, NULL, NULL, "substr failed"));
-	temp2 = get_env_var_value(line, index);
+	temp2 = get_env_var_value(line, index, shell);
 	if (!temp2)
 		return (free_this(temp, NULL, NULL, "get_env_var_value failed"));
 	result = ft_strjoin(temp, temp2);
@@ -72,14 +72,14 @@ char	*handle_env_variable_without_space(const char
 	return (result);
 }
 
-char	*handle_dollar_sign(const char *line, int *index, int start)
+char	*handle_dollar_sign(const char *line, int *index, int start, t_shell *shell)
 {
 	char	*result;
 
 	if (is_space(line[*index - 1]))
-		result = get_env_var_value(line, index);
+		result = get_env_var_value(line, index, shell);
 	else
-		result = handle_env_variable_without_space(line, index, start);
+		result = handle_env_variable_without_space(line, index, start, shell);
 	if (!result)
 	{
 		ft_putstr_fd("Memory error at handling dollar sign ", STDERR_FILENO);
@@ -111,7 +111,7 @@ char	*handle_dollar_sign(const char *line, int *index, int start)
  * Return: A newly allocated string containing the concatenated word.
  */
 char	*join_string_with_quoted_if_no_space(const char *line,
-	int *index, int start)
+	int *index, int start, t_shell *shell)
 {
 	char	*result;
 	char	*temp;
@@ -123,7 +123,7 @@ char	*join_string_with_quoted_if_no_space(const char *line,
 		temp = ft_substr(line, start, (*index) - start);
 		if (!temp)
 			return (free_this(NULL, NULL, NULL, "substr failed"));
-		temp2 = parse_quotes(line, index);
+		temp2 = parse_quotes(line, index, shell);
 		if (!temp2)
 			return (free_this(temp, NULL, NULL, "temp2 failed"));
 		result = ft_strjoin(temp, temp2);

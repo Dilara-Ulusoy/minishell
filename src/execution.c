@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:03 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/24 19:08:59 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/25 13:13:41 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -362,7 +362,7 @@ int check_and_run_builtins(t_shell *shell, t_cmd_parts **cmd_parts, t_args *arg_
 
 		//ft_addA(&envp);
 		//ft_addA(&(arg_struct->envp));
-		ft_set("A=55", &envp);
+		ft_set("A=55\0", &envp);
 		//ft_env(envp);
 		//free_cmd_parts(cmd_parts);
 		//cmd_parts = NULL;

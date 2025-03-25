@@ -33,23 +33,26 @@ static char *copy_after_equal(char *envp)
 	return (dest);
 }
 
-char *ft_getenv(char *var_name, char ***envp)
+char *ft_getenv(char *var_name, t_shell *shell)
 {
 	int		i;
 	char *name_w_equal;
 	char *value;
 
+	// printf("var name: %s\n", var_name);
+	// if (ft_strncmp(var_name,"?\0",2) == 0)
+	// 	printf("%s\n", ft_itoa(shell->exit_code));
 	name_w_equal = ft_strjoin(var_name, "=");
 	i = 0;
-	while ((*envp)[i] != NULL && ft_strnstr((*envp)[i], name_w_equal, ft_strlen(name_w_equal)) == 0)
+	while ((*(shell->envp))[i] != NULL && ft_strnstr((*(shell->envp))[i], name_w_equal, ft_strlen(name_w_equal)) == 0)
 		i++;
-	printf("Searched for: %s\n\n", name_w_equal);
+	//printf("Searched for: %s\n\n", name_w_equal);
 	free(name_w_equal);
-	if ((*envp)[i] == NULL)
+	if ((*(shell->envp))[i] == NULL)
 	{
-		printf("Var was not found in envp\n");
+		//printf("Var was not found in envp\n");
 		return ("\0");
 	}
-	value = copy_after_equal((*envp)[i]);
+	value = copy_after_equal((*(shell->envp))[i]);
 	return (value); // Remember to free this later!
 }
