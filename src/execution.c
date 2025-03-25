@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:03 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/25 13:13:41 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/25 15:18:47 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -457,10 +457,17 @@ int check_and_run_builtins(t_shell *shell, t_cmd_parts **cmd_parts, t_args *arg_
 	}
 	else if (ft_strncmp((*cmd_parts)->cmd_array[0], "cd\0", 3) == 0)
 	{
-		exit_code = ft_cd((*cmd_parts)->cmd_array[1], &envp);
+		//printf("Number of command args: %d\n", (*cmd_parts)->n_cmd);
+		if ((*cmd_parts)->n_cmd > 2)
+		{
+			write(2, "bash: cd: too many arguments\n", 29);
+			exit_code = EXIT_FAILURE;
+		}
+		else
+			exit_code = ft_cd((*cmd_parts)->cmd_array[1], &envp);
 		free_cmd_parts(cmd_parts);
-		//cmd_parts = NULL;
 		return (exit_code);
+		//cmd_parts = NULL;
 	}
 	return (0);
 }
@@ -572,7 +579,14 @@ int check_and_run_builtins_single(t_shell *shell, t_cmd_parts **cmd_parts, char 
 	}
 	else if (ft_strncmp((*cmd_parts)->cmd_array[0], "cd\0", 3) == 0)
 	{
-		exit_code = ft_cd((*cmd_parts)->cmd_array[1], envp);
+		//printf("Number of command args: %d\n", (*cmd_parts)->n_cmd);
+		if ((*cmd_parts)->n_cmd > 2)
+		{
+			write(2, "bash: cd: too many arguments\n", 29);
+			exit_code = EXIT_FAILURE;
+		}
+		else
+			exit_code = ft_cd((*cmd_parts)->cmd_array[1], envp);
 		free_cmd_parts(cmd_parts);
 		return (exit_code);
 		//cmd_parts = NULL;

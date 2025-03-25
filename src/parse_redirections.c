@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_redirections.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 12:57:34 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/18 14:06:42 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/25 14:52:54 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ int	parse_redirections(t_parser *p, t_io_node **io_list)
 		if (attach_io_node(io_list, new_io) == -1)
 			return (-1);
 		get_next_token(p);
+		if(p->current_token && p->current_token->type == TOKEN_WORD)
+			get_next_token(p);
 	}
 	return (0);
 }
