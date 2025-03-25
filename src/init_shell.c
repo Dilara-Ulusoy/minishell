@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_shell.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:21:29 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/02/18 15:22:37 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/25 12:12:37 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /**
  * Initializes the shell structure.
  */
-void	init_shell(t_shell *shell)
+void	init_shell(t_shell *shell, char ***envp)
 {
 	shell->line = NULL;
 	shell->tokens = NULL;
@@ -24,6 +24,7 @@ void	init_shell(t_shell *shell)
 	shell->parser = NULL;
 	shell->exit_code = 0;
 	shell->line_length = 0;
+	shell->envp = envp;
 }
 
 /*

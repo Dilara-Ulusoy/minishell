@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:59:15 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/21 12:50:54 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/25 12:13:14 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ typedef struct s_shell
 	t_parser	*parser;
 	int			exit_code;
 	int			line_length;
-
+	char		***envp;
 }	t_shell;
 
 typedef struct s_parse_quote
@@ -59,7 +59,7 @@ typedef struct s_buffer
 
 /* Input Handling and Initialization */
 char	*get_input(const char *prompt);
-void	init_shell(t_shell *shell);
+void	init_shell(t_shell *shell, char ***envp);
 
 /* Environment Variable Expansion */
 char	*get_env_var_value(const char *line, int *index);

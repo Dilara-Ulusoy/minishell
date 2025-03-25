@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 15:00:56 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/25 11:41:50 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/25 12:15:17 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ int main(int argc, char **argv, char **envp)
 
 	envp_copy = copy_envp(envp);
 
-	printf("\n\nOur A is %s\n\n", ft_getenv("A", &envp));
+	printf("\n\nOur A is %s\n\n", ft_getenv("A", &envp_copy));
 
 	//ft_set("A=12", &envp_copy);
 	//printf("\n\n\n\n");
@@ -106,7 +106,7 @@ int main(int argc, char **argv, char **envp)
 		ft_putendl_fd("Too many args. Usage: ./minishell", 2);
 		exit(1);
 	}
-	init_shell(&shell);
+	init_shell(&shell, &envp_copy);
 	setup_signal_handlers();
 	// pid_t pid = fork();
     // if (pid == 0) 
