@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:03 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/26 13:55:45 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/26 15:43:04 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,8 +215,12 @@ int ft_exit(char *exit_code)
 		return (2);
 	}
 	exit_number = ft_atoi(exit_code);
-	if (exit_number < 0 || exit_number > 255)
-		exit_number = 0;
+	if (exit_number < 0)
+		exit_number = 156;
+	if (exit_number > 255)
+		exit_number = 42;
+	// if (exit_number < 0 || exit_number > 255)
+	// 	exit_number = 0;
 	return (exit_number);
 }
 
