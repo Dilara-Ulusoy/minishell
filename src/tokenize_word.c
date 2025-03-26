@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize_word.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:14:48 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/26 12:16:38 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/26 13:13:18 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,23 +80,35 @@ char	*handle_dollar_sign(const char *line, int *index, int start, t_shell *shell
 		result = get_env_var_value(line, index, shell);
 	else
 		result = handle_env_variable_without_space(line, index, start, shell);
+
 	if (!result)
 	{
-		ft_putstr_fd("Memory error at handling dollar sign ", STDERR_FILENO);
+		ft_putstr_fd("Memory error at handling dollar sign\n", STDERR_FILENO);
 		return (NULL);
 	}
-	while (line[*index] && is_space(line[*index]))
+	if (result[0] != '\0')
 	{
-		result = ft_strjoin(result, " ");
-		if (!result)
+		while (line[*index] && is_space(line[*index]))
 		{
-			ft_putstr_fd("Memory error at handle dollar sign\n", STDERR_FILENO);
-			return (NULL);
+			char *temp = result;
+			result = ft_strjoin(result, " ");
+			free(temp);
+			if (!result)
+			{
+				ft_putstr_fd("Memory error at handle dollar sign\n", STDERR_FILENO);
+				return (NULL);
+			}
+			(*index)++;
 		}
-		(*index)++;
+	}
+	else
+	{
+		while (line[*index] && is_space(line[*index]))
+			(*index)++;
 	}
 	return (result);
 }
+
 
 /**
  * join_string_with_quoted_if_no_space - Concatenates a word with quoted content

@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 15:00:56 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/25 16:27:45 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/26 13:11:34 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "execution.h"
 
-
+/*
 void	handle_sigint(int sig)
 {
 	(void)sig;
@@ -47,6 +47,7 @@ void	setup_signal_handlers(void)
 	signal(SIGQUIT, handle_sigquit);  // `Ctrl-\` için
 	//signal(SIGCHLD, handle_child_exit);
 }
+*/
 
 void parse_and_process_command(t_shell *shell, char ***envp_copy)
 {
@@ -72,7 +73,7 @@ void parse_and_process_command(t_shell *shell, char ***envp_copy)
 		cleanup_shell(shell);
 		return ;
 	}
-	//debug_ast(shell->ast, 0);   // -------> FOR DUBEGGING
+	debug_ast(shell->ast, 0);   // -------> FOR DUBEGGING
 	// execute_ast(shell->ast); /* Uncomment for actual execution */
 	//print_tokens(shell->tokens);  // -------> FOR DUBEGGING
 	//printf("Old exit code in shell: %d\n", shell->exit_code);
@@ -106,17 +107,17 @@ int main(int argc, char **argv, char **envp)
 	}
 	init_shell(&shell, &envp_copy);
 	//printf("\n\nOur A in minishell is %s\n\n", ft_getenv("A", &shell));
-	setup_signal_handlers();
+	//setup_signal_handlers();
 	// pid_t pid = fork();
-    // if (pid == 0) 
+    // if (pid == 0)
     // {
     //     // Child process
     //     printf("Child process %d running...\n", getpid());
     //     sleep(2);  // Simulate some work
     //     printf("Child process %d exiting...\n", getpid());
     //     exit(0);
-    // } 
-    // else if (pid > 0) 
+    // }
+    // else if (pid > 0)
     // {
     //     // Parent process
     //     printf("Parent process %d waiting...\n", getpid());
@@ -124,8 +125,8 @@ int main(int argc, char **argv, char **envp)
     //     {
     //         pause();  // Wait indefinitely for signals
     //     }
-    // } 
-    // else 
+    // }
+    // else
     // {
     //     perror("fork failed");
     //     return 1;
