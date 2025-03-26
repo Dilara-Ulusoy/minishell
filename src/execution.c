@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:03 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/25 18:06:03 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/26 13:55:45 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,8 @@ t_cmd_parts *count_tokens(const t_token *head, int command_number)
 		}
 		if (curr && curr->type == TOKEN_WORD)
 		{
-			(cmd_parts->n_cmd)++;
+			if (curr->value[0] != '\0')
+				(cmd_parts->n_cmd)++;
         	curr = curr->next;
 		}
     }
@@ -155,8 +156,11 @@ t_cmd_parts *get_command_array(const t_token *head, int command_number)
 		if (curr && curr->type == TOKEN_WORD)
 		{
 			//cmd_parts->cmd_array[j] = curr->value;
-			cmd_parts->cmd_array[j] = ft_strdup(curr->value);
-			j++;
+			if (curr->value[0] != '\0')
+			{
+				cmd_parts->cmd_array[j] = ft_strdup(curr->value);
+				j++;
+			}
         	curr = curr->next;
 		}
     }

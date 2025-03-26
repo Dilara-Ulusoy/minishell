@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoce@student.hive.fi>       +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/06 11:26:30 by dakcakoc          #+#    #+#             */
-/*   Updated: 2024/04/22 11:37:09 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/26 14:33:27 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "libft.h"
 
 char	*ft_strcat(char *dest, const char *src)

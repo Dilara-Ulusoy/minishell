@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:24 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/21 19:06:15 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/26 14:23:27 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,6 +212,18 @@ int	set_pipe(t_cmd_parts *cmd_parts, t_args *arg_struct, char *path, int is_buil
 		i = -1;
 		while (++i < cmd_parts->n_in)
 		{
+			if (cmd_parts->infiles_array[i][0] == '\0')
+			{
+				ft_putstr_fd("minishell: ambiguous redirect\n", 2);
+				free_cmd_parts(&cmd_parts);
+				free(arg_struct->pids);
+				free_array((void **)arg_struct->fd, 1, arg_struct->argc - 1);
+				free_envp(arg_struct->envp);
+				free(arg_struct);
+				free(path);
+				//close_and_free(arg_struct, 1);
+				exit (1); // Remember to free other things before exit!
+			}
 			if (cmd_parts->command_number == 0)
 			{
 				fd_in = open_and_check_file(cmd_parts->infiles_array[i], 0);
@@ -236,6 +248,18 @@ int	set_pipe(t_cmd_parts *cmd_parts, t_args *arg_struct, char *path, int is_buil
 		i = -1;
 		while (++i < (cmd_parts->n_out))
 		{
+			if (cmd_parts->outfiles_array[i][0] == '\0')
+			{
+				ft_putstr_fd("minishell: ambiguous redirect\n", 2);
+				free_cmd_parts(&cmd_parts);
+				free(arg_struct->pids);
+				free_array((void **)arg_struct->fd, 1, arg_struct->argc - 1);
+				free_envp(arg_struct->envp);
+				free(arg_struct);
+				free(path);
+				//close_and_free(arg_struct, 1);
+				exit (1); // Remember to free other things before exit!
+			}
 			if (cmd_parts->command_number == ((cmd_parts->num_commands) - 1))
 			{
 				fd_out = open_and_check_file(cmd_parts->outfiles_array[i], cmd_parts->outfiles_types[i]);

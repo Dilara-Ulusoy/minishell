@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 15:00:56 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/26 13:11:34 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/26 15:07:32 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "execution.h"
 
-/*
+
 void	handle_sigint(int sig)
 {
 	(void)sig;
@@ -47,7 +47,7 @@ void	setup_signal_handlers(void)
 	signal(SIGQUIT, handle_sigquit);  // `Ctrl-\` için
 	//signal(SIGCHLD, handle_child_exit);
 }
-*/
+
 
 void parse_and_process_command(t_shell *shell, char ***envp_copy)
 {
@@ -73,7 +73,7 @@ void parse_and_process_command(t_shell *shell, char ***envp_copy)
 		cleanup_shell(shell);
 		return ;
 	}
-	debug_ast(shell->ast, 0);   // -------> FOR DUBEGGING
+	//debug_ast(shell->ast, 0);   // -------> FOR DUBEGGING
 	// execute_ast(shell->ast); /* Uncomment for actual execution */
 	//print_tokens(shell->tokens);  // -------> FOR DUBEGGING
 	//printf("Old exit code in shell: %d\n", shell->exit_code);
@@ -107,7 +107,7 @@ int main(int argc, char **argv, char **envp)
 	}
 	init_shell(&shell, &envp_copy);
 	//printf("\n\nOur A in minishell is %s\n\n", ft_getenv("A", &shell));
-	//setup_signal_handlers();
+	setup_signal_handlers();
 	// pid_t pid = fork();
     // if (pid == 0)
     // {
