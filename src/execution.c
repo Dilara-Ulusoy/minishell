@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:03 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/26 15:43:04 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/26 16:02:59 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -293,7 +293,7 @@ int ft_cd(char *new_path, char ***envp)
 	}
 	if (chdir(new_path) != 0)
 	{
-		fprintf(stderr, "cd: %s: %s\n", strerror(errno), new_path);
+		perror(new_path);
 		return (EXIT_FAILURE);
 	}
 	i = 0;
@@ -315,8 +315,7 @@ int ft_cd(char *new_path, char ***envp)
 	}
 	else
 	{
-		printf("\nHEYOOO!!\n");
-        write(2, "getcwd() error\n", 15);
+		ft_putstr_fd("getcwd() error.\n",2);
 		return (EXIT_FAILURE);
 	}
 	//ft_env(*envp);
