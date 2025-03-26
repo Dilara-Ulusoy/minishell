@@ -51,7 +51,8 @@ char *ft_getenv(char *var_name, t_shell *shell)
 	if ((*(shell->envp))[i] == NULL)
 	{
 		//printf("Var was not found in envp\n");
-		return (ft_strdup(""));
+		//return (ft_strdup(""));
+		return (NULL);
 	}
 	value = copy_after_equal((*(shell->envp))[i]);
 	return (value); // Remember to free this later!

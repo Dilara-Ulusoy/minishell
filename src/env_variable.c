@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:23:12 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/25 16:09:53 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/26 12:20:16 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static char	*handle_special_cases(const char *line, int *index, int start, t_she
 {
 	char	*result;
 
-	if (is_space(line[*index - 1]) && (line[*index + 1] == '\0'
+	if (*index > 0 && is_space(line[*index - 1]) && (line[*index + 1] == '\0'
 			|| is_space(line[*index + 1])))
 	{
 		(*index)++;
@@ -46,7 +46,7 @@ static char	*handle_special_cases(const char *line, int *index, int start, t_she
 			return (NULL);
 		return (result);
 	}
-	if (is_space(line[*index - 1]) && !ft_isalpha(line[start])
+	if (*index > 0 && is_space(line[*index - 1]) && !ft_isalpha(line[start])
 		&& line[start] != '_')
 	{
 		(*index)++;

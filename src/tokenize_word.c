@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:14:48 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/25 13:23:31 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/26 12:16:38 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ char	*handle_dollar_sign(const char *line, int *index, int start, t_shell *shell
 {
 	char	*result;
 
-	if (is_space(line[*index - 1]))
+	if (*index > 0 && is_space(line[*index - 1]))
 		result = get_env_var_value(line, index, shell);
 	else
 		result = handle_env_variable_without_space(line, index, start, shell);
