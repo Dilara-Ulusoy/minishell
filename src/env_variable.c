@@ -3,63 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   env_variable.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:23:12 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/26 15:32:12 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/27 16:21:11 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "execution.h"
-
-/*
-📌 handle_special_cases(line, index, start)
-Purpose: Handles special cases where the $ sign appears in an unusual way.
-Examples:
-If the $ is surrounded by spaces (e.g., "echo $"), it returns "$".
-If $ is followed by an invalid variable name
-(e.g., "echo $123invalid"), it skips invalid characters and
-returns an empty string ("").
-Effect: Updates index accordingly and returns
-a dynamically allocated string if a special case is found.
-*/
-static char	*handle_special_cases(const char *line, int *index, int start, t_shell *shell)
-{
-	char	*result;
-
-	if (*index > 0 && is_space(line[*index - 1]) && (line[*index + 1] == '\0'
-			|| is_space(line[*index + 1])))
-	{
-		(*index)++;
-		result = ft_strdup("$");
-		if (!result)
-			return (NULL);
-		return (result);
-	}
-	if (line[start] == '?')
-	{
-		(*index)++;
-		result = ft_itoa(shell->exit_code);
-		(*index)++;
-		if (!result)
-			return (NULL);
-		return (result);
-	}
-	if (*index > 0 && is_space(line[*index - 1]) && !ft_isalpha(line[start])
-		&& line[start] != '_')
-	{
-		(*index)++;
-		while (!ft_isalpha(line[*index]) && line[*index] != '_'
-			&& line[*index] != '\0')
-			(*index)++;
-		result = ft_strdup("");
-		if (!result)
-			return (NULL);
-		return (result);
-	}
-	return (NULL);
-}
 
 /*
 📌 get_var_name(line, index)
@@ -138,10 +90,11 @@ static void	append_dollar_if_no_var(char **result)
 
 static char	*append_remaining_text(const char *line, int *index, char *prefix)
 {
-	char	*result = prefix;
+	char	*result;
 	char	*new_result;
 	char	temp[2];
 
+	result = prefix;
 	while (line[*index] && (ft_isalnum(line[*index]) || line[*index] == '_'))
 	{
 		temp[0] = line[*index];
@@ -155,6 +108,7 @@ static char	*append_remaining_text(const char *line, int *index, char *prefix)
 	}
 	return (result);
 }
+
 /*
    get_env_var_value:
 

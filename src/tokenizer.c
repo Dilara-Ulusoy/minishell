@@ -3,69 +3,59 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:34:26 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/25 16:30:59 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/27 16:53:58 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "token.h"
 
-static int	process_token_parsing(t_token **head,
-		const char *line, int *i, int length, t_shell *shell)
+static int	process_token_parsing(t_token **head, t_shell *shell)
 {
-	int	parse_result;
+	int	result;
 
-	parse_result = parse_two_char_operator(head, line, i, length);
-	if (parse_result == -1)
-		return (-1);
-	if (parse_result)
-		return (0);
-	parse_result = parse_single_char_operator(head, line, i, length);
-	if (parse_result == -1)
-		return (-1);
-	if (parse_result)
-		return (0);
-	parse_result = handle_newline(head, line, i);
-	if (parse_result == -1)
-		return (-1);
-	if (parse_result)
-		return (0);
-	parse_result = parse_word(head, line, i, length, shell);
-	if (parse_result == -1)
-		return (-1);
-	if (parse_result)
-		return (0);
-	return (0);
+	result = parse_two_char_operator(head, shell->line, &shell->index, shell->line_length);
+	if (result == -1 || result == 1)
+		return (result);
+	result = parse_single_char_operator(head, shell->line, &shell->index, shell->line_length);
+	if (result == -1 || result == 1)
+		return (result);
+	result = handle_newline(head, shell->line, &shell->index);
+	if (result == -1 || result == 1)
+		return (result);
+	result = parse_word(head, shell->line, &shell->index, shell->line_length, shell);
+	return (result);
 }
+
 
 t_token	*tokenize(t_token *head, const char *line, int length, t_shell *shell)
 {
-	int	i;
-
 	if (!line || !*line)
 	{
 		ft_putstr_fd("Error: Empty line\n", STDERR_FILENO);
 		return (NULL);
 	}
-	i = 0;
-	while (i < length)
+	shell->line = (char *)line;
+	shell->line_length = length;
+	shell->index = 0;
+
+	while (shell->index < length)
 	{
-		i = skip_whitespace(line, i);
-		if (i >= length)
+		shell->index = skip_whitespace(shell->line, shell->index);
+		if (shell->index >= length)
 			break ;
-		if (process_token_parsing(&head, line, &i, length, shell) == -1)
+		if (process_token_parsing(&head, shell) == -1)
 		{
 			ft_putstr_fd("Error: Token parsing failed\n", STDERR_FILENO);
 			free_tokens(&head);
 			return (NULL);
 		}
 	}
-	//head->exit_code = exit_code;
 	return (head);
 }
+
 
 /**
  * @brief Parses a two-character operator from the given position in the line.

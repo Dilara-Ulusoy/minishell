@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:59:15 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/27 15:45:21 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/27 16:52:37 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include <signal.h>
 # include "parsing.h"
 # include "token.h"
+# include "execution.h"
 # include "../Libft/libft.h"
 
 typedef struct s_shell
@@ -37,7 +38,11 @@ typedef struct s_shell
 	int			exit_code;
 	int			line_length;
 	char		***envp;
+
+	// 👇 Geçici parsing index’i için
+	int			index;
 }	t_shell;
+
 
 typedef struct s_parse_quote
 {
@@ -66,6 +71,7 @@ char	*get_env_var_value(const char *line, int *index, t_shell *shell);
 char	*handle_env_variable_without_space(const char *line,
 			int *index, int start, t_shell *shell);
 char	*handle_dollar_sign(const char *line, int *index, int start, t_shell *shell);
+char	*handle_special_cases(const char *line, int *index, int start, t_shell *shell);
 
 /* Quote Parsing */
 char	*join_string_with_quoted_if_no_space(const char *line,

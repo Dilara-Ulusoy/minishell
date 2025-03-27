@@ -1,59 +1,45 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_getenv.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/27 16:37:44 by dakcakoc          #+#    #+#             */
+/*   Updated: 2025/03/27 16:38:31 by dakcakoc         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
-#include "execution.h"
 
-static char *copy_after_equal(char *envp)
+static char	*copy_after_equal(char *envp)
 {
-	int i;
-	int j;
-	char *dest;
+	int		i;
+	char	*dest;
 
 	i = 0;
-	while (envp[i] != '=')
+	while (envp[i] && envp[i] != '=')
 		i++;
-	i++;
-	j = 0;
-	while (envp[i] != '\0')
-	{
+	if (envp[i] == '=')
 		i++;
-		j++;
-	}
-	dest = malloc(sizeof(char) * (j + 1));
-	i = 0;
-	while (envp[i] != '=')
-		i++;
-	i++;
-	j = 0;
-	while (envp[i] != '\0')
-	{
-		dest[j] = envp[i];
-		i++;
-		j++;
-	}
-	dest[j] = '\0';
+	dest = ft_strdup(&envp[i]);
 	return (dest);
 }
 
-char *ft_getenv(char *var_name, t_shell *shell)
+char	*ft_getenv(char *var_name, t_shell *shell)
 {
 	int		i;
-	char *name_w_equal;
-	char *value;
+	char	*name_w_equal;
+	char	*value;
 
-	// printf("var name: %s\n", var_name);
-	// if (ft_strncmp(var_name,"?\0",2) == 0)
-	// 	printf("%s\n", ft_itoa(shell->exit_code));
 	name_w_equal = ft_strjoin(var_name, "=");
 	i = 0;
-	while ((*(shell->envp))[i] != NULL && ft_strnstr((*(shell->envp))[i], name_w_equal, ft_strlen(name_w_equal)) == 0)
+	while ((*(shell->envp))[i] != NULL && ft_strnstr((*(shell->envp))[i],
+			name_w_equal, ft_strlen(name_w_equal)) == 0)
 		i++;
-	//printf("Searched for: %s\n\n", name_w_equal);
 	free(name_w_equal);
 	if ((*(shell->envp))[i] == NULL)
-	{
-		//printf("Var was not found in envp\n");
-		//return (ft_strdup(""));
 		return (NULL);
-	}
 	value = copy_after_equal((*(shell->envp))[i]);
 	return (value); // Remember to free this later!
 }

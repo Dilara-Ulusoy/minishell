@@ -35,7 +35,8 @@ SRCS        = $(SRC_DIR)main.c \
 			  $(SRC_DIR)parse_expression.c \
 			  $(SRC_DIR)parse_redirections.c \
 			  $(SRC_DIR)parse_error.c \
-			  $(SRC_DIR)syntax_error_check.c \
+			  $(SRC_DIR)syntax_error_check_1.c \
+			  $(SRC_DIR)syntax_error_check_2.c \
 			  $(SRC_DIR)handle_quote.c \
 			  $(SRC_DIR)exec_utils.c \
 			  $(SRC_DIR)pipes.c \
@@ -43,6 +44,7 @@ SRCS        = $(SRC_DIR)main.c \
 			  $(SRC_DIR)pipex.c \
 			  $(SRC_DIR)execution.c \
 			  $(SRC_DIR)ft_getenv.c \
+			  $(SRC_DIR)special_cases.c \
 
 
 

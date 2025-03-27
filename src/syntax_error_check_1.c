@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   syntax_error_check.c                               :+:      :+:    :+:   */
+/*   syntax_error_check_1.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/30 14:05:19 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/21 20:08:14 by htopa            ###   ########.fr       */
+/*   Created: 2025/03/27 16:46:54 by dakcakoc          #+#    #+#             */
+/*   Updated: 2025/03/27 16:46:57 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,42 +54,26 @@ Effect:
 and parsing stops (returns 0).
 - Otherwise, parsing continues (returns 1).
 */
-/*
 static int	handle_consecutive_operators(t_parser *parser, t_token *current)
 {
-	if (is_operator(current->type) && is_operator(current->next->type))
+	if (current->type == TOKEN_PIPE && !is_redir(current->next->type))
 	{
 		set_syntax_error(parser, current->next->value);
 		return (0);
 	}
-	return (1);
-}
-*/
-static int	handle_consecutive_operators(t_parser *parser, t_token *current)
-{
-	if(current->type == TOKEN_PIPE && !is_redir(current->next->type))
-	{
-		set_syntax_error(parser, current->next->value);
-		return (0);
-	}
-	/* if (is_operator(current->type) && is_operator(current->next->type))
-	{
-		set_syntax_error(parser, current->next->value);
-		return (0);
-	} */
 	return (1);
 }
 
-static int handle_and_or(t_parser *parser, t_token *current)
+static int	handle_and_or(t_parser *parser, t_token *current)
 {
 	if (current->type == TOKEN_WORD)
 	{
-		if(current->next && current->next->type == TOKEN_AND)
+		if (current->next && current->next->type == TOKEN_AND)
 		{
 			set_syntax_error(parser, current->value);
 			return (0);
 		}
-		if(current->next && current->next->type == TOKEN_OR)
+		if (current->next && current->next->type == TOKEN_OR)
 		{
 			set_syntax_error(parser, current->value);
 			return (0);
@@ -98,67 +82,15 @@ static int handle_and_or(t_parser *parser, t_token *current)
 	return (1);
 }
 
-static int handle_parantesis(t_parser *parser, t_token *current)
+static int	handle_parantesis(t_parser *parser, t_token *current)
 {
 	if (is_operator(current->type) || current->type == TOKEN_WORD)
 	{
-		if(current->next && current->next->type == TOKEN_PAREN_OPEN)
+		if (current->next && current->next->type == TOKEN_PAREN_OPEN)
 		{
 			set_syntax_error(parser, current->value);
 			return (0);
 		}
-	}
-	return (1);
-}
-
-/*
-📌 handle_redir_followed_by_word(parser, current)
-
-Purpose: Ensures that every redirection token (>, <, >>, <<)
-is followed by a valid word token.
-
-Example:
-- If current = ">" and current->next = "file.txt", it returns 1 (valid case).
-- If current = ">>" and current->next = NULL or another operator
-(e.g., ">> &&"), it sets a syntax error and returns 0.
-
-Effect:
-- If a redirection token is not followed by a word, a syntax error is set.
-- Returns 1 if the syntax is correct, otherwise returns 0.
-*/
-static int	handle_redir_followed_by_word(t_parser *parser, t_token *current)
-{
-	if (is_redirection(current->type))
-	{
-		if (current->next == NULL || current->next->type != TOKEN_WORD)
-		{
-			if (current->next != NULL)
-				set_syntax_error(parser, current->next->value);
-			else
-				set_syntax_error(parser, "\\n");
-			return (0);
-		}
-	}
-	return (1);
-}
-
-/**
- * handle_trailing_operator - Checks if the last token is an operator.
- *
- * If the last token is an operator, it sets a syntax error.
- *
- * @param parser Pointer to the parser structure.
- * @param current Pointer to the current token.
- */
-static int	handle_trailing_operator(t_parser *parser, t_token *current)
-{
-	if (current && is_operator(current->type))
-	{
-		if (!is_redirection((current)->type))
-			set_syntax_error(parser, (current)->value);
-		else
-			set_syntax_error(parser, "\\n");
-		return (0);
 	}
 	return (1);
 }

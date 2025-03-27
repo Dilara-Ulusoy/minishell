@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 13:18:55 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/18 14:03:40 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/27 16:46:29 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,8 @@ void			cleanup_resources(char *cmd_args, t_io_node *io_list);
 /* Syntax validation */
 int				check_syntax_errors(t_parser *parser);
 int				set_syntax_error(t_parser *parser, const char *token_value);
-//int			set_error_number(t_parser *parser, int number);
+int				handle_redir_followed_by_word(t_parser *parser, t_token *current);
+int				handle_trailing_operator(t_parser *parser, t_token *current);
 
 /* Error handling */
 void			*handle_parse_error(t_parser *p, t_ast_node *left_node,

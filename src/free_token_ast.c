@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_token_ast.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:04:51 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/21 10:58:49 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/27 16:12:18 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,6 @@ void	free_io_list(t_io_node *io_list)
 	while (io_list)
 	{
 		temp = io_list->next;
-		//printf("Freeing I/O List for AST Node: %p ----> %s\n",
-		//	(void *)io_list, io_list->filename);
 		if (io_list->filename)
 			free(io_list->filename);
 		free(io_list);
