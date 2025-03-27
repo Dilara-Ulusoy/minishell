@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 15:00:56 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/26 15:07:32 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/27 15:28:27 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "execution.h"
 
-
+/*
 void	handle_sigint(int sig)
 {
 	(void)sig;
@@ -28,26 +28,12 @@ void	handle_sigquit(int sig)
 	(void)sig;
 }
 
-// void handle_child_exit(int sig)
-// {
-//     (void)sig;  // Mark parameter as unused
-//     int status;
-//     pid_t pid;
-
-//     while ((pid = waitpid(-1, &status, WNOHANG)) > 0)
-//     {
-//         printf("Child process %d exited. Terminating parent.\n", pid);
-//         exit(EXIT_SUCCESS);
-//     }
-// }
-
 void	setup_signal_handlers(void)
 {
 	signal(SIGINT, handle_sigint);  // `Ctrl-C` için
 	signal(SIGQUIT, handle_sigquit);  // `Ctrl-\` için
-	//signal(SIGCHLD, handle_child_exit);
 }
-
+*/
 
 void parse_and_process_command(t_shell *shell, char ***envp_copy)
 {
@@ -107,7 +93,7 @@ int main(int argc, char **argv, char **envp)
 	}
 	init_shell(&shell, &envp_copy);
 	//printf("\n\nOur A in minishell is %s\n\n", ft_getenv("A", &shell));
-	setup_signal_handlers();
+	//setup_signal_handlers();
 	// pid_t pid = fork();
     // if (pid == 0)
     // {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:59:15 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/25 13:24:02 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/27 15:45:21 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,5 +103,6 @@ void	cleanup_shell(t_shell *shell);
 /* Utility */
 void	*ft_realloc(void *ptr, size_t size);
 void	*free_this(char *s1, char *s2, char *s3, char *message);
+int		append_to_buffer(t_buffer *buf, const char *word_value);
 
 #endif

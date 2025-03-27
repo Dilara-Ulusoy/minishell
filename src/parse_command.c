@@ -3,93 +3,70 @@
 /*                                                        :::      ::::::::   */
 /*   parse_command.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 10:22:37 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/21 19:42:47 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/27 15:46:32 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
-	parse_command():
-	---------------
-	This function parses a simple command node. A "command" in this context
-	is one or more WORD tokens (like "echo", "hello") that get combined into
-	a single string, plus any optional redirections (<, >, >>, <<) that follow.
-
-	STEP-BY-STEP (Beginner-Friendly):
-	  1) If there's a WORD token, we capture it (and possibly more WORD tokens)
-		 into one command string (e.g., "echo hello world").
-	  2) After we finish reading WORD tokens, we look for redirection tokens
-		 like TOKEN_REDIR_IN (<), TOKEN_REDIR_OUT (>), etc.
-	  3) For each redirection, we consume the operator token, then expect a
-		 WORD token for the filename. We store these in a simple linked list
-		 (io_redirects).
-	  4) Finally, we create and return a command node (AST_COMMAND) with
-		 cmd_args = the combined command string, and io_redirects = the
-		 redirection list. If we have no words at all but we do have
-		 redirections, we can still form a command node (though a real shell
-		 might treat that as an error or do something special).
-
-	EXAMPLE:
-	  Tokens: [ WORD("echo"), WORD("hello"), TOKEN_REDIR_OUT(">"),
-				WORD("file.txt") ]
-	  - Combine "echo" + "hello" => "echo hello" for cmd_args
-	  - Redirection: > file.txt => store in io_redirects => IO_OUT("file.txt")
-	  - Build a node => AST_COMMAND with:
-		   node->cmd_args = "echo hello"
-		   node->io_redirects => [IO_OUT("file.txt")]
-	  - Return that node.
-
-	IMPORTANT:
-	  - In a real shell, you might handle special cases like 'redirection
-		with no command' differently. For simplicity, we allow an empty
-		command string if no WORD tokens appear but do parse redirections.
-	  - If memory fails, we set p->error_status = PARSE_MEMORY_ERROR.
-	  - If we find a redirection operator but no WORD after it for the filename,
-		we set p->error_status = PARSE_SYNTAX_ERROR.
-
-	CODE FLOW (Simplified):
-	  1) Gather all WORD tokens into a single string 'cmd_args'.
-	  2) parse_redirections => attach them to a linked list for io_redirects
-	  3) create an AST_COMMAND node and return it.
-*/
-
-t_ast_node *parse_command(t_parser *p)
+static int	handle_initial_redirection(t_parser *p, t_io_node **io_list)
 {
-	t_io_node *io_list = NULL;
-	t_ast_node *cmd_node = NULL;
-	char *cmd_args = NULL;
-
-	if (!p->current_token || p->error_status != PARSE_OK)
-		return (NULL);
-
 	if (is_redirection(p->current_token->type))
 	{
-		if (parse_redirections(p, &io_list) == -1)
-		{
-			free_io_list(io_list);
-			return (NULL);
-		}
+		if (parse_redirections(p, io_list) == -1)
+			return (-1);
 	}
+	return (0);
+}
+
+static char	*handle_command_string(t_parser *p, t_io_node *io_list)
+{
+	char	*cmd_args;
+
 	cmd_args = build_command_string(p);
 	if (!cmd_args || p->error_status != PARSE_OK || cmd_args[0] == '\0')
 	{
 		if (io_list)
-		{
 			p->error_status = PARSE_SYNTAX_ERROR;
-			free_io_list(io_list);
-		}
+		free_io_list(io_list);
 		free(cmd_args);
 		return (NULL);
 	}
-	if (parse_redirections(p, &io_list) == -1)
+	return (cmd_args);
+}
+
+static int	handle_post_redirection(t_parser *p, t_io_node **io_list,
+		char *cmd_args)
+{
+	if (parse_redirections(p, io_list) == -1)
 	{
-		cleanup_resources(cmd_args, io_list);
-		return (NULL);
+		cleanup_resources(cmd_args, *io_list);
+		return (-1);
 	}
+	return (0);
+}
+
+t_ast_node	*parse_command(t_parser *p)
+{
+	t_io_node	*io_list;
+	t_ast_node	*cmd_node;
+	char		*cmd_args;
+
+	cmd_node = NULL;
+	io_list = NULL;
+	cmd_args = NULL;
+	if (!p->current_token || p->error_status != PARSE_OK)
+		return (NULL);
+	if (handle_initial_redirection(p, &io_list) == -1)
+		return (NULL);
+	cmd_args = handle_command_string(p, io_list);
+	if (!cmd_args)
+		return (NULL);
+	if (handle_post_redirection(p, &io_list, cmd_args) == -1)
+		return (NULL);
 	cmd_node = create_ast_command_node(cmd_args, io_list);
 	if (!cmd_node)
 	{
@@ -99,85 +76,6 @@ t_ast_node *parse_command(t_parser *p)
 	}
 	free(cmd_args);
 	return (cmd_node);
-}
-
-// t_ast_node	*parse_command(t_parser *p)
-// {
-// 	t_io_node	*io_list;
-// 	t_ast_node	*cmd_node;
-// 	char		*cmd_args;
-
-// 	if (!p->current_token || p->error_status != PARSE_OK)
-// 		return (NULL);
-// 	io_list = NULL;
-// 	cmd_args = build_command_string(p);
-// 	if (!cmd_args || p->error_status != PARSE_OK)
-// 		return (NULL);
-// 	if (parse_redirections(p, &io_list) == -1)
-// 	{
-// 		cleanup_resources(cmd_args, io_list);
-// 		return (NULL);
-// 	}
-// 	cmd_node = create_ast_command_node(cmd_args, io_list);
-// 	if (!cmd_node)
-// 	{
-// 		p->error_status = PARSE_MEMORY_ERROR;
-// 		cleanup_resources(cmd_args, io_list);
-// 		return (NULL);
-// 	}
-// 	free(cmd_args);
-// 	return (cmd_node);
-// }
-
-/*
-📌 append_to_buffer(buf, word_value)
-Purpose: Appends a new word to a growing buffer,
-resizing it dynamically if needed.
-
-Steps:
-1) Calculates the length of `word_value`.
-2) Ensures the buffer has enough space:
-   - If needed, calls `resize_buffer()` to increase `buf->size`.
-   - If memory allocation fails, returns `0`.
-3) Adds a space before appending `word_value`,
-but only if it's **not the first word**.
-4) Copies `word_value` into `buf->data`,
-updates `buf->pos`, and null-terminates the string.
-5) Returns `1` on success, `0` on failure.
-
-Example:
-- **Initial buffer:** `"echo"`
-- `append_to_buffer(buf, "hello")` → `"echo hello"`
-- `append_to_buffer(buf, "world")` → `"echo hello world"`
-
-Effect:
-- Ensures words are correctly spaced.
-- Dynamically resizes the buffer when needed.
-- Maintains a **null-terminated** string for safe usage.
-*/
-static int	append_to_buffer(t_buffer *buf, const char *word_value)
-{
-	size_t	word_len;
-	char	*tmp;
-
-	if (!buf || !buf->data || !word_value)
-		return (0);
-
-	word_len = ft_strlen(word_value);
-	while (buf->pos + word_len + 2 >= buf->size)
-	{
-		tmp = resize_buffer(buf->data, &(buf->size));
-		if (!tmp)
-			return (0);
-		buf->data = tmp;
-	}
-	if (buf->pos > 0)
-		buf->data[buf->pos++] = ' ';
-	if (ft_memcpy(&buf->data[buf->pos], word_value, word_len) == NULL)
-		return (0);
-	buf->pos += word_len;
-	buf->data[buf->pos] = '\0';
-	return (1);
 }
 
 /*

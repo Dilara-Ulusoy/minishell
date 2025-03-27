@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:14:48 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/26 13:13:18 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/27 16:06:04 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@
  *
  * Return: A newly allocated string containing the extracted word.
  */
-char	*read_word_range(const char *line, int *index, int length, t_shell *shell)
+char	*read_word_range(const char *line, int *index,
+		int length, t_shell *shell)
 {
 	int		start;
 	int		wordlength;
@@ -72,15 +73,52 @@ char	*handle_env_variable_without_space(const char
 	return (result);
 }
 
-char	*handle_dollar_sign(const char *line, int *index, int start, t_shell *shell)
+/*
+Determines how to handle the dollar sign based on whether
+there's a space before it.
+If there is a space, we treat it as a standalone variable.
+Otherwise, it's part of a more complex word (e.g., echo$VAR).
+*/
+static char	*fetch_env_result_based_on_space(const char *line, int *index,
+		int start, t_shell *shell)
+{
+	if (*index > 0 && is_space(line[*index - 1]))
+		return (get_env_var_value(line, index, shell));
+	else
+		return (handle_env_variable_without_space(line, index, start, shell));
+}
+
+/*
+If the result of the env variable expansion is not empty,
+and there are spaces following the variable, we want to preserve those spaces.
+This function appends spaces one by one and moves the index forward.
+*/
+static char	*append_spaces_if_needed(const char *line, int *index, char *result)
+{
+	char	*temp;
+
+	while (line[*index] && is_space(line[*index]))
+	{
+		temp = result;
+		result = ft_strjoin(result, " ");
+		free(temp);
+		if (!result)
+		{
+			ft_putstr_fd("Memory error at handle dollar sign\n", STDERR_FILENO);
+			return (NULL);
+		}
+		(*index)++;
+	}
+	return (result);
+}
+
+// Main function to handle `$` in a shell command line.
+char	*handle_dollar_sign(const char *line, int *index,
+		int start, t_shell *shell)
 {
 	char	*result;
 
-	if (*index > 0 && is_space(line[*index - 1]))
-		result = get_env_var_value(line, index, shell);
-	else
-		result = handle_env_variable_without_space(line, index, start, shell);
-
+	result = fetch_env_result_based_on_space(line, index, start, shell);
 	if (!result)
 	{
 		ft_putstr_fd("Memory error at handling dollar sign\n", STDERR_FILENO);
@@ -88,18 +126,9 @@ char	*handle_dollar_sign(const char *line, int *index, int start, t_shell *shell
 	}
 	if (result[0] != '\0')
 	{
-		while (line[*index] && is_space(line[*index]))
-		{
-			char *temp = result;
-			result = ft_strjoin(result, " ");
-			free(temp);
-			if (!result)
-			{
-				ft_putstr_fd("Memory error at handle dollar sign\n", STDERR_FILENO);
-				return (NULL);
-			}
-			(*index)++;
-		}
+		result = append_spaces_if_needed(line, index, result);
+		if (!result)
+			return (NULL);
 	}
 	else
 	{
@@ -108,7 +137,6 @@ char	*handle_dollar_sign(const char *line, int *index, int start, t_shell *shell
 	}
 	return (result);
 }
-
 
 /**
  * join_string_with_quoted_if_no_space - Concatenates a word with quoted content
