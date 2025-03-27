@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:03 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/27 15:41:43 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/27 18:19:05 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -354,6 +354,46 @@ int	ft_set(char *var_eq_value, char ***envp)
 	return (EXIT_SUCCESS);
 }
 
+static void    ft_unset(char *value, char ***envp)
+{
+	char *name_w_equal;
+	int i;
+	int len;
+	int j;
+	char **reduced_envp;
+	
+	len = 0;
+	while ((*envp)[len] != NULL)
+		len++;
+	name_w_equal = ft_strjoin(value, "=");
+	i = 0;
+	while ((*envp)[i] != NULL && (ft_strnstr((*envp)[i], name_w_equal, ft_strlen(name_w_equal)) == 0  && ft_strcmp_wo_equal((*envp)[i], name_w_equal) == 0))
+		i++;
+	free(name_w_equal);
+	if ((*envp)[i] == NULL)
+		return ;
+	reduced_envp = malloc(sizeof(char *) * (len));
+	if (!reduced_envp)
+		return ;
+	len = 0;
+	j = 0;
+	while ((*envp)[j] != NULL)
+	{
+		if (j == i)
+		{
+			free((*envp)[j]);
+			j++;
+			continue ;
+		}
+		reduced_envp[len] = (*envp)[j];
+		len++;
+		j++;
+	}
+	reduced_envp[len] = NULL;
+	free(*envp);
+	*envp = reduced_envp;
+}
+
 int ft_cd(char *new_path, char ***envp)
 {
 	char *old_path;
@@ -438,6 +478,16 @@ int check_and_run_builtins(t_shell *shell, t_cmd_parts **cmd_parts, t_args *arg_
 	envp = arg_struct->envp;
 	//ft_env(arg_struct->envp);
 	//ft_env(envp);
+	if (ft_strncmp((*cmd_parts)->cmd_array[0], "unset\0", 6) == 0)
+	{
+		k = 1;
+		while ((*cmd_parts)->cmd_array[k] != NULL)
+		{
+			ft_unset((*cmd_parts)->cmd_array[k], &envp);
+			k++;
+		}
+		return (EXIT_SUCCESS);
+	}
 	if (ft_strncmp((*cmd_parts)->cmd_array[0], "export\0", 7) == 0)
 	{
 		//free_cmd_parts(cmd_parts);
@@ -589,6 +639,16 @@ int check_and_run_builtins_single(t_shell *shell, t_cmd_parts **cmd_parts, char 
 
 	//ft_env(arg_struct->envp);
 	//ft_env(envp);
+	if (ft_strncmp((*cmd_parts)->cmd_array[0], "unset\0", 6) == 0)
+	{
+		k = 1;
+		while ((*cmd_parts)->cmd_array[k] != NULL)
+		{
+			ft_unset((*cmd_parts)->cmd_array[k], envp);
+			k++;
+		}
+		return (EXIT_SUCCESS);
+	}
 	if (ft_strncmp((*cmd_parts)->cmd_array[0], "export\0", 7) == 0)
 	{
 		//free_cmd_parts(cmd_parts);
