@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:03 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/26 16:02:59 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/27 15:25:36 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,6 +224,20 @@ int ft_exit(char *exit_code)
 	return (exit_number);
 }
 
+static int contains_equal(char *s)
+{
+	int i;
+
+	i = 0;
+	while(s[i] != '\0')
+	{
+		if (s[i] == '=')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
 int ft_env(char **envp)
 {
 	int i;
@@ -231,7 +245,8 @@ int ft_env(char **envp)
 	i = 0;
 	while (envp[i] != NULL)
 	{
-		printf("%s\n",envp[i]);
+		if (contains_equal(envp[i]))
+			printf("%s\n",envp[i]);
 		i++;
 	}
 	return (0);
@@ -256,14 +271,69 @@ static char *copy_until_equal(char *src)
 	return (dest);
 }
 
-void	ft_set(char *var_eq_value, char ***envp)
+static int check_export_var_name_is_valid(char *name_w_equal)
+{
+	int i;
+
+	i = 0;
+	if (name_w_equal[i] == '=')
+	{
+		ft_putstr_fd("export: `", 2);
+		ft_putchar_fd(name_w_equal[i], 2);
+		ft_putstr_fd("': not a valid identifier\n", 2);
+		return (0);
+	}
+	while (name_w_equal[i] != '=')
+	{
+		if ((i == 0 && ft_isdigit(name_w_equal[i])) || !(ft_isalnum(name_w_equal[i]) || name_w_equal[i] == '_'))
+		{
+			ft_putstr_fd("export: `", 2);
+			ft_putchar_fd(name_w_equal[i], 2);
+			ft_putstr_fd("': not a valid identifier\n", 2);
+			return (0);
+		}
+		i++;
+	}
+	return (1);
+}
+
+static int ft_strcmp_wo_equal(char *s1, char *s2)
+{
+	int i;
+
+	if (ft_strlen(s1) != (ft_strlen(s2) - 1))
+		return (0);
+	i = 0;
+    while (s1[i] != '\0')
+	{
+        if (s1[i] != s2[i])
+			return (0);
+		i++;
+    }
+    return (1);
+}
+
+int	ft_set(char *var_eq_value, char ***envp)
 {
 	int		i;
 	char *name_w_equal;
+	int ret;
 
-	name_w_equal = copy_until_equal(var_eq_value);
+	if (contains_equal(var_eq_value))
+		name_w_equal = copy_until_equal(var_eq_value);
+	else
+		name_w_equal = ft_strjoin(var_eq_value, "=");
+	ret = check_export_var_name_is_valid(name_w_equal);
+	//printf("ret: %d\n", ret);
+	//printf("name_w_equal: %s\n", name_w_equal);
+	//printf("var_eq_value: %s\n", var_eq_value);
+	if (!ret)
+	{
+		free(name_w_equal);
+		return (EXIT_FAILURE);
+	}
 	i = 0;
-	while ((*envp)[i] != NULL && ft_strnstr((*envp)[i], name_w_equal, ft_strlen(name_w_equal)) == 0)
+	while ((*envp)[i] != NULL && (ft_strnstr((*envp)[i], name_w_equal, ft_strlen(name_w_equal)) == 0  && ft_strcmp_wo_equal((*envp)[i], name_w_equal) == 0))
 		i++;
 	//printf("Searched for: %s\n\n", name_w_equal);
 	free(name_w_equal);
@@ -271,13 +341,15 @@ void	ft_set(char *var_eq_value, char ***envp)
 	{
 		//printf("Var was not found in envp\n");
 		ft_add_envVar(var_eq_value, envp);
-		return ;
+		return (EXIT_SUCCESS);
 	}
 	//printf("Var was found in envp: %s\n", (*envp)[i]);
+	//if (!((ft_strnstr((*envp)[i], name_w_equal, ft_strlen(name_w_equal)) != 0) && !contains_equal(var_eq_value)))
 	free((*envp)[i]);
 	//(*envp)[i] = NULL;
 	//(*envp)[i] = malloc(sizeof(char *));
 	(*envp)[i] = ft_strdup(var_eq_value);
+	return (EXIT_SUCCESS);
 }
 
 int ft_cd(char *new_path, char ***envp)
@@ -388,10 +460,13 @@ int check_and_run_builtins(t_shell *shell, t_cmd_parts **cmd_parts, t_args *arg_
 			k = 1;
 			while ((*cmd_parts)->cmd_array[k] != NULL)
 			{
-				ft_set((*cmd_parts)->cmd_array[k], &envp);
+				exit_code = ft_set((*cmd_parts)->cmd_array[k], &envp);
+				if (exit_code)
+					return (exit_code);
 				k++;
 			}
 		}
+		return (EXIT_SUCCESS);
 		//ft_env(envp);
 		//free_cmd_parts(cmd_parts);
 		//cmd_parts = NULL;
@@ -535,9 +610,12 @@ int check_and_run_builtins_single(t_shell *shell, t_cmd_parts **cmd_parts, char 
 			k = 1;
 			while ((*cmd_parts)->cmd_array[k] != NULL)
 			{
-				ft_set((*cmd_parts)->cmd_array[k], envp);
+				exit_code = ft_set((*cmd_parts)->cmd_array[k], envp);
+				if (exit_code)
+					return (exit_code);
 				k++;
 			}
+			return (EXIT_SUCCESS);
 		}
 		//ft_env(*envp);
 		//free_cmd_parts(cmd_parts);
