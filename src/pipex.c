@@ -250,6 +250,7 @@ int	execute_commands(t_shell *shell, int num_commands, char ***envp)
 	if (num_commands == 1)
 	{
 		cmd_parts = get_command_array(shell->tokens, 1);
+		cmd_parts->num_commands = num_commands;
 		if (is_builtin(cmd_parts))
 		{
 			exit_code = run_single_builtin(&cmd_parts, shell, envp);

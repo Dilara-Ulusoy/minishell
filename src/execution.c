@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:03 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/27 15:25:36 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/27 15:41:43 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -324,9 +324,6 @@ int	ft_set(char *var_eq_value, char ***envp)
 	else
 		name_w_equal = ft_strjoin(var_eq_value, "=");
 	ret = check_export_var_name_is_valid(name_w_equal);
-	//printf("ret: %d\n", ret);
-	//printf("name_w_equal: %s\n", name_w_equal);
-	//printf("var_eq_value: %s\n", var_eq_value);
 	if (!ret)
 	{
 		free(name_w_equal);
@@ -336,15 +333,20 @@ int	ft_set(char *var_eq_value, char ***envp)
 	while ((*envp)[i] != NULL && (ft_strnstr((*envp)[i], name_w_equal, ft_strlen(name_w_equal)) == 0  && ft_strcmp_wo_equal((*envp)[i], name_w_equal) == 0))
 		i++;
 	//printf("Searched for: %s\n\n", name_w_equal);
-	free(name_w_equal);
 	if ((*envp)[i] == NULL)
 	{
 		//printf("Var was not found in envp\n");
 		ft_add_envVar(var_eq_value, envp);
+		free(name_w_equal);
 		return (EXIT_SUCCESS);
 	}
 	//printf("Var was found in envp: %s\n", (*envp)[i]);
-	//if (!((ft_strnstr((*envp)[i], name_w_equal, ft_strlen(name_w_equal)) != 0) && !contains_equal(var_eq_value)))
+	if ((ft_strnstr((*envp)[i], name_w_equal, ft_strlen(name_w_equal)) != 0) && (contains_equal(var_eq_value) == 0))
+	{
+		free(name_w_equal);
+		return (EXIT_SUCCESS);
+	}
+	free(name_w_equal);
 	free((*envp)[i]);
 	//(*envp)[i] = NULL;
 	//(*envp)[i] = malloc(sizeof(char *));
