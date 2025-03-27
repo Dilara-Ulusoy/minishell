@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:59:15 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/27 16:52:37 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/27 17:22:28 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ int		parse_single_char_operator(t_token **head, const char *line,
 			int *pos, int length);
 
 /* Step 4: Parse Word */
-int		parse_word(t_token **head, const char *line, int *pos, int length, t_shell *shell);
+int	parse_word(t_token **head, t_shell *shell);
 int		handle_newline(t_token **head, const char *line, int *pos);
 
 /* Cleanup */

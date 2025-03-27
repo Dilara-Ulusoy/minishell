@@ -1,30 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_token_ast.c                                   :+:      :+:    :+:   */
+/*   free_ast.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/18 15:04:51 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/27 16:12:18 by dakcakoc         ###   ########.fr       */
+/*   Created: 2025/03/27 17:12:38 by dakcakoc          #+#    #+#             */
+/*   Updated: 2025/03/27 17:12:41 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	free_tokens(t_token **head)
-{
-	t_token	*temp;
-
-	while (*head)
-	{
-		temp = (*head)->next;
-		if ((*head)->value)
-			free((*head)->value);
-		free(*head);
-		*head = temp;
-	}
-}
 
 void	free_ast(t_ast_node *root)
 {

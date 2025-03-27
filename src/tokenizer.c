@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:34:26 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/27 16:53:58 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/27 17:22:57 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,20 @@ static int	process_token_parsing(t_token **head, t_shell *shell)
 {
 	int	result;
 
-	result = parse_two_char_operator(head, shell->line, &shell->index, shell->line_length);
+	result = parse_two_char_operator(head, shell->line,
+			&shell->index, shell->line_length);
 	if (result == -1 || result == 1)
 		return (result);
-	result = parse_single_char_operator(head, shell->line, &shell->index, shell->line_length);
+	result = parse_single_char_operator(head, shell->line,
+			&shell->index, shell->line_length);
 	if (result == -1 || result == 1)
 		return (result);
 	result = handle_newline(head, shell->line, &shell->index);
 	if (result == -1 || result == 1)
 		return (result);
-	result = parse_word(head, shell->line, &shell->index, shell->line_length, shell);
+	result = parse_word(head, shell);
 	return (result);
 }
-
 
 t_token	*tokenize(t_token *head, const char *line, int length, t_shell *shell)
 {
@@ -40,7 +41,6 @@ t_token	*tokenize(t_token *head, const char *line, int length, t_shell *shell)
 	shell->line = (char *)line;
 	shell->line_length = length;
 	shell->index = 0;
-
 	while (shell->index < length)
 	{
 		shell->index = skip_whitespace(shell->line, shell->index);
@@ -55,7 +55,6 @@ t_token	*tokenize(t_token *head, const char *line, int length, t_shell *shell)
 	}
 	return (head);
 }
-
 
 /**
  * @brief Parses a two-character operator from the given position in the line.
@@ -197,14 +196,14 @@ int	handle_newline(t_token **head, const char *line, int *pos)
  * @return int 1 if a word was successfully parsed and added to the token list,
  *             0 otherwise (e.g., no word found or memory allocation failure).
  */
-int	parse_word(t_token **head, const char *line, int *pos, int length, t_shell *shell)
+int	parse_word(t_token **head, t_shell *shell)
 {
 	t_token	*token;
 	char	*word;
 
-	if (*pos >= length)
+	if (shell->index >= shell->line_length)
 		return (0);
-	word = read_word_range(line, pos, length, shell);
+	word = read_word_range(shell->line, &shell->index, shell->line_length, shell);
 	token = (t_token *)malloc(sizeof(t_token));
 	if (!word || !token)
 	{
@@ -224,3 +223,4 @@ int	parse_word(t_token **head, const char *line, int *pos, int length, t_shell *
 	}
 	return (1);
 }
+

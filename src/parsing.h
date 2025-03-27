@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 13:18:55 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/27 16:46:29 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/27 17:08:54 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ t_ast_node		*create_ast_operator_node(t_ast_node_type type,
 					t_ast_node *left, t_ast_node *right);
 t_io_node		*create_io_node(t_io_type kind, const char *filename,
 					struct s_parser *p);
-int			attach_io_node(t_io_node **io_list, t_io_node *new_io);
+int				attach_io_node(t_io_node **io_list, t_io_node *new_io);
 t_ast_node		*built_operator_node(t_ast_node *left_node,
 					t_ast_node *right_node, t_token_type operator_type,
 					struct s_parser *p);
@@ -123,13 +123,14 @@ t_ast_node		*build_ast(t_token *token_list);
 t_ast_node		*parse_expression(t_parser *p, int min_prec);
 t_ast_node		*parse_term(t_parser *p);
 t_ast_node		*parse_command(t_parser *p);
-int			parse_redirections(t_parser *p, t_io_node **io_list);
+int				parse_redirections(t_parser *p, t_io_node **io_list);
 void			cleanup_resources(char *cmd_args, t_io_node *io_list);
 
 /* Syntax validation */
 int				check_syntax_errors(t_parser *parser);
 int				set_syntax_error(t_parser *parser, const char *token_value);
-int				handle_redir_followed_by_word(t_parser *parser, t_token *current);
+int				handle_redir_followed_by_word(t_parser *parser,
+					t_token *current);
 int				handle_trailing_operator(t_parser *parser, t_token *current);
 
 /* Error handling */

@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:14:48 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/27 16:06:04 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/27 17:14:36 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,53 +136,4 @@ char	*handle_dollar_sign(const char *line, int *index,
 			(*index)++;
 	}
 	return (result);
-}
-
-/**
- * join_string_with_quoted_if_no_space - Concatenates a word with quoted content
- * if there is no space between them. Eg. echo"hello" -> echohello
- *
- * @line: The input string.
- * @index: Pointer to the current position in the string.
- * @start: The starting position of the word.
- * @quote: The type of quote (single or double).
- * @length: The total length of the input string.
- *
- * Return: A newly allocated string containing the concatenated word.
- */
-char	*join_string_with_quoted_if_no_space(const char *line,
-	int *index, int start, t_shell *shell)
-{
-	char	*result;
-	char	*temp;
-	char	*temp2;
-
-	result = NULL;
-	if (*index > 0 && !is_space(line[*index - 1]))
-	{
-		temp = ft_substr(line, start, (*index) - start);
-		if (!temp)
-			return (free_this(NULL, NULL, NULL, "substr failed"));
-		temp2 = parse_quotes(line, index, shell);
-		if (!temp2)
-			return (free_this(temp, NULL, NULL, "temp2 failed"));
-		result = ft_strjoin(temp, temp2);
-		if (!result)
-			return (free_this(temp, temp2, NULL, "strjoin failed"));
-		free_this(temp, temp2, NULL, NULL);
-	}
-	return (result);
-}
-
-void	*free_this(char *s1, char *s2, char *s3, char *message)
-{
-	if (s1)
-		free(s1);
-	if (s2)
-		free(s2);
-	if (s3)
-		free(s3);
-	if (message)
-		ft_putstr_fd(message, STDERR_FILENO);
-	return (NULL);
 }
