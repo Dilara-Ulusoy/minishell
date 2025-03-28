@@ -61,6 +61,7 @@ t_args	*add_fd_to_struct(t_args *arg_struct, int argc);
 t_args	*initialize_struct_with_pids_and_fd(int argc);
 t_args	*prepare_struct(int num_commands, char **envp);
 int	set_pipe(t_cmd_parts *cmd_parts, t_args *arg_struct, char *path, int is_builtin);
+int	set_pipe_single_buitin(t_cmd_parts *cmd_parts);
 void	free_array(void **arr, int is_int, int j);
 int	close_and_free(t_args *arg_struct, int free_pid);
 int	open_and_check_file(char *filename, int type);
@@ -75,5 +76,6 @@ void ft_add_envVar(char *var_eq_value, char ***envp);
 int	ft_set(char *var_eq_value, char ***envp);
 int check_and_run_builtins_single(t_shell *shell, t_cmd_parts **cmd_parts, char ***env);
 char *ft_getenv(char *var_name, t_shell *shell);
+int	get_exit_code(void);
 
 #endif

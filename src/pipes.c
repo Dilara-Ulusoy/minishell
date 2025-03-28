@@ -198,6 +198,69 @@ t_args	*prepare_struct(int num_commands, char **envp)
 // 	return (close_and_free(arg_struct, 0));
 // }
 
+int	set_pipe_single_buitin(t_cmd_parts *cmd_parts)
+{
+	int i;
+	int fd_in;
+	int fd_out;
+
+	if (cmd_parts->n_in > 0)
+	{
+		i = -1;
+		while (++i < cmd_parts->n_in)
+		{
+			if (cmd_parts->infiles_array[i][0] == '\0')
+			{
+				ft_putstr_fd("minishell: ambiguous redirect\n", 2);
+				//free_cmd_parts(&cmd_parts);
+				return (1); // Remember to free other things before exit!
+			}
+			fd_in = open_and_check_file(cmd_parts->infiles_array[i], 0);
+			if (fd_in == -1)
+			{
+				//free_cmd_parts(&cmd_parts);
+				return (EXIT_FAILURE);
+			}
+			if (dup2(fd_in, STDIN_FILENO) == -1)
+			{
+				close(fd_in);
+				//free_cmd_parts(&cmd_parts);
+				ft_putstr_fd("dup2() failed!\n", 2);
+				return (EXIT_FAILURE);
+			}
+			close(fd_in);
+		}
+	}
+	if (cmd_parts->n_out > 0)
+	{
+		i = -1;
+		while (++i < (cmd_parts->n_out))
+		{
+			if (cmd_parts->outfiles_array[i][0] == '\0')
+			{
+				ft_putstr_fd("minishell: ambiguous redirect\n", 2);
+				//free_cmd_parts(&cmd_parts);
+				return (1); // Remember to free other things before exit!
+			}
+			fd_out = open_and_check_file(cmd_parts->outfiles_array[i], cmd_parts->outfiles_types[i]);
+			if (fd_out == -1)
+			{
+				//free_cmd_parts(&cmd_parts);
+				return (EXIT_FAILURE);
+			}
+			if (dup2(fd_out, STDOUT_FILENO) == -1)
+			{
+				close(fd_out);
+				//free_cmd_parts(&cmd_parts);
+				ft_putstr_fd("dup2() failed!\n", 2);
+				return (EXIT_FAILURE);
+			}
+			close(fd_out);
+		}
+	}
+	return (EXIT_SUCCESS);
+}
+
 int	set_pipe(t_cmd_parts *cmd_parts, t_args *arg_struct, char *path, int is_builtin)
 {
 	int i;
