@@ -251,11 +251,11 @@ int	execute_commands(t_shell *shell, int num_commands, char ***envp)
 	{
 		cmd_parts = get_command_array(shell->tokens, 1);
 		cmd_parts->num_commands = num_commands;
-		int original_stdin = dup(STDIN_FILENO);
-		int original_stdout = dup(STDOUT_FILENO);
 		if (is_builtin(cmd_parts))
 		{
-			exit_code = set_pipe_single_buitin(cmd_parts);
+			int original_stdin = dup(STDIN_FILENO);
+			int original_stdout = dup(STDOUT_FILENO);
+			exit_code = set_pipe_single_builtin(cmd_parts);
 			if (exit_code != 0)
 			{
 				dup2(original_stdin, STDIN_FILENO);

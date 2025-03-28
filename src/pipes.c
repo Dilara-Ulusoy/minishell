@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:24 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/26 14:23:27 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/28 18:43:30 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,64 +198,43 @@ t_args	*prepare_struct(int num_commands, char **envp)
 // 	return (close_and_free(arg_struct, 0));
 // }
 
-int	set_pipe_single_buitin(t_cmd_parts *cmd_parts)
+int	set_pipe_single_builtin(t_cmd_parts *cmd_parts)
 {
 	int i;
-	int fd_in;
-	int fd_out;
+	int fd;
+	int fileno;
 
-	if (cmd_parts->n_in > 0)
+	if (cmd_parts->n_files > 0)
 	{
 		i = -1;
-		while (++i < cmd_parts->n_in)
+		while (++i < cmd_parts->n_files)
 		{
-			if (cmd_parts->infiles_array[i][0] == '\0')
+			if (cmd_parts->files_types[i] == 0)
+				fileno = STDIN_FILENO;
+			if (cmd_parts->files_types[i] == 1 || cmd_parts->files_types[i] == 2)
+				fileno = STDOUT_FILENO;
+			// if (cmd_parts->files_types[i] == 3) //HERE-DOC
+			// 	fileno = STDIN_FILENO;
+			if (cmd_parts->files_array[i][0] == '\0')
 			{
 				ft_putstr_fd("minishell: ambiguous redirect\n", 2);
 				//free_cmd_parts(&cmd_parts);
 				return (1); // Remember to free other things before exit!
 			}
-			fd_in = open_and_check_file(cmd_parts->infiles_array[i], 0);
-			if (fd_in == -1)
+			fd = open_and_check_file(cmd_parts->files_array[i], cmd_parts->files_types[i]);
+			if (fd == -1)
 			{
 				//free_cmd_parts(&cmd_parts);
 				return (EXIT_FAILURE);
 			}
-			if (dup2(fd_in, STDIN_FILENO) == -1)
+			if (dup2(fd, fileno) == -1)
 			{
-				close(fd_in);
+				close(fd);
 				//free_cmd_parts(&cmd_parts);
 				ft_putstr_fd("dup2() failed!\n", 2);
 				return (EXIT_FAILURE);
 			}
-			close(fd_in);
-		}
-	}
-	if (cmd_parts->n_out > 0)
-	{
-		i = -1;
-		while (++i < (cmd_parts->n_out))
-		{
-			if (cmd_parts->outfiles_array[i][0] == '\0')
-			{
-				ft_putstr_fd("minishell: ambiguous redirect\n", 2);
-				//free_cmd_parts(&cmd_parts);
-				return (1); // Remember to free other things before exit!
-			}
-			fd_out = open_and_check_file(cmd_parts->outfiles_array[i], cmd_parts->outfiles_types[i]);
-			if (fd_out == -1)
-			{
-				//free_cmd_parts(&cmd_parts);
-				return (EXIT_FAILURE);
-			}
-			if (dup2(fd_out, STDOUT_FILENO) == -1)
-			{
-				close(fd_out);
-				//free_cmd_parts(&cmd_parts);
-				ft_putstr_fd("dup2() failed!\n", 2);
-				return (EXIT_FAILURE);
-			}
-			close(fd_out);
+			close(fd);
 		}
 	}
 	return (EXIT_SUCCESS);
@@ -264,18 +243,21 @@ int	set_pipe_single_buitin(t_cmd_parts *cmd_parts)
 int	set_pipe(t_cmd_parts *cmd_parts, t_args *arg_struct, char *path, int is_builtin)
 {
 	int i;
-	int fd_in;
-	int fd_out;
-	// if (cmd_parts->command_number == 0)
-	// 	close(arg_struct->fd[cmd_parts->command_number][1]);
-	// if (cmd_parts->command_number == ((cmd_parts->num_commands) - 1))
-	// 	close(arg_struct->fd[(cmd_parts->command_number) + 1][0]);
-	if (cmd_parts->n_in > 0)
+	int fd;
+	int fileno;
+
+	if (cmd_parts->n_files > 0)
 	{
 		i = -1;
-		while (++i < cmd_parts->n_in)
+		while (++i < cmd_parts->n_files)
 		{
-			if (cmd_parts->infiles_array[i][0] == '\0')
+			if (cmd_parts->files_types[i] == 0)
+				fileno = STDIN_FILENO;
+			if (cmd_parts->files_types[i] == 1 || cmd_parts->files_types[i] == 2)
+				fileno = STDOUT_FILENO;
+			// if (cmd_parts->files_types[i] == 3) //HERE-DOC
+			// 	fileno = STDIN_FILENO;
+			if (cmd_parts->files_array[i][0] == '\0')
 			{
 				ft_putstr_fd("minishell: ambiguous redirect\n", 2);
 				free_cmd_parts(&cmd_parts);
@@ -287,64 +269,134 @@ int	set_pipe(t_cmd_parts *cmd_parts, t_args *arg_struct, char *path, int is_buil
 				//close_and_free(arg_struct, 1);
 				exit (1); // Remember to free other things before exit!
 			}
-			if (cmd_parts->command_number == 0)
+			if (cmd_parts->command_number == 0 && cmd_parts->files_types[i] == 0)
 			{
-				fd_in = open_and_check_file(cmd_parts->infiles_array[i], 0);
-				if (check_dup2(fd_in, arg_struct, STDIN_FILENO) == -1)
+				fd = open_and_check_file(cmd_parts->files_array[i], 0);
+				if (check_dup2(fd, arg_struct, fileno) == -1)
 					return (-1);
-				close(fd_in);
+				close(fd);
 			}
-			else
+			else if (cmd_parts->command_number != 0 && cmd_parts->files_types[i] == 0)
 			{
-				arg_struct->fd[cmd_parts->command_number - 1][0] = open_and_check_file(cmd_parts->infiles_array[i], 0);
-				if (check_dup2(arg_struct->fd[cmd_parts->command_number - 1][0], arg_struct, STDIN_FILENO) == -1)
+				arg_struct->fd[cmd_parts->command_number - 1][0] = open_and_check_file(cmd_parts->files_array[i], 0);
+				if (check_dup2(arg_struct->fd[cmd_parts->command_number - 1][0], arg_struct, fileno) == -1)
 					return (-1);
 				close(arg_struct->fd[cmd_parts->command_number - 1][0]);
 			}
-		}
-	}
-	else if (cmd_parts->command_number != 0
-		&& (dup2(arg_struct->fd[cmd_parts->command_number - 1][0], STDIN_FILENO) == -1))
-		return (display_error_message(3, arg_struct));
-	if (cmd_parts->n_out > 0)
-	{
-		i = -1;
-		while (++i < (cmd_parts->n_out))
-		{
-			if (cmd_parts->outfiles_array[i][0] == '\0')
+			if (cmd_parts->command_number == ((cmd_parts->num_commands) - 1) && (cmd_parts->files_types[i] == 1 || cmd_parts->files_types[i] == 2))
 			{
-				ft_putstr_fd("minishell: ambiguous redirect\n", 2);
-				free_cmd_parts(&cmd_parts);
-				free(arg_struct->pids);
-				free_array((void **)arg_struct->fd, 1, arg_struct->argc - 1);
-				free_envp(arg_struct->envp);
-				free(arg_struct);
-				free(path);
-				//close_and_free(arg_struct, 1);
-				exit (1); // Remember to free other things before exit!
-			}
-			if (cmd_parts->command_number == ((cmd_parts->num_commands) - 1))
-			{
-				fd_out = open_and_check_file(cmd_parts->outfiles_array[i], cmd_parts->outfiles_types[i]);
-				if (fd_out == -1)
+				fd = open_and_check_file(cmd_parts->files_array[i], cmd_parts->files_types[i]);
+				if (fd == -1)
 					return (close_and_free(arg_struct, 1));
-				if (((is_builtin == 1) || (path != NULL)) && dup2(fd_out, STDOUT_FILENO) == -1)
+				if (((is_builtin == 1) || (path != NULL)) && dup2(fd, fileno) == -1)
 					return (display_error_message(3, arg_struct));
-				close(fd_out);
+				close(fd);
 			}
-			else
+			else if (cmd_parts->command_number != ((cmd_parts->num_commands) - 1) && (cmd_parts->files_types[i] == 1 || cmd_parts->files_types[i] == 2))
 			{
-				arg_struct->fd[cmd_parts->command_number][1] = open_and_check_file(cmd_parts->outfiles_array[i], cmd_parts->outfiles_types[i]);
+				arg_struct->fd[cmd_parts->command_number][1] = open_and_check_file(cmd_parts->files_array[i], cmd_parts->files_types[i]);
 				if (arg_struct->fd[cmd_parts->command_number][1] == -1)
 					return (close_and_free(arg_struct, 1));
-				if (((is_builtin == 1) || (path != NULL)) && dup2(arg_struct->fd[cmd_parts->command_number][1], STDOUT_FILENO) == -1)
+				if (((is_builtin == 1) || (path != NULL)) && dup2(arg_struct->fd[cmd_parts->command_number][1], fileno) == -1)
 					return (display_error_message(3, arg_struct));
 				close(arg_struct->fd[cmd_parts->command_number][1]);
 			}
 		}
 	}
-	else if (cmd_parts->command_number != ((cmd_parts->num_commands) - 1) && ((path != NULL) || (is_builtin == 1))
+	if (cmd_parts->n_in == 0 && cmd_parts->command_number != 0
+		&& (dup2(arg_struct->fd[cmd_parts->command_number - 1][0], STDIN_FILENO) == -1))
+		return (display_error_message(3, arg_struct));
+	if (cmd_parts->n_out == 0 && cmd_parts->command_number != ((cmd_parts->num_commands) - 1) && ((path != NULL) || (is_builtin == 1))
 		&& dup2(arg_struct->fd[cmd_parts->command_number][1], STDOUT_FILENO) == -1)
 		return (display_error_message(3, arg_struct));
 	return (close_and_free(arg_struct, 0));
 }
+
+
+// int	set_pipe(t_cmd_parts *cmd_parts, t_args *arg_struct, char *path, int is_builtin)
+// {
+// 	int i;
+// 	int fd_in;
+// 	int fd_out;
+// 	// if (cmd_parts->command_number == 0)
+// 	// 	close(arg_struct->fd[cmd_parts->command_number][1]);
+// 	// if (cmd_parts->command_number == ((cmd_parts->num_commands) - 1))
+// 	// 	close(arg_struct->fd[(cmd_parts->command_number) + 1][0]);
+// 	if (cmd_parts->n_in > 0)
+// 	{
+// 		i = -1;
+// 		while (++i < cmd_parts->n_in)
+// 		{
+// 			if (cmd_parts->infiles_array[i][0] == '\0')
+// 			{
+// 				ft_putstr_fd("minishell: ambiguous redirect\n", 2);
+// 				free_cmd_parts(&cmd_parts);
+// 				free(arg_struct->pids);
+// 				free_array((void **)arg_struct->fd, 1, arg_struct->argc - 1);
+// 				free_envp(arg_struct->envp);
+// 				free(arg_struct);
+// 				free(path);
+// 				//close_and_free(arg_struct, 1);
+// 				exit (1); // Remember to free other things before exit!
+// 			}
+// 			if (cmd_parts->command_number == 0)
+// 			{
+// 				fd_in = open_and_check_file(cmd_parts->infiles_array[i], 0);
+// 				if (check_dup2(fd_in, arg_struct, STDIN_FILENO) == -1)
+// 					return (-1);
+// 				close(fd_in);
+// 			}
+// 			else
+// 			{
+// 				arg_struct->fd[cmd_parts->command_number - 1][0] = open_and_check_file(cmd_parts->infiles_array[i], 0);
+// 				if (check_dup2(arg_struct->fd[cmd_parts->command_number - 1][0], arg_struct, STDIN_FILENO) == -1)
+// 					return (-1);
+// 				close(arg_struct->fd[cmd_parts->command_number - 1][0]);
+// 			}
+// 		}
+// 	}
+// 	else if (cmd_parts->command_number != 0
+// 		&& (dup2(arg_struct->fd[cmd_parts->command_number - 1][0], STDIN_FILENO) == -1))
+// 		return (display_error_message(3, arg_struct));
+// 	if (cmd_parts->n_out > 0)
+// 	{
+// 		i = -1;
+// 		while (++i < (cmd_parts->n_out))
+// 		{
+// 			if (cmd_parts->outfiles_array[i][0] == '\0')
+// 			{
+// 				ft_putstr_fd("minishell: ambiguous redirect\n", 2);
+// 				free_cmd_parts(&cmd_parts);
+// 				free(arg_struct->pids);
+// 				free_array((void **)arg_struct->fd, 1, arg_struct->argc - 1);
+// 				free_envp(arg_struct->envp);
+// 				free(arg_struct);
+// 				free(path);
+// 				//close_and_free(arg_struct, 1);
+// 				exit (1); // Remember to free other things before exit!
+// 			}
+// 			if (cmd_parts->command_number == ((cmd_parts->num_commands) - 1))
+// 			{
+// 				fd_out = open_and_check_file(cmd_parts->outfiles_array[i], cmd_parts->outfiles_types[i]);
+// 				if (fd_out == -1)
+// 					return (close_and_free(arg_struct, 1));
+// 				if (((is_builtin == 1) || (path != NULL)) && dup2(fd_out, STDOUT_FILENO) == -1)
+// 					return (display_error_message(3, arg_struct));
+// 				close(fd_out);
+// 			}
+// 			else
+// 			{
+// 				arg_struct->fd[cmd_parts->command_number][1] = open_and_check_file(cmd_parts->outfiles_array[i], cmd_parts->outfiles_types[i]);
+// 				if (arg_struct->fd[cmd_parts->command_number][1] == -1)
+// 					return (close_and_free(arg_struct, 1));
+// 				if (((is_builtin == 1) || (path != NULL)) && dup2(arg_struct->fd[cmd_parts->command_number][1], STDOUT_FILENO) == -1)
+// 					return (display_error_message(3, arg_struct));
+// 				close(arg_struct->fd[cmd_parts->command_number][1]);
+// 			}
+// 		}
+// 	}
+// 	else if (cmd_parts->command_number != ((cmd_parts->num_commands) - 1) && ((path != NULL) || (is_builtin == 1))
+// 		&& dup2(arg_struct->fd[cmd_parts->command_number][1], STDOUT_FILENO) == -1)
+// 		return (display_error_message(3, arg_struct));
+// 	return (close_and_free(arg_struct, 0));
+// }

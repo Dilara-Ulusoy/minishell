@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:15 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/27 12:47:51 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/28 17:49:23 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,13 @@ typedef struct	s_cmd_parts
 	int n_cmd;
 	int n_in;
 	int n_out;
-	int *outfiles_types;
+	int n_files;
+	int *files_types;
+	//int *outfiles_types;
 	char **cmd_array;
-	char **infiles_array;
-	char **outfiles_array;
+	char **files_array;
+	//char **infiles_array;
+	//char **outfiles_array;
 } t_cmd_parts;
 
 typedef struct s_args
@@ -61,7 +64,7 @@ t_args	*add_fd_to_struct(t_args *arg_struct, int argc);
 t_args	*initialize_struct_with_pids_and_fd(int argc);
 t_args	*prepare_struct(int num_commands, char **envp);
 int	set_pipe(t_cmd_parts *cmd_parts, t_args *arg_struct, char *path, int is_builtin);
-int	set_pipe_single_buitin(t_cmd_parts *cmd_parts);
+int	set_pipe_single_builtin(t_cmd_parts *cmd_parts);
 void	free_array(void **arr, int is_int, int j);
 int	close_and_free(t_args *arg_struct, int free_pid);
 int	open_and_check_file(char *filename, int type);
