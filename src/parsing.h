@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 13:18:55 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/27 17:08:54 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/30 16:28:25 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,11 +119,11 @@ void			free_ast(t_ast_node *root);
 void			free_io_list(t_io_node *io_list);
 
 /* Parsing functions */
-t_ast_node		*build_ast(t_token *token_list);
-t_ast_node		*parse_expression(t_parser *p, int min_prec);
-t_ast_node		*parse_term(t_parser *p);
-t_ast_node		*parse_command(t_parser *p);
-int				parse_redirections(t_parser *p, t_io_node **io_list);
+t_ast_node		*build_ast(t_token *token_list, t_shell *shell);
+t_ast_node		*parse_expression(t_parser *p, int min_prec, t_shell *shell);
+t_ast_node		*parse_term(t_parser *p, t_shell *shell);
+t_ast_node		*parse_command(t_parser *p, t_shell *shell);
+int				parse_redirections(t_parser *p, t_io_node **io_list, t_shell *shell);
 void			cleanup_resources(char *cmd_args, t_io_node *io_list);
 
 /* Syntax validation */

@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:23:12 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/27 16:21:11 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/30 16:49:50 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ If line = "$HOME" → get_var_name() returns "HOME", updating index
 If line = "$123var", it returns NULL
 Effect: Moves index forward to the character after the variable name
 */
-static char	*get_var_name(const char *line, int *index)
+char	*get_var_name(const char *line, int *index)
 {
 	int		start;
 	int		len;

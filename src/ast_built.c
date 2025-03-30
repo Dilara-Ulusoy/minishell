@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 09:03:53 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/20 12:58:15 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/30 16:25:30 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ Effect:
 - If an error occurs during parsing,
 frees the partially built AST and returns NULL.
 */
-t_ast_node	*build_ast(t_token *token_list)
+t_ast_node	*build_ast(t_token *token_list, t_shell *shell)
 {
 	t_parser	parser;
 	t_ast_node	*root;
@@ -46,7 +46,7 @@ t_ast_node	*build_ast(t_token *token_list)
 	init_parser(&parser, token_list);
 	if (!check_syntax_errors(&parser))
 		return (NULL);
-	root = parse_expression(&parser, 0);
+	root = parse_expression(&parser, 0, shell);
 	if (!root || parser.error_status != PARSE_OK)
 	{
 		free_ast(root);

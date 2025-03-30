@@ -6,19 +6,19 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 10:49:26 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/27 16:40:25 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/30 16:29:48 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static	t_ast_node	*parse_right_node(t_parser *p, int op_prec)
+static	t_ast_node	*parse_right_node(t_parser *p, int op_prec, t_shell *shell)
 {
 	t_ast_node	*right_node;
 	int			next_prec;
 
 	next_prec = op_prec + 1;
-	right_node = parse_expression(p, next_prec);
+	right_node = parse_expression(p, next_prec, shell);
 	if (!right_node)
 	{
 		handle_parse_error(p, NULL, NULL, "Expected expression after operator");
@@ -67,12 +67,12 @@ static	t_ast_node	*parse_right_node(t_parser *p, int op_prec)
 	  1) If we see '(' => parse sub-expression => expect ')' => return sub-expr
 	  2) Else => parse_command
 */
-t_ast_node	*parse_term(t_parser *p)
+t_ast_node	*parse_term(t_parser *p, t_shell *shell)
 {
 	if (!p->current_token || p->error_status != PARSE_OK)
 		return (NULL);
 	else
-		return (parse_command(p));
+		return (parse_command(p, shell));
 }
 
 t_ast_node	*built_operator_node(t_ast_node *left_node, t_ast_node *right_node,
@@ -150,7 +150,7 @@ Final AST:
     /    \
 AST_COMMAND("ls") AST_COMMAND("grep .c")
 */
-t_ast_node	*parse_expression(t_parser *p, int min_prec)
+t_ast_node	*parse_expression(t_parser *p, int min_prec, t_shell *shell)
 {
 	t_token_type	operator_type;
 	t_ast_node		*left;
@@ -159,7 +159,7 @@ t_ast_node	*parse_expression(t_parser *p, int min_prec)
 
 	if (!p->current_token || p->error_status != PARSE_OK)
 		return (NULL);
-	left = parse_term(p);
+	left = parse_term(p, shell);
 	if (!left)
 		return (NULL);
 	while (p->current_token && p->current_token->type == TOKEN_PIPE)
@@ -169,7 +169,7 @@ t_ast_node	*parse_expression(t_parser *p, int min_prec)
 			break ;
 		operator_type = p->current_token->type;
 		get_next_token(p);
-		right = parse_right_node(p, op_prec);
+		right = parse_right_node(p, op_prec, shell);
 		if (!right)
 			return (NULL);
 		left = built_operator_node(left, right, operator_type, p);

@@ -1,74 +1,35 @@
-#******************************************************************************#
-#                               VARIABLES                                      #
-#******************************************************************************#
+# **************************************************************************** #
+#                                  CONFIG                                      #
+# **************************************************************************** #
 
-# Executable name
-NAME        = minishell
-
-# Compiler and flags
-CC          = cc
-CFLAGS      = -Wall -Wextra -Werror #-g -fsanitize=address
-READLINE    = -I /opt/homebrew/opt/readline/include/readline -lreadline # -L/opt/homebrew/opt/readline/lib
+NAME     := minishell
+CC       := cc
+CFLAGS   := -Wall -Wextra -Werror
+READLINE := -lreadline -I /opt/homebrew/opt/readline/include/readline
 #READLINE    = -I/usr/include/readline -lreadline
 
-# Directories
-OBJ_DIR     = obj/
-SRC_DIR     = src/
-LIBFT_DIR   = Libft/
-LIBFT       = $(LIBFT_DIR)libft.a
+SRC_DIR  := src
+OBJ_DIR  := obj
+LIBFT_DIR:= Libft
+LIBFT    := $(LIBFT_DIR)/libft.a
 
-# Source and object files
-SRCS        = $(SRC_DIR)main.c \
-              $(SRC_DIR)tokenizer.c  \
-			  $(SRC_DIR)tokenizer_utils.c \
-			  $(SRC_DIR)tokenizer_appender.c \
-			  $(SRC_DIR)tokenizer_handler.c \
-			  $(SRC_DIR)tokenize_word.c \
-			  $(SRC_DIR)parse_command.c \
-			  $(SRC_DIR)parsing_utils.c \
-			  $(SRC_DIR)ast_built.c \
-			  $(SRC_DIR)ast_node_create.c \
-			  $(SRC_DIR)free_token_ast.c \
-			  $(SRC_DIR)env_variable.c \
-			  $(SRC_DIR)debug.c \
-			  $(SRC_DIR)init_shell.c \
-			  $(SRC_DIR)parse_expression.c \
-			  $(SRC_DIR)parse_redirections.c \
-			  $(SRC_DIR)parse_error.c \
-			  $(SRC_DIR)syntax_error_check_1.c \
-			  $(SRC_DIR)syntax_error_check_2.c \
-			  $(SRC_DIR)handle_quote.c \
-			  $(SRC_DIR)exec_utils.c \
-			  $(SRC_DIR)pipes.c \
-			  $(SRC_DIR)print_error_messages.c \
-			  $(SRC_DIR)pipex.c \
-			  $(SRC_DIR)execution.c \
-			  $(SRC_DIR)ft_getenv.c \
-			  $(SRC_DIR)special_cases.c \
+SRCS := $(wildcard $(SRC_DIR)/*.c)
+OBJS := $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
 
-
-
-OBJS        = $(SRCS:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)
-
-#******************************************************************************#
-#                               MAIN TARGETS                                   #
-#******************************************************************************#
+# **************************************************************************** #
+#                                  TARGETS                                     #
+# **************************************************************************** #
 
 # Default target: build everything
 all: $(LIBFT) $(NAME)
 
-bonus: $(LIBFT)_bonus $(NAME)
+bonus: $(LIBFT) $(NAME)
 
 # Linking the executable
 $(NAME): $(OBJ_DIR) $(OBJS)
 	@echo "Linking $(NAME)..."
-	@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(READLINE) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(READLINE) -o $@
 
-#******************************************************************************#
-#                               LIBFT TARGET                                   #
-#******************************************************************************#
-
-# Compile libft
 $(LIBFT):
 	@echo "Building libft..."
 	@$(MAKE) -C $(LIBFT_DIR)
@@ -83,10 +44,9 @@ $(LIBFT)_bonus:
 
 # Ensure object directory exists
 $(OBJ_DIR):
-	@mkdir -p $(OBJ_DIR)
+	@mkdir -p $@
 
-# Compile source files to object files
-$(OBJ_DIR)%.o: $(SRC_DIR)%.c | $(OBJ_DIR)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 	@echo "Compiling $<..."
 	@$(CC) $(CFLAGS) -c $< -o $@
 
@@ -110,9 +70,4 @@ fclean: clean
 # Rebuild everything from scratch
 re: fclean all
 
-#******************************************************************************#
-#                               SPECIAL TARGETS                                #
-#******************************************************************************#
-
-# Indicate phony targets
-.PHONY: all clean fclean re bonus
+.PHONY: all bonus clean fclean re

@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:59:15 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/27 17:22:28 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/30 16:39:24 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ char	*get_input(const char *prompt);
 void	init_shell(t_shell *shell, char ***envp);
 
 /* Environment Variable Expansion */
+char	*get_var_name(const char *line, int *index);
 char	*get_env_var_value(const char *line, int *index, t_shell *shell);
 char	*handle_env_variable_without_space(const char *line,
 			int *index, int start, t_shell *shell);

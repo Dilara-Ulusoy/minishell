@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 15:00:56 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/27 15:28:27 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/30 16:26:05 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void parse_and_process_command(t_shell *shell, char ***envp_copy)
 		cleanup_shell(shell);
 		return ;
 	}
-	shell->ast = build_ast(shell->tokens); /* Build the AST */
+	shell->ast = build_ast(shell->tokens, shell); /* Build the AST */
 	if (!shell->ast)
 	{
 		//printf("Error: Parsing failed.\n");
