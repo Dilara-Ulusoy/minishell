@@ -45,7 +45,7 @@ static int	command_not_found(t_cmd_parts **cmd_parts, t_args *arg_struct)
 	return (127);
 }
 
-static int	get_exit_code(void)
+int	get_exit_code(void)
 {
 	if (errno == 13 || errno == 21)
 		return (126);
@@ -253,7 +253,27 @@ int	execute_commands(t_shell *shell, int num_commands, char ***envp)
 		cmd_parts->num_commands = num_commands;
 		if (is_builtin(cmd_parts))
 		{
+			int original_stdin = dup(STDIN_FILENO);
+			int original_stdout = dup(STDOUT_FILENO);
+			exit_code = set_pipe_single_builtin(cmd_parts);
+			if (exit_code != 0)
+			{
+				dup2(original_stdin, STDIN_FILENO);
+				dup2(original_stdout, STDOUT_FILENO);
+				close(original_stdin);
+				close(original_stdout);
+
+				free_cmd_parts(&cmd_parts);
+				cleanup_shell(shell);
+				return (exit_code);
+			}
 			exit_code = run_single_builtin(&cmd_parts, shell, envp);
+
+			dup2(original_stdin, STDIN_FILENO);
+			dup2(original_stdout, STDOUT_FILENO);
+			close(original_stdin);
+			close(original_stdout);
+
 			free_cmd_parts(&cmd_parts);
 			cleanup_shell(shell);
 			return (exit_code);

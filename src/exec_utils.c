@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 13:01:11 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/21 18:22:05 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/28 18:23:16 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ int	open_and_check_file(char *filename, int type)
 		file = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	else // if (type == 2)
 		file = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0777);
+	// else // (type == 3)  here-doc
 	if (file == -1)
 	{
 		perror(filename);
