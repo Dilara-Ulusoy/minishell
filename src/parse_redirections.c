@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_redirections.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 12:57:34 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/31 14:12:05 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/31 14:53:14 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,18 +81,19 @@ int heredoc_to_tempfile(const char *delimiter, t_shell *shell, const char *path)
 	return (0);
 }
 
-int handle_heredoc(const char *delimiter, t_shell *shell, int index, char **out_path)
+int handle_heredoc(char **delimiter, t_shell *shell, int index, char **out_path)
 {
 	char *path = generate_heredoc_filename(index);
 	if (!path)
 		return (-1);
-	if (heredoc_to_tempfile(delimiter, shell, path) == -1)
+	if (heredoc_to_tempfile(*delimiter, shell, path) == -1)
 	{
 		perror("heredoc");
 		free(path);
 		return (-1);
 	}
 	*out_path = path;
+	*delimiter = ft_strdup(*out_path);
 	return (0);
 }
 
@@ -116,7 +117,7 @@ int parse_redirections(t_parser *p, t_io_node **io_list, t_shell *shell)
 
 		if (kind == IO_HEREDOC)
 		{
-			if (handle_heredoc(p->current_token->value, shell, index, &path) == -1)
+			if (handle_heredoc(&(p->current_token->value), shell, index, &path) == -1)
 				return (-1);
 			index++;
 
