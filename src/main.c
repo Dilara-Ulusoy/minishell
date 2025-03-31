@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 15:00:56 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/31 15:10:22 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/31 15:36:28 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	handle_sigquit(int sig)
 void	setup_signal_handlers(void)
 {
 	signal(SIGINT, handle_sigint);  // `Ctrl-C` için
-	signal(SIGQUIT, handle_sigquit);  // `Ctrl-\` için
+	signal(SIGQUIT, SIG_IGN);  // `Ctrl-\` için
 }
 
 
