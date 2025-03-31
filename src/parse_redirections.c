@@ -6,18 +6,17 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 12:57:34 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/31 16:41:23 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/31 16:57:57 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	parse_redirections(t_parser *p, t_io_node **io_list, t_shell *shell)
+int parse_redirections(t_parser *p, t_io_node **io_list, t_shell *shell)
 {
-	t_io_type	kind;
-	int			index;
+	t_io_type kind;
 
-	index = 0;
+	int index = 0;
 	while (p->current_token && is_redirection(p->current_token->type))
 	{
 		kind = map_token_to_io_type(p->current_token->type);
@@ -37,10 +36,11 @@ int	parse_redirections(t_parser *p, t_io_node **io_list, t_shell *shell)
 			if (process_io(p, io_list, kind) == -1)
 				return (-1);
 		}
+		if (p->current_token && p->current_token->type == TOKEN_WORD)
+			get_next_token(p);
 	}
 	return (0);
 }
-
 /*
    map_token_to_io_type:
    - Convert a token type for redirection (<, >, >>, <<)
@@ -92,3 +92,4 @@ int	is_redirection(t_token_type type)
 		return (1);
 	return (0);
 }
+
