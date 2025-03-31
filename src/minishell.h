@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:59:15 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/30 16:39:24 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/31 16:40:45 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,8 +101,16 @@ int		parse_single_char_operator(t_token **head, const char *line,
 			int *pos, int length);
 
 /* Step 4: Parse Word */
-int	parse_word(t_token **head, t_shell *shell);
+int		parse_word(t_token **head, t_shell *shell);
 int		handle_newline(t_token **head, const char *line, int *pos);
+
+// Heredoc
+
+void	write_heredoc_line(int fd, char *line, t_shell *shell);
+int		heredoc_to_tempfile(const char *delimiter, t_shell *shell, const char *path);
+int		handle_heredoc(char **delimiter, t_shell *shell, int index);
+int		process_heredoc(t_parser *p, t_io_node **io_list, t_shell *shell, int *index);
+int		process_io(t_parser *p, t_io_node **io_list, t_io_type kind);
 
 /* Cleanup */
 void	cleanup_shell(t_shell *shell);

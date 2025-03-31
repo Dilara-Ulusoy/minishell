@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 15:00:56 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/31 15:36:28 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/31 16:21:39 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "execution.h"
 
-
+/*
 void	handle_sigint(int sig)
 {
 	(void)sig;
@@ -33,6 +33,7 @@ void	setup_signal_handlers(void)
 	signal(SIGINT, handle_sigint);  // `Ctrl-C` için
 	signal(SIGQUIT, SIG_IGN);  // `Ctrl-\` için
 }
+*/
 
 
 void parse_and_process_command(t_shell *shell, char ***envp_copy)
@@ -60,14 +61,10 @@ void parse_and_process_command(t_shell *shell, char ***envp_copy)
 		return ;
 	}
 	//debug_ast(shell->ast, 0);   // -------> FOR DUBEGGING
-	// execute_ast(shell->ast); /* Uncomment for actual execution */
 	//print_tokens(shell->tokens);  // -------> FOR DUBEGGING
-	//printf("Old exit code in shell: %d\n", shell->exit_code);
 	num_commands = get_num_commands(shell);
 	if (num_commands > 0)
 		shell->exit_code = execute_commands(shell, num_commands, envp_copy);
-	//printf("%c", (*envp_copy)[0][0]);
-	//printf("New exit code in shell: %d\n", shell->exit_code);
 	cleanup_shell(shell);
 }
 
@@ -77,14 +74,6 @@ int main(int argc, char **argv, char **envp)
 	char **envp_copy;
 
 	envp_copy = copy_envp(envp);
-
-	//ft_set("A=12", &envp_copy);
-	//printf("\n\n\n\n");
-	//ft_env(envp_copy);
-	//ft_cd("src", &envp_copy);
-	//printf("HELLO\n");
-	//ft_env(envp_copy);
-	(void)envp;
 	(void)argv;
 	if (argc != 1)
 	{
@@ -92,31 +81,7 @@ int main(int argc, char **argv, char **envp)
 		exit(1);
 	}
 	init_shell(&shell, &envp_copy);
-	//printf("\n\nOur A in minishell is %s\n\n", ft_getenv("A", &shell));
-	setup_signal_handlers();
-	// pid_t pid = fork();
-    // if (pid == 0)
-    // {
-    //     // Child process
-    //     printf("Child process %d running...\n", getpid());
-    //     sleep(2);  // Simulate some work
-    //     printf("Child process %d exiting...\n", getpid());
-    //     exit(0);
-    // }
-    // else if (pid > 0)
-    // {
-    //     // Parent process
-    //     printf("Parent process %d waiting...\n", getpid());
-    //     while (1)
-    //     {
-    //         pause();  // Wait indefinitely for signals
-    //     }
-    // }
-    // else
-    // {
-    //     perror("fork failed");
-    //     return 1;
-    // }
+	//setup_signal_handlers();
 	while (1)
 	{
 		shell.line = get_input("minishell$ ");
@@ -124,7 +89,6 @@ int main(int argc, char **argv, char **envp)
 			break ;
 		shell.line_length = ft_strlen(shell.line);
 		parse_and_process_command(&shell, &envp_copy);
-		//printf("%c", (envp_copy)[0][0]);
 	}
 	free_envp(envp_copy);
 	envp_copy = NULL;
