@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 15:00:56 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/30 16:26:05 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/31 12:13:41 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void parse_and_process_command(t_shell *shell, char ***envp_copy)
 	}
 	//debug_ast(shell->ast, 0);   // -------> FOR DUBEGGING
 	// execute_ast(shell->ast); /* Uncomment for actual execution */
-	//print_tokens(shell->tokens);  // -------> FOR DUBEGGING
+	print_tokens(shell->tokens);  // -------> FOR DUBEGGING
 	//printf("Old exit code in shell: %d\n", shell->exit_code);
 	num_commands = get_num_commands(shell);
 	if (num_commands > 0)

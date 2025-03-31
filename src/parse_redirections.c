@@ -6,12 +6,11 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 12:57:34 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/30 21:03:58 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/31 12:17:24 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 void redirect_stdin_from_file(const char *path)
 {
@@ -33,7 +32,7 @@ void redirect_stdin_from_file(const char *path)
 char *generate_heredoc_filename(int index)
 {
 	char *base = "/tmp/minishell_heredoc_";
-	char *suffix = ft_itoa(index); // Kendi ft_itoa fonksiyonunu kullan
+	char *suffix = ft_itoa(index);
 	if (!suffix)
 		return (NULL);
 	char *filename = ft_strjoin(base, suffix);
@@ -132,7 +131,8 @@ int parse_redirections(t_parser *p, t_io_node **io_list, t_shell *shell)
 				free(last_heredoc_path);
 			last_heredoc_path = path;
 			redirect_stdin_from_file(path);
-			get_next_token(p);
+			if(p->current_token->next)
+				get_next_token(p);
 		}
 		new_io = create_io_node(kind, p->current_token->value, p);
 		if (!new_io)
