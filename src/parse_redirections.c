@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 12:57:34 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/31 14:53:14 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/31 15:02:08 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int heredoc_to_tempfile(const char *delimiter, t_shell *shell, const char *path)
 	return (0);
 }
 
-int handle_heredoc(char **delimiter, t_shell *shell, int index, char **out_path)
+int handle_heredoc(char **delimiter, t_shell *shell, int index)
 {
 	char *path = generate_heredoc_filename(index);
 	if (!path)
@@ -92,8 +92,8 @@ int handle_heredoc(char **delimiter, t_shell *shell, int index, char **out_path)
 		free(path);
 		return (-1);
 	}
-	*out_path = path;
-	*delimiter = ft_strdup(*out_path);
+	*delimiter = ft_strdup(path);
+	free(path);
 	return (0);
 }
 
@@ -102,8 +102,6 @@ int parse_redirections(t_parser *p, t_io_node **io_list, t_shell *shell)
 	t_io_type kind;
 	t_io_node *new_io;
 	int index = 0;
-	char *path = NULL;
-	char *last_heredoc_path = NULL;
 
 	while (p->current_token && is_redirection(p->current_token->type))
 	{
@@ -117,15 +115,11 @@ int parse_redirections(t_parser *p, t_io_node **io_list, t_shell *shell)
 
 		if (kind == IO_HEREDOC)
 		{
-			if (handle_heredoc(&(p->current_token->value), shell, index, &path) == -1)
+			if (handle_heredoc(&(p->current_token->value), shell, index) == -1)
 				return (-1);
 			index++;
 
-			if (last_heredoc_path)
-				free(last_heredoc_path);
-			last_heredoc_path = path;
-
-			new_io = create_io_node(kind, last_heredoc_path, p); // ✅ path veriyoruz
+			new_io = create_io_node(kind, p->current_token->value, p); // ✅ path veriyoruz
 			if (!new_io)
 			{
 				free_io_list(*io_list);
