@@ -113,7 +113,7 @@ static int	execute_command(char *path, t_cmd_parts **cmd_parts,
 			free(path);
 		free_cmd_parts(cmd_parts);
 		free(arg_struct->pids);
-		free_array((void **)arg_struct->fd, 1, arg_struct->argc - 1);
+		//free_array((void **)arg_struct->fd, 1, arg_struct->argc - 1);
 		free_envp(arg_struct->envp);
 		free(arg_struct);
 		//free(arg_struct->pids);
@@ -131,7 +131,7 @@ static int	execute_command(char *path, t_cmd_parts **cmd_parts,
 		free(path);
 	free_cmd_parts(cmd_parts);
 	free(arg_struct->pids);
-	free_array((void **)arg_struct->fd, 1, arg_struct->argc - 1);
+	//free_array((void **)arg_struct->fd, 1, arg_struct->argc - 1);
 	free_envp(arg_struct->envp);
 	free(arg_struct);
 	//free(arg_struct->pids);
