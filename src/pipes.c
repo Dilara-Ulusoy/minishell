@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:24 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/28 18:43:30 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/31 13:37:03 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,7 +209,7 @@ int	set_pipe_single_builtin(t_cmd_parts *cmd_parts)
 		i = -1;
 		while (++i < cmd_parts->n_files)
 		{
-			if (cmd_parts->files_types[i] == 0)
+			if (cmd_parts->files_types[i] == 0 || cmd_parts->files_types[i] == 3)
 				fileno = STDIN_FILENO;
 			if (cmd_parts->files_types[i] == 1 || cmd_parts->files_types[i] == 2)
 				fileno = STDOUT_FILENO;
@@ -251,7 +251,7 @@ int	set_pipe(t_cmd_parts *cmd_parts, t_args *arg_struct, char *path, int is_buil
 		i = -1;
 		while (++i < cmd_parts->n_files)
 		{
-			if (cmd_parts->files_types[i] == 0)
+			if (cmd_parts->files_types[i] == 0 || cmd_parts->files_types[i] == 3)
 				fileno = STDIN_FILENO;
 			if (cmd_parts->files_types[i] == 1 || cmd_parts->files_types[i] == 2)
 				fileno = STDOUT_FILENO;
@@ -269,14 +269,14 @@ int	set_pipe(t_cmd_parts *cmd_parts, t_args *arg_struct, char *path, int is_buil
 				//close_and_free(arg_struct, 1);
 				exit (1); // Remember to free other things before exit!
 			}
-			if (cmd_parts->command_number == 0 && cmd_parts->files_types[i] == 0)
+			if (cmd_parts->command_number == 0 && (cmd_parts->files_types[i] == 0 || cmd_parts->files_types[i] == 3))
 			{
 				fd = open_and_check_file(cmd_parts->files_array[i], 0);
 				if (check_dup2(fd, arg_struct, fileno) == -1)
 					return (-1);
 				close(fd);
 			}
-			else if (cmd_parts->command_number != 0 && cmd_parts->files_types[i] == 0)
+			else if (cmd_parts->command_number != 0 && (cmd_parts->files_types[i] == 0 || cmd_parts->files_types[i] == 3))
 			{
 				arg_struct->fd[cmd_parts->command_number - 1][0] = open_and_check_file(cmd_parts->files_array[i], 0);
 				if (check_dup2(arg_struct->fd[cmd_parts->command_number - 1][0], arg_struct, fileno) == -1)

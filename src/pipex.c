@@ -242,7 +242,7 @@ int	execute_commands(t_shell *shell, int num_commands, char ***envp)
 	//int		k;
 	t_args	*arg_struct;
 	t_cmd_parts *cmd_parts;
-	int used_execve[num_commands];
+	//int used_execve[num_commands];
 	//int last_exit_code;
 	//pid_t exited_pid;
 	int exit_code;
@@ -295,10 +295,10 @@ int	execute_commands(t_shell *shell, int num_commands, char ***envp)
 	{
 		cmd_parts = get_command_array(shell->tokens, j + 1);
 		cmd_parts->num_commands = num_commands;
-		if (is_builtin(cmd_parts) == 1)
-			used_execve[j] = 0;
-		else
-			used_execve[j] = 1;
+		// if (is_builtin(cmd_parts) == 1)
+		// 	used_execve[j] = 0;
+		// else
+		// 	used_execve[j] = 1;
 		arg_struct->pids[j] = fork();
 		if (arg_struct->pids[j] < 0)
 		{
