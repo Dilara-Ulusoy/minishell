@@ -6,27 +6,20 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 12:57:34 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/31 12:17:24 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/03/31 14:12:05 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void redirect_stdin_from_file(const char *path)
+t_token create_token(t_token_type type, const char *value)
 {
-	int fd = open(path, O_RDONLY);
-	if (fd == -1)
-	{
-		perror("open for stdin redirection");
-		exit(1);
-	}
-	if (dup2(fd, STDIN_FILENO) == -1)
-	{
-		perror("dup2");
-		close(fd);
-		exit(1);
-	}
-	close(fd);
+	t_token token;
+
+	token.type = type;
+	token.value = ft_strdup(value);
+	token.next = NULL;
+	return (token);
 }
 
 char *generate_heredoc_filename(int index)
@@ -44,7 +37,6 @@ void write_heredoc_line(int fd, char *line, t_shell *shell)
 {
 	char *env;
 	char *var_value;
-
 	shell->index = 0;
 	if (line[shell->index] == '$')
 	{
@@ -110,7 +102,7 @@ int parse_redirections(t_parser *p, t_io_node **io_list, t_shell *shell)
 	t_io_node *new_io;
 	int index = 0;
 	char *path = NULL;
-	static char *last_heredoc_path = NULL;
+	char *last_heredoc_path = NULL;
 
 	while (p->current_token && is_redirection(p->current_token->type))
 	{
@@ -121,33 +113,46 @@ int parse_redirections(t_parser *p, t_io_node **io_list, t_shell *shell)
 			p->error_status = PARSE_SYNTAX_ERROR;
 			return (-1);
 		}
+
 		if (kind == IO_HEREDOC)
 		{
 			if (handle_heredoc(p->current_token->value, shell, index, &path) == -1)
 				return (-1);
 			index++;
-			// önceki path'i sil, son heredoc path'i tutulsun
+
 			if (last_heredoc_path)
 				free(last_heredoc_path);
 			last_heredoc_path = path;
-			redirect_stdin_from_file(path);
-			if(p->current_token->next)
+
+			new_io = create_io_node(kind, last_heredoc_path, p); // ✅ path veriyoruz
+			if (!new_io)
+			{
+				free_io_list(*io_list);
+				return (-1);
+			}
+			if (p->current_token->next)
 				get_next_token(p);
 		}
-		new_io = create_io_node(kind, p->current_token->value, p);
-		if (!new_io)
+		else
 		{
-			free_io_list(*io_list);
-			return (-1);
+			new_io = create_io_node(kind, p->current_token->value, p); // normal dosya ismi
+			if (!new_io)
+			{
+				free_io_list(*io_list);
+				return (-1);
+			}
+			get_next_token(p);
 		}
+
 		if (attach_io_node(io_list, new_io) == -1)
 			return (-1);
-		get_next_token(p);
+
 		if (p->current_token && p->current_token->type == TOKEN_WORD)
 			get_next_token(p);
 	}
 	return (0);
 }
+
 
 /*
    map_token_to_io_type:
@@ -200,3 +205,4 @@ int	is_redirection(t_token_type type)
 		return (1);
 	return (0);
 }
+
