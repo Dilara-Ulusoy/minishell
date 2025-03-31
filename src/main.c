@@ -6,14 +6,14 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 15:00:56 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/31 15:01:55 by htopa            ###   ########.fr       */
+/*   Updated: 2025/03/31 15:10:22 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "execution.h"
 
-/*
+
 void	handle_sigint(int sig)
 {
 	(void)sig;
@@ -33,7 +33,7 @@ void	setup_signal_handlers(void)
 	signal(SIGINT, handle_sigint);  // `Ctrl-C` için
 	signal(SIGQUIT, handle_sigquit);  // `Ctrl-\` için
 }
-*/
+
 
 void parse_and_process_command(t_shell *shell, char ***envp_copy)
 {
@@ -93,7 +93,7 @@ int main(int argc, char **argv, char **envp)
 	}
 	init_shell(&shell, &envp_copy);
 	//printf("\n\nOur A in minishell is %s\n\n", ft_getenv("A", &shell));
-	//setup_signal_handlers();
+	setup_signal_handlers();
 	// pid_t pid = fork();
     // if (pid == 0)
     // {
