@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_heredoc.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 16:33:55 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/31 16:58:58 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/01 17:26:08 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ int	handle_heredoc(char **delimiter, t_shell *shell, int index)
 		free(path);
 		return (-1);
 	}
+	if (*delimiter)
+		free(*delimiter);
 	*delimiter = ft_strdup(path);
 	free(path);
 	return (0);
