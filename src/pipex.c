@@ -142,42 +142,51 @@ static int	execute_command(char *path, t_cmd_parts **cmd_parts,
 
 void ft_add_envVar(char *var_eq_value, char ***envp)
 {
-	if (!envp || !*envp) return; // Safety check
+	int count;
+	char **new_envp;
+	int i;
 
-	//(*envp)[0][0] = 'A';
-	size_t count = 0;
-    while ((*envp)[count] != NULL) {
-        count++;
-    }
-
-    char **new_envp = malloc((count + 2) * sizeof(char *));
-    if (!new_envp) {
+	if (!envp || !(*envp))
+		return ; // Safety check
+	count = 0;
+    while ((*envp)[count] != NULL)
+		count++;
+	new_envp = malloc((count + 2) * sizeof(char *));
+    if (!new_envp)
+	{
         perror("malloc failed");
         return ;
     }
-
-    for (size_t i = 0; i < count; i++) {
+	i = 0;
+    while (i < count)
+	{
         new_envp[i] = ft_strdup((*envp)[i]);
-        if (!new_envp[i]) {
+        if (!new_envp[i])
+		{
             perror("strdup failed");
             while (i > 0) free(new_envp[--i]);
             free(new_envp);
             return ;
         }
+		i++;
     }
 	new_envp[count] = ft_strdup(var_eq_value);
-	if (!new_envp[count]) {
+	if (!new_envp[count])
+	{
         perror("ft_strdup failed");
         while (count > 0) free(new_envp[--count]);
         free(new_envp);
-        return;
+        return ;
     }
     new_envp[count + 1] = NULL;  // Null-terminate the array
-	// Free old envp before reassigning
+	//Free old envp before reassigning
 	if (*envp)
 	{
-    	for (size_t i = 0; (*envp)[i] != NULL; i++) {
+		i = 0;
+    	while ((*envp)[i] != NULL)
+		{
         	free((*envp)[i]);
+			i++;
     	}
     	free(*envp);
 	}

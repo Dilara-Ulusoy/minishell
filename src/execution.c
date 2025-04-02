@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:03 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/28 18:51:45 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/02 19:20:31 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -587,17 +587,15 @@ int check_and_run_builtins(t_shell *shell, t_cmd_parts **cmd_parts, t_args *arg_
 	int k;
 	int len;
 	int exit_code;
-	char **envp;
+	//char **envp;
 
-	envp = arg_struct->envp;
-	//ft_env(arg_struct->envp);
-	//ft_env(envp);
+	//envp = arg_struct->envp;
 	if (ft_strncmp((*cmd_parts)->cmd_array[0], "unset\0", 6) == 0)
 	{
 		k = 1;
 		while ((*cmd_parts)->cmd_array[k] != NULL)
 		{
-			ft_unset((*cmd_parts)->cmd_array[k], &envp);
+			ft_unset((*cmd_parts)->cmd_array[k], &arg_struct->envp);
 			k++;
 		}
 		return (EXIT_SUCCESS);
@@ -613,10 +611,10 @@ int check_and_run_builtins(t_shell *shell, t_cmd_parts **cmd_parts, t_args *arg_
 		if ((*cmd_parts)->cmd_array[1] == NULL)
 		{
 			k = 0;
-			while(envp[k] != NULL)
+			while(arg_struct->envp[k] != NULL)
 			{
 				ft_putstr_fd("declare -x ", 1);
-				ft_putstr_fd(envp[k], 1);
+				ft_putstr_fd(arg_struct->envp[k], 1);
 				ft_putstr_fd("\n", 1);
 				k++;
 			}
@@ -626,7 +624,7 @@ int check_and_run_builtins(t_shell *shell, t_cmd_parts **cmd_parts, t_args *arg_
 			k = 1;
 			while ((*cmd_parts)->cmd_array[k] != NULL)
 			{
-				exit_code = ft_set((*cmd_parts)->cmd_array[k], &envp);
+				exit_code = ft_set((*cmd_parts)->cmd_array[k], &(arg_struct->envp));
 				if (exit_code)
 					return (exit_code);
 				k++;
@@ -718,7 +716,7 @@ int check_and_run_builtins(t_shell *shell, t_cmd_parts **cmd_parts, t_args *arg_
 			return (EXIT_FAILURE);
 		}
 		else
-			ft_env(envp);
+			ft_env(arg_struct->envp);
 		free_cmd_parts(cmd_parts);
 		//cmd_parts = NULL;
 	}
@@ -737,7 +735,7 @@ int check_and_run_builtins(t_shell *shell, t_cmd_parts **cmd_parts, t_args *arg_
 			exit_code = EXIT_FAILURE;
 		}
 		else
-			exit_code = ft_cd((*cmd_parts)->cmd_array[1], &envp);
+			exit_code = ft_cd((*cmd_parts)->cmd_array[1], &arg_struct->envp);
 		free_cmd_parts(cmd_parts);
 		return (exit_code);
 		//cmd_parts = NULL;

@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 13:01:11 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/31 16:28:43 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/02 19:13:10 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ int	close_and_free(t_args *arg_struct, int free_pid)
 	if (free_pid == 1)
 	{
 		free(arg_struct->pids);
+		free_envp(arg_struct->envp);
 		free(arg_struct);
 		return (-1);
 	}

@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 12:58:25 by htopa             #+#    #+#             */
-/*   Updated: 2025/03/28 17:19:27 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/02 18:38:09 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,6 +179,7 @@ void free_envp(char **envp) {
 	free(envp[i]); 
     free(envp);  // Free the array itself
 }
+
 
 // void	free_array(void **arr, int is_int, int j)
 // {
