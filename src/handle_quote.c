@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 18:18:52 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/25 13:13:39 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/03 14:21:18 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,10 +173,8 @@ char	*parse_quotes(const char *line, int *index, t_shell *shell)
 	while (p.line[p.index])
 	{
 		status = process_character(&p, shell);
-		// If a quote is closed and followed by a space, exit the loop
 		if (status == 1)
 			break ;
-		// If an error occurred clean up and return NULL
 		if (status == -1)
 		{
 			free(p.result);
@@ -189,3 +187,6 @@ char	*parse_quotes(const char *line, int *index, t_shell *shell)
 	*index = p.index;
 	return (p.result);
 }
+
+// Line 176: If a quote is closed and followed by a space, exit the loop
+// Line 178: If an error occurred clean up and return NULL

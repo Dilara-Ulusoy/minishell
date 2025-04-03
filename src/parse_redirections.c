@@ -3,20 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   parse_redirections.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 12:57:34 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/31 16:57:57 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/03 14:17:15 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int parse_redirections(t_parser *p, t_io_node **io_list, t_shell *shell)
+int	parse_redirections(t_parser *p, t_io_node **io_list, t_shell *shell)
 {
-	t_io_type kind;
+	t_io_type	kind;
+	int			index;
 
-	int index = 0;
+	index = 0;
 	while (p->current_token && is_redirection(p->current_token->type))
 	{
 		kind = map_token_to_io_type(p->current_token->type);
@@ -26,11 +27,9 @@ int parse_redirections(t_parser *p, t_io_node **io_list, t_shell *shell)
 			p->error_status = PARSE_SYNTAX_ERROR;
 			return (-1);
 		}
-		if (kind == IO_HEREDOC)
-		{
-			if (process_heredoc(p, io_list, shell, &index) == -1)
-				return (-1);
-		}
+		if (kind == IO_HEREDOC
+			&& process_heredoc(p, io_list, shell, &index) == -1)
+			return (-1);
 		else
 		{
 			if (process_io(p, io_list, kind) == -1)
@@ -41,6 +40,7 @@ int parse_redirections(t_parser *p, t_io_node **io_list, t_shell *shell)
 	}
 	return (0);
 }
+
 /*
    map_token_to_io_type:
    - Convert a token type for redirection (<, >, >>, <<)
@@ -92,4 +92,3 @@ int	is_redirection(t_token_type type)
 		return (1);
 	return (0);
 }
-

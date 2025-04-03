@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_appender.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 14:04:22 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/27 17:14:58 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/03 14:25:20 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,4 +102,33 @@ char	*join_string_with_quoted_if_no_space(const char *line,
 		free_this(temp, temp2, NULL, NULL);
 	}
 	return (result);
+}
+
+int	parse_word(t_token **head, t_shell *shell)
+{
+	t_token	*token;
+	char	*word;
+
+	if (shell->index >= shell->line_length)
+		return (0);
+	word = read_word_range(shell->line, &shell->index, shell->line_length,
+			shell);
+	token = (t_token *)malloc(sizeof(t_token));
+	if (!word || !token)
+	{
+		ft_putstr_fd("Memory allocation error in parse_word\n", STDERR_FILENO);
+		free(word);
+		free(token);
+		free_tokens(head);
+		return (-1);
+	}
+	token->type = TOKEN_WORD;
+	token->value = word;
+	token->next = NULL;
+	if (append_token(head, token) == -1)
+	{
+		free(token);
+		return (-1);
+	}
+	return (1);
 }

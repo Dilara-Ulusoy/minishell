@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:34:26 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/03 14:05:08 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/03 14:25:04 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,32 +196,3 @@ int	handle_newline(t_token **head, const char *line, int *pos)
  * @return int 1 if a word was successfully parsed and added to the token list,
  *             0 otherwise (e.g., no word found or memory allocation failure).
  */
-
-int	parse_word(t_token **head, t_shell *shell)
-{
-	t_token	*token;
-	char	*word;
-
-	if (shell->index >= shell->line_length)
-		return (0);
-	word = read_word_range(shell->line, &shell->index, shell->line_length,
-			shell);
-	token = (t_token *)malloc(sizeof(t_token));
-	if (!word || !token)
-	{
-		ft_putstr_fd("Memory allocation error in parse_word\n", STDERR_FILENO);
-		free(word);
-		free(token);
-		free_tokens(head);
-		return (-1);
-	}
-	token->type = TOKEN_WORD;
-	token->value = word;
-	token->next = NULL;
-	if (append_token(head, token) == -1)
-	{
-		free(token);
-		return (-1);
-	}
-	return (1);
-}
