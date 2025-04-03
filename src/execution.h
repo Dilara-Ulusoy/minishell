@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:15 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/03 16:14:42 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/03 17:37:50 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ typedef struct s_args
 	pid_t		*pids;
 }	t_args;
 
-void count_pipes(t_ast_node *node, int *i);
+//void count_pipes(t_ast_node *node, int *i);
 t_cmd_parts *count_tokens(const t_token *head, int command_number);
 t_cmd_parts *get_command_array(const t_token *head, int command_number);
 int ft_pwd();
@@ -56,7 +56,7 @@ int is_number(char *str);
 int ft_exit(char *exit_code);
 int ft_env(char **envp);
 int ft_cd(char *new_path, char ***envp);
-int get_num_commands(t_shell *shell);
+//int get_num_commands(t_shell *shell);
 int check_and_run_builtins(t_shell *shell, t_cmd_parts **cmd_parts, t_args *arg_struct);
 int execute_commands(t_shell *shell, int num_commands, char ***envp);
 void	close_pipes(int **fd, int j);
@@ -82,5 +82,7 @@ char *ft_getenv(char *var_name, t_shell *shell);
 int	get_exit_code(void);
 int	run_pid(t_args *arg_struct, t_cmd_parts **cmd_parts, t_shell *shell, int is_builtin);
 int	run_single_builtin(t_cmd_parts **cmd_parts, t_shell *shell, char ***envp);
+int get_num_commands(const t_token *head);
+void count_pipes(const t_token *head, int *i);
 
 #endif

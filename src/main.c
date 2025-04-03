@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 15:00:56 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/03 12:55:48 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/03 17:51:22 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,8 @@ void parse_and_process_command(t_shell *shell, char ***envp_copy)
 	}
 	//debug_ast(shell->ast, 0);   // -------> FOR DUBEGGING
 	//print_tokens(shell->tokens);  // -------> FOR DUBEGGING
-	num_commands = get_num_commands(shell);
+	//num_commands = get_num_commands(shell);
+	num_commands = get_num_commands(shell->tokens);
 	if (num_commands > 0)
 		shell->exit_code = execute_commands(shell, num_commands, envp_copy);
 	cleanup_shell(shell);

@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:03 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/03 15:45:51 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/03 17:38:24 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,15 +36,54 @@
 //     find_ast_pipes(node->right);
 // }
 
-void count_pipes(t_ast_node *node, int *i)
+void count_pipes(const t_token *head, int *i)
 {
-	if (!node)
+	const t_token *curr;
+
+	if (!head)
 		return ;
-    if (node->node_type == AST_PIPE)
-		(*i)++;
-    count_pipes(node->left, i);
-    count_pipes(node->right, i);
+	curr = head;
+	while (curr)
+	{
+		if (curr->type == TOKEN_PIPE)
+			(*i)++;
+		curr = curr->next;
+	}
 }
+
+int get_num_commands(const t_token *head)
+{
+	int	num_pipes;
+	int num_commands;
+
+	num_pipes = 0;
+	count_pipes(head, &num_pipes);
+	num_commands = 1 + num_pipes;
+	//printf("Number of commands: %d\n", num_commands);
+	return (num_commands);
+}
+
+// void count_pipes(t_ast_node *node, int *i)
+// {
+// 	if (!node)
+// 		return ;
+//     if (node->node_type == AST_PIPE)
+// 		(*i)++;
+//     count_pipes(node->left, i);
+//     count_pipes(node->right, i);
+// }
+
+// int get_num_commands(t_shell *shell)
+// {
+// 	int	num_pipes;
+// 	int num_commands;
+
+// 	num_pipes = 0;
+// 	count_pipes(shell->ast, &num_pipes);
+// 	num_commands = 1 + num_pipes;
+// 	//printf("Number of commands: %d\n", num_commands);
+// 	return (num_commands);
+// }
 
 t_cmd_parts *count_tokens(const t_token *head, int command_number)
 {
@@ -548,18 +587,6 @@ int ft_cd(char *new_path, char ***envp)
 	}
 	//ft_env(*envp);
 	return (EXIT_SUCCESS);
-}
-
-int get_num_commands(t_shell *shell)
-{
-	int	num_pipes;
-	int num_commands;
-
-	num_pipes = 0;
-	count_pipes(shell->ast, &num_pipes);
-	num_commands = 1 + num_pipes;
-	//printf("Number of commands: %d\n", num_commands);
-	return (num_commands);
 }
 
 int is_builtin(t_cmd_parts *cmd_parts)
