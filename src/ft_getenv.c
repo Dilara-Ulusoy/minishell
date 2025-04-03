@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_getenv.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:37:44 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/27 16:38:31 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/03 14:44:37 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,5 +41,5 @@ char	*ft_getenv(char *var_name, t_shell *shell)
 	if ((*(shell->envp))[i] == NULL)
 		return (NULL);
 	value = copy_after_equal((*(shell->envp))[i]);
-	return (value); // Remember to free this later!
+	return (value);
 }
