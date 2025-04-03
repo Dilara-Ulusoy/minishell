@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 16:03:04 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/18 14:22:20 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/03 14:08:28 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 
 	if (!dest || !src)
 		return (NULL);
-
 	d = (unsigned char *)dest;
 	s = (const unsigned char *)src;
 	i = 0;
