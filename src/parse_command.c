@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   parse_command.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 10:22:37 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/30 16:27:25 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/03 14:02:48 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	handle_initial_redirection(t_parser *p, t_io_node **io_list, t_shell *shell)
+static int	handle_initial_redirection(t_parser *p, t_io_node **io_list,
+	t_shell *shell)
 {
 	if (is_redirection(p->current_token->type))
 	{

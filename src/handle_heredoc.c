@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 16:33:55 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/03 13:55:34 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/03 14:01:39 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,8 +102,6 @@ int	process_heredoc(t_parser *p, t_io_node **io_list,
 	}
 	if (attach_io_node(io_list, new_io) == -1)
 		return (-1);
-	//if (p->current_token->next)
-	//	get_next_token(p);
 	return (0);
 }
 
@@ -119,7 +117,8 @@ int	process_io(t_parser *p, t_io_node **io_list, t_io_type kind)
 	}
 	if (attach_io_node(io_list, new_io) == -1)
 		return (-1);
-	if(p->current_token && p->current_token->next && p->current_token->next->next && p->current_token->type == TOKEN_WORD)
+	if (p->current_token && p->current_token->next
+		&& p->current_token->next->next && p->current_token->type == TOKEN_WORD)
 		get_next_token(p);
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:34:26 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/27 17:22:57 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/03 14:05:08 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,6 +196,7 @@ int	handle_newline(t_token **head, const char *line, int *pos)
  * @return int 1 if a word was successfully parsed and added to the token list,
  *             0 otherwise (e.g., no word found or memory allocation failure).
  */
+
 int	parse_word(t_token **head, t_shell *shell)
 {
 	t_token	*token;
@@ -203,7 +204,8 @@ int	parse_word(t_token **head, t_shell *shell)
 
 	if (shell->index >= shell->line_length)
 		return (0);
-	word = read_word_range(shell->line, &shell->index, shell->line_length, shell);
+	word = read_word_range(shell->line, &shell->index, shell->line_length,
+			shell);
 	token = (t_token *)malloc(sizeof(t_token));
 	if (!word || !token)
 	{
@@ -223,4 +225,3 @@ int	parse_word(t_token **head, t_shell *shell)
 	}
 	return (1);
 }
-
