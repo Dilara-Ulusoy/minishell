@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:03 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/02 19:20:31 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/03 15:45:51 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -450,7 +450,7 @@ int	ft_set(char *var_eq_value, char ***envp)
 	if ((*envp)[i] == NULL)
 	{
 		//printf("Var was not found in envp\n");
-		ft_add_envVar(var_eq_value, envp);
+		ft_add_env_var(var_eq_value, envp);
 		free(name_w_equal);
 		return (EXIT_SUCCESS);
 	}

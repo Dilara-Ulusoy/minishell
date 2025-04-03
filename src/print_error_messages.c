@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 12:58:25 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/02 18:38:09 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/03 15:00:31 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,138 +48,91 @@ int	check_dup2(int file_d, t_args *arg_struct, int std_type)
 		return (0);
 }
 
-void free_cmd_parts(t_cmd_parts **cmd_parts)
+void	free_cmd_parts(t_cmd_parts **cmd_parts)
 {
-    int i;
+	int	i;
 
-    if (cmd_parts == NULL || *cmd_parts == NULL)
-        return;
-
-    if ((*cmd_parts)->cmd_array != NULL)
-    {
-        i = 0;
-        while ((*cmd_parts)->cmd_array[i] != NULL)
-        {
-            free((*cmd_parts)->cmd_array[i]);
-            i++;
-        }
-        free((*cmd_parts)->cmd_array);
-        (*cmd_parts)->cmd_array = NULL;
-    }
-    if ((*cmd_parts)->files_array != NULL)
-    {
-        i = 0;
-        while ((*cmd_parts)->files_array[i] != NULL)
-        {
-            free((*cmd_parts)->files_array[i]);
-            i++;
-        }
-        free((*cmd_parts)->files_array);
-        (*cmd_parts)->files_array = NULL;
-    }
-    if ((*cmd_parts)->files_types != NULL)
-    {
-        free((*cmd_parts)->files_types);
-        (*cmd_parts)->files_types = NULL;
-    }
-    free(*cmd_parts);
-    *cmd_parts = NULL;
+	if (cmd_parts == NULL || *cmd_parts == NULL)
+		return ;
+	if ((*cmd_parts)->cmd_array != NULL)
+	{
+		i = 0;
+		while ((*cmd_parts)->cmd_array[i] != NULL)
+		{
+			free((*cmd_parts)->cmd_array[i]);
+			i++;
+		}
+		free((*cmd_parts)->cmd_array);
+		(*cmd_parts)->cmd_array = NULL;
+	}
+	if ((*cmd_parts)->files_array != NULL)
+	{
+		i = 0;
+		while ((*cmd_parts)->files_array[i] != NULL)
+		{
+			free((*cmd_parts)->files_array[i]);
+			i++;
+		}
+		free((*cmd_parts)->files_array);
+		(*cmd_parts)->files_array = NULL;
+	}
+	if ((*cmd_parts)->files_types != NULL)
+	{
+		free((*cmd_parts)->files_types);
+		(*cmd_parts)->files_types = NULL;
+	}
+	free(*cmd_parts);
+	*cmd_parts = NULL;
 }
 
-// void free_cmd_parts(t_cmd_parts **cmd_parts)
-// {
-//     int i;
+char	**copy_envp(char **envp)
+{
+	int		count;
+	char	**new_envp;
+	int		i;
 
-//     if (cmd_parts == NULL || *cmd_parts == NULL)
-//         return;
-
-//     if ((*cmd_parts)->cmd_array != NULL)
-//     {
-//         i = 0;
-//         while ((*cmd_parts)->cmd_array[i] != NULL)
-//         {
-//             free((*cmd_parts)->cmd_array[i]);
-//             i++;
-//         }
-//         free((*cmd_parts)->cmd_array);
-//         (*cmd_parts)->cmd_array = NULL;
-//     }
-
-//     if ((*cmd_parts)->infiles_array != NULL)
-//     {
-//         i = 0;
-//         while ((*cmd_parts)->infiles_array[i] != NULL)
-//         {
-//             free((*cmd_parts)->infiles_array[i]);
-//             i++;
-//         }
-//         free((*cmd_parts)->infiles_array);
-//         (*cmd_parts)->infiles_array = NULL;
-//     }
-
-//     if ((*cmd_parts)->outfiles_array != NULL)
-//     {
-//         i = 0;
-//         while ((*cmd_parts)->outfiles_array[i] != NULL)
-//         {
-//             free((*cmd_parts)->outfiles_array[i]);
-//             i++;
-//         }
-//         free((*cmd_parts)->outfiles_array);
-//         (*cmd_parts)->outfiles_array = NULL;
-//     }
-
-//     if ((*cmd_parts)->outfiles_types != NULL)
-//     {
-//         free((*cmd_parts)->outfiles_types);
-//         (*cmd_parts)->outfiles_types = NULL;
-//     }
-
-//     free(*cmd_parts);
-//     *cmd_parts = NULL;
-// }
-
-char **copy_envp(char **envp) {
-    size_t count = 0;
-    while (envp[count] != NULL) {
-        count++;
-    }
-
-    char **new_envp = malloc((count + 1) * sizeof(char *));
-    if (!new_envp) {
-        perror("malloc failed");
-        return NULL;
-    }
-
-    for (size_t i = 0; i < count; i++) {
-        new_envp[i] = ft_strdup(envp[i]);
-        if (!new_envp[i]) {
-            perror("strdup failed");
-            while (i > 0) free(new_envp[--i]);
-            free(new_envp);
-            return NULL;
-        }
-    }
-
-    new_envp[count] = NULL;  // Null-terminate the array
-    return new_envp;
+	count = 0;
+	while (envp[count] != NULL)
+		count++;
+	new_envp = malloc((count + 1) * sizeof(char *));
+	if (!new_envp)
+	{
+		perror("malloc failed");
+		return (NULL);
+	}
+	i = 0;
+	while (i < count)
+	{
+		new_envp[i] = ft_strdup(envp[i]);
+		if (!new_envp[i])
+		{
+			perror("strdup failed");
+			while (i > 0)
+				free(new_envp[--i]);
+			free(new_envp);
+			return (NULL);
+		}
+		i++;
+	}
+	new_envp[count] = NULL;
+	return (new_envp);
 }
 
-void free_envp(char **envp) {
-	int i;
+void	free_envp(char **envp)
+{
+	int	i;
 
-    if (!envp)
-		return;  // Avoid freeing NULL
-    i = 0;
+	if (!envp)
+		return ;
+	i = 0;
 	while (envp[i] != NULL)
 	{
-        free(envp[i]);  // Free each string
+		free(envp[i]);
 		i++;
-    }
-	free(envp[i]); 
-    free(envp);  // Free the array itself
+	}
+	free(envp[i]);
+	free(envp);
 }
-
 
 // void	free_array(void **arr, int is_int, int j)
 // {
@@ -285,4 +238,57 @@ void free_envp(char **envp) {
 //     }
 
 //     free(cmd_parts);
+// }
+
+// void free_cmd_parts(t_cmd_parts **cmd_parts)
+// {
+//     int i;
+
+//     if (cmd_parts == NULL || *cmd_parts == NULL)
+//         return;
+
+//     if ((*cmd_parts)->cmd_array != NULL)
+//     {
+//         i = 0;
+//         while ((*cmd_parts)->cmd_array[i] != NULL)
+//         {
+//             free((*cmd_parts)->cmd_array[i]);
+//             i++;
+//         }
+//         free((*cmd_parts)->cmd_array);
+//         (*cmd_parts)->cmd_array = NULL;
+//     }
+
+//     if ((*cmd_parts)->infiles_array != NULL)
+//     {
+//         i = 0;
+//         while ((*cmd_parts)->infiles_array[i] != NULL)
+//         {
+//             free((*cmd_parts)->infiles_array[i]);
+//             i++;
+//         }
+//         free((*cmd_parts)->infiles_array);
+//         (*cmd_parts)->infiles_array = NULL;
+//     }
+
+//     if ((*cmd_parts)->outfiles_array != NULL)
+//     {
+//         i = 0;
+//         while ((*cmd_parts)->outfiles_array[i] != NULL)
+//         {
+//             free((*cmd_parts)->outfiles_array[i]);
+//             i++;
+//         }
+//         free((*cmd_parts)->outfiles_array);
+//         (*cmd_parts)->outfiles_array = NULL;
+//     }
+
+//     if ((*cmd_parts)->outfiles_types != NULL)
+//     {
+//         free((*cmd_parts)->outfiles_types);
+//         (*cmd_parts)->outfiles_types = NULL;
+//     }
+
+//     free(*cmd_parts);
+//     *cmd_parts = NULL;
 // }

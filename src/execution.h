@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:15 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/02 18:37:48 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/03 16:14:42 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +75,12 @@ int is_builtin(t_cmd_parts *cmd_parts);
 void	free_cmd_parts(t_cmd_parts **cmd_parts);
 char **copy_envp(char **envp);
 void free_envp(char **envp);
-void ft_add_envVar(char *var_eq_value, char ***envp);
+void ft_add_env_var(char *var_eq_value, char ***envp);
 int	ft_set(char *var_eq_value, char ***envp);
 int check_and_run_builtins_single(t_shell *shell, t_cmd_parts **cmd_parts, char ***env);
 char *ft_getenv(char *var_name, t_shell *shell);
 int	get_exit_code(void);
+int	run_pid(t_args *arg_struct, t_cmd_parts **cmd_parts, t_shell *shell, int is_builtin);
+int	run_single_builtin(t_cmd_parts **cmd_parts, t_shell *shell, char ***envp);
 
 #endif
