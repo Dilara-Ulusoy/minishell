@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 18:18:52 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/14 12:01:56 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/14 15:34:46 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,6 +184,13 @@ char	*parse_quotes(const char *line, int *index, t_shell *shell)
 	if (p.quote != 0)
 		return (check_unmatched_quote(&p));
 	p.result[p.result_index] = '\0';
+	if (p.result[0] == '\0')
+	{
+		free(p.result);
+		p.result = ft_strdup(" ");
+		if (p.result == NULL)
+			return (NULL);
+	}
 	*index = p.index;
 	return (p.result);
 }
