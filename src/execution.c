@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:03 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/14 08:46:31 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/14 12:23:16 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -589,6 +589,25 @@ int ft_cd(char *new_path, char ***envp)
 	return (EXIT_SUCCESS);
 }
 
+static int check_echo_option(char *str)
+{
+    int i;
+
+    if (str[0] == '-' && str[1] == 'n')
+    {
+        i = 2;
+        while (str[i] != '\0')
+        {
+            if (str[i] == 'n')
+                i++;
+            else
+                return (0);
+        }
+        return (1);
+    }
+    return (0);
+}
+
 int is_builtin(t_cmd_parts *cmd_parts)
 {
 	if (cmd_parts->cmd_array[0] == NULL)
@@ -667,7 +686,7 @@ int check_and_run_builtins(t_shell *shell, t_cmd_parts **cmd_parts, t_args *arg_
 	if (ft_strncmp((*cmd_parts)->cmd_array[0], "echo\0", 5) == 0)
 	{
 		k = 1;
-		while (((*cmd_parts)->cmd_array[k]) && (ft_strncmp((*cmd_parts)->cmd_array[k], "-n\0", 3) == 0))
+		while (((*cmd_parts)->cmd_array[k]) && (check_echo_option((*cmd_parts)->cmd_array[k]) == 1))
 			k++;
 		while((*cmd_parts)->cmd_array[k] != NULL)
 		{
@@ -678,7 +697,7 @@ int check_and_run_builtins(t_shell *shell, t_cmd_parts **cmd_parts, t_args *arg_
 				//printf(" ");
 			k++;
 		}
-		if (((*cmd_parts)->cmd_array[1] == NULL) || (((*cmd_parts)->cmd_array[1]) && (ft_strncmp((*cmd_parts)->cmd_array[1], "-n\0", 3) != 0)))
+		if (((*cmd_parts)->cmd_array[1] == NULL) || (((*cmd_parts)->cmd_array[1]) && (check_echo_option((*cmd_parts)->cmd_array[1]) == 0)))
 			ft_putstr_fd("\n", STDOUT_FILENO);
 			//printf("\n");
 		free_cmd_parts(cmd_parts);
@@ -827,7 +846,7 @@ int check_and_run_builtins_single(t_shell *shell, t_cmd_parts **cmd_parts, char 
 	if (ft_strncmp((*cmd_parts)->cmd_array[0], "echo\0", 5) == 0)
 	{
 		k = 1;
-		while (((*cmd_parts)->cmd_array[k]) && (ft_strncmp((*cmd_parts)->cmd_array[k], "-n\0", 3) == 0))
+		while (((*cmd_parts)->cmd_array[k]) && (check_echo_option((*cmd_parts)->cmd_array[k]) == 1))
 			k++;
 		while((*cmd_parts)->cmd_array[k] != NULL)
 		{
@@ -838,7 +857,7 @@ int check_and_run_builtins_single(t_shell *shell, t_cmd_parts **cmd_parts, char 
 				//printf(" ");
 			k++;
 		}
-		if (((*cmd_parts)->cmd_array[1] == NULL) || (((*cmd_parts)->cmd_array[1]) && (ft_strncmp((*cmd_parts)->cmd_array[1], "-n\0", 3) != 0)))
+		if (((*cmd_parts)->cmd_array[1] == NULL) || (((*cmd_parts)->cmd_array[1]) && (check_echo_option((*cmd_parts)->cmd_array[1]) == 0)))
 			ft_putstr_fd("\n", STDOUT_FILENO);
 			//printf("\n");
 		free_cmd_parts(cmd_parts);
