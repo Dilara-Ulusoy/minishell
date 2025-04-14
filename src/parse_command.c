@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 10:22:37 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/03 18:16:59 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/14 08:19:49 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ t_ast_node	*parse_command(t_parser *p, t_shell *shell)
 		return (NULL);
 	if (handle_initial_redirection(p, &io_list, shell) == -1)
 		return (NULL);
-	if (p->current_token->type == TOKEN_WORD)
+	if (p->current_token != NULL && p->current_token->type == TOKEN_WORD)
 	{
 		cmd_args = handle_command_string(p, io_list);
 		if (!cmd_args)

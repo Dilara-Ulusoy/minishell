@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:03 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/03 17:38:24 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/14 08:46:31 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -591,6 +591,8 @@ int ft_cd(char *new_path, char ***envp)
 
 int is_builtin(t_cmd_parts *cmd_parts)
 {
+	if (cmd_parts->cmd_array[0] == NULL)
+		return (0);
 	if (ft_strncmp(cmd_parts->cmd_array[0], "echo\0", 5) == 0)
 		return (1);
 	else if (ft_strncmp(cmd_parts->cmd_array[0], "exit\0", 5) == 0)

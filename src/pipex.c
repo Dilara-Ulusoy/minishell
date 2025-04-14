@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 16:07:31 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/03 16:14:33 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/14 09:07:32 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,15 @@
 
 static int	command_not_found(t_cmd_parts **cmd_parts, t_args *arg_struct)
 {
-	if ((*cmd_parts)->cmd_array[0] == NULL)
-		ft_putstr_fd(": command not found\n", 2);
-	else
+	if ((*cmd_parts)->cmd_array[0] != NULL)
 	{
-		ft_putstr_fd((*cmd_parts)->cmd_array[0], 2);
-		ft_putstr_fd(": command not found\n", 2);
+		if ((*cmd_parts)->cmd_array[0][0] == '\0')
+			ft_putstr_fd(": command not found\n", 2);
+		else
+		{
+			ft_putstr_fd((*cmd_parts)->cmd_array[0], 2);
+			ft_putstr_fd(": command not found\n", 2);
+		}
 	}
 	free_cmd_parts(cmd_parts);
 	free(arg_struct->pids);
@@ -112,6 +115,11 @@ int	run_pid(t_args *arg_struct, t_cmd_parts **cmd_parts, t_shell *shell,
 		free(arg_struct);
 		return (ret);
 	}
+	// else if (command_array[0] == NULL)
+	// {
+	// 	free_cmd_parts(cmd_parts);
+	// 	return (EXIT_SUCCESS);
+	// }
 	else if (path != NULL)
 		return (execute_command(path, cmd_parts, arg_struct));
 	else
