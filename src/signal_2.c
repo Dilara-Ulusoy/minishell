@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 15:43:28 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/15 15:43:31 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/15 20:19:53 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ int	set_signals(int *exit_code, int type)
 	{
 		if (signal(SIGINT, SIG_DFL) == SIG_ERR)
 			return (0);
-		if (signal(SIGQUIT, SIG_DFL) == SIG_ERR)
+		if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
 			return (0);
 	}
 	return (1);
