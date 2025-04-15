@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:03 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/14 12:23:16 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/15 13:25:29 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -323,19 +323,31 @@ t_cmd_parts *get_command_array(const t_token *head, int command_number)
 // 	return (cmd_parts);
 // }
 
-int ft_pwd()
+int ft_pwd(t_shell *shell)
 {
 	char cwd[PATH_MAX];
+	char *env_var_value;
 
-	if (getcwd(cwd, sizeof(cwd)) != NULL)
+	env_var_value = ft_getenv("PWD", shell);
+	if (env_var_value == NULL)
 	{
-        printf("%s\n", cwd);
-		return (EXIT_SUCCESS);
+		if (getcwd(cwd, sizeof(cwd)) != NULL)
+		{
+        	printf("%s\n", cwd);
+			return (EXIT_SUCCESS);
+		}
+    	else
+		{
+        	write(2, "getcwd() error\n", 15);
+			return (EXIT_FAILURE);
+		}
 	}
-    else
+	else
 	{
-        write(2, "getcwd() error\n", 15);
-		return (EXIT_FAILURE);
+		printf("%s\n", env_var_value);
+		free(env_var_value);
+		env_var_value=NULL;
+		return (EXIT_SUCCESS);
 	}
 }
 
@@ -770,7 +782,7 @@ int check_and_run_builtins(t_shell *shell, t_cmd_parts **cmd_parts, t_args *arg_
 	}
 	else if (ft_strncmp((*cmd_parts)->cmd_array[0], "pwd\0", 4) == 0)
 	{
-		ft_pwd();
+		ft_pwd(shell);
 		free_cmd_parts(cmd_parts);
 		//cmd_parts = NULL;
 	}
@@ -927,7 +939,7 @@ int check_and_run_builtins_single(t_shell *shell, t_cmd_parts **cmd_parts, char 
 	}
 	else if (ft_strncmp((*cmd_parts)->cmd_array[0], "pwd\0", 4) == 0)
 	{
-		ft_pwd();
+		ft_pwd(shell);
 		free_cmd_parts(cmd_parts);
 		//cmd_parts = NULL;
 	}

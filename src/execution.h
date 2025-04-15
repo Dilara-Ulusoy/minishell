@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:15 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/03 17:37:50 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/15 13:25:58 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ typedef struct s_args
 //void count_pipes(t_ast_node *node, int *i);
 t_cmd_parts *count_tokens(const t_token *head, int command_number);
 t_cmd_parts *get_command_array(const t_token *head, int command_number);
-int ft_pwd();
+int ft_pwd(t_shell *shell);
 int is_number(char *str);
 int ft_exit(char *exit_code);
 int ft_env(char **envp);
