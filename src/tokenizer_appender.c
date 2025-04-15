@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_appender.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/30 14:04:22 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/03 14:25:20 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/15 16:41:42 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ int	parse_word(t_token **head, t_shell *shell)
 	token = (t_token *)malloc(sizeof(t_token));
 	if (!word || !token)
 	{
-		ft_putstr_fd("Memory allocation error in parse_word\n", STDERR_FILENO);
+		ft_putstr_fd("Error: Token is null\n", STDERR_FILENO);
 		free(word);
 		free(token);
 		free_tokens(head);
