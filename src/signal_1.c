@@ -1,31 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signal.h                                           :+:      :+:    :+:   */
+/*   signal_1.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/15 15:45:23 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/15 15:46:45 by dakcakoc         ###   ########.fr       */
+/*   Created: 2025/04/15 15:42:05 by dakcakoc          #+#    #+#             */
+/*   Updated: 2025/04/15 15:44:02 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SIGNAL_H
-# define SIGNAL_H
+#include "minishell.h"
 
-# include <signal.h>
-# include <unistd.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-# include <stdlib.h>
-# include <errno.h>
+int	event(void)
+{
+	return (0);
+}
 
-# define SIGNAL_PARENT 1
-# define SIGNAL_HEREDOC 2
-# define SIGNAL_CHILD 3
-
-extern int	g_signal;
-
-int	set_signals(int *exit_code, int type);
-
-#endif
+int	init_term_and_signal(int argc, char **argv, int *exit_code)
+{
+	if (argc > 1)
+	{
+		*exit_code = 127;
+		return (ft_putstr_fd("Usage: ./minishell\n", 2), 1);
+	}
+	(void)argv;
+	set_signals(exit_code, SIGNAL_PARENT);
+	return (0);
+}

@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:59:15 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/15 13:41:39 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/15 15:58:03 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ typedef struct s_buffer
 char	*get_input(const char *prompt);
 void	init_shell(t_shell *shell, char ***envp);
 int	init_term_and_signal(int argc, char **argv, int *exit_code);
+int	event(void);
 
 /* Environment Variable Expansion */
 char	*get_var_name(const char *line, int *index);
@@ -81,6 +82,8 @@ char	*handle_special_cases(const char *line, int *index, int start, t_shell *she
 char	*join_string_with_quoted_if_no_space(const char *line,
 			int *index, int start, t_shell *shell);
 char	*parse_quotes(const char *line, int *index, t_shell *shell);
+char	*process_quote_loop(t_parse_quote *p, t_shell *shell);
+char	*check_unmatched_quote(t_parse_quote *p);
 int		init_parse_quote(t_parse_quote *p, const char *line, int *index);
 
 /* Word Parsing */
