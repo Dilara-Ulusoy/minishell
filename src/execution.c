@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:03 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/15 16:23:07 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/15 20:41:02 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -371,7 +371,13 @@ int is_number(char *str)
 	if (str[0] == '+')
 		str++;
 	if (strncmp(str, str_check, ft_strlen(str)) != 0)
+	{
+		free(str_check);
+		str_check = NULL;
 		return (0);
+	}
+	free(str_check);
+	str_check = NULL;
 	return (1);
 }
 
@@ -379,7 +385,7 @@ int ft_exit(char *exit_code)
 {
 	int exit_number;
 
-	ft_putstr_fd("exit\n", 2);
+	ft_putstr_fd("exit\n", 1);
 	if (is_number(exit_code) == 0)
 	{
 		ft_putstr_fd("exit: ", 2);
@@ -732,9 +738,10 @@ int check_and_run_builtins(t_shell *shell, t_cmd_parts **cmd_parts, t_args *arg_
 		//ft_putstr_fd("exit\n", 2);
 		if (len == 1)
 		{
-			ft_putstr_fd("exit\n", 2);
+			ft_putstr_fd("exit\n", 1);
 			free_cmd_parts(cmd_parts);
 			free(arg_struct->pids);
+			free_envp(arg_struct->envp);
 			free(arg_struct);
 			//cmd_parts = NULL;
 			cleanup_shell(shell);
@@ -745,6 +752,7 @@ int check_and_run_builtins(t_shell *shell, t_cmd_parts **cmd_parts, t_args *arg_
 			exit_code = ft_exit((*cmd_parts)->cmd_array[1]);
 			free_cmd_parts(cmd_parts);
 			free(arg_struct->pids);
+			free_envp(arg_struct->envp);
 			free(arg_struct);
 			//cmd_parts = NULL;
 			cleanup_shell(shell);
@@ -771,6 +779,7 @@ int check_and_run_builtins(t_shell *shell, t_cmd_parts **cmd_parts, t_args *arg_
 				free_cmd_parts(cmd_parts);
 				//cmd_parts = NULL;
 				free(arg_struct->pids);
+				free_envp(arg_struct->envp);
 				free(arg_struct);
 				cleanup_shell(shell);
 				exit(2);
@@ -895,7 +904,7 @@ int check_and_run_builtins_single(t_shell *shell, t_cmd_parts **cmd_parts, char 
 		//ft_putstr_fd("exit\n", 2);
 		if (len == 1)
 		{
-			ft_putstr_fd("exit\n", 2);
+			ft_putstr_fd("exit\n", 1);
 			free_cmd_parts(cmd_parts);
 			free_envp(*envp);
 			//cmd_parts = NULL;

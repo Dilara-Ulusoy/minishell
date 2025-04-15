@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 10:37:58 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/15 16:50:39 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/15 20:53:20 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,21 @@ static long long	ft_atoi_main_longlong(char *str)
 
 long long	ft_atoi_longlong(char *str)
 {
-	if (ft_strncmp(str, ft_itoa_longlong(LLONG_MIN), ft_strlen(str)) == 0)
+	char	*itoa_str;
+
+	itoa_str = ft_itoa_longlong(LLONG_MIN);
+	if (ft_strncmp(str, itoa_str, ft_strlen(str)) == 0)
+	{
+		free (itoa_str);
+		itoa_str = NULL;
 		return (LLONG_MIN);
+	}
 	else
+	{
+		free (itoa_str);
+		itoa_str = NULL;
 		return (ft_atoi_main_longlong(str));
+	}
 }
 
 /*
