@@ -1,0 +1,2647 @@
+c2r6p4% ./minishell
+minishell$ exit -1
+exit
+c2r6p4% echo $?
+156
+c2r6p4% ./minishell
+minishell$ exit 99999999999999999999999999999999999
+exit
+exit: 99999999999999999999999999999999999: numeric argument required
+c2r6p4% echo $?
+2
+c2r6p4% ./minishell
+minishell$ exit 86868 0797
+exit
+exit: too many arguments
+minishell$ echo $?
+1
+minishell$ sleep 3 | exit | echo hihi
+exit
+hihi
+minishell$ echo hihi > outfile1
+minishell$ cat outfile1
+hihi
+minishell$ echo-n hihi > outfile2
+echo-n: command not found
+minishell$ echo -n hihi > outfile2
+minishell$ cat outfile2
+hihiminishell$ rm outfile2
+minishell$ echo -n hihi > outfile2
+minishell$ ls
+1	      file   file2    file.txt	leak_checker.sh  local.supp  minishell	       obj	outfile   outfile2
+commands.txt  file1  fileout  infile	Libft		 Makefile    minishell_tester  outecho	outfile1  src
+minishell$ rm outfile2
+minishell$ echo hihi > $VAR
+minishell: ambiguous redirect
+minishell$ export
+declare -x SYSTEMD_EXEC_PID=1906633
+declare -x SSH_AUTH_SOCK=/run/user/5928/keyring/ssh
+declare -x SESSION_MANAGER=local/c2r6p4.hive.fi:@/tmp/.ICE-unix/1906609,unix/c2r6p4.hive.fi:/tmp/.ICE-unix/1906609
+declare -x GNOME_TERMINAL_SCREEN=/org/gnome/Terminal/screen/ecab1c13_1449_477e_8aa3_1f55dd7a6dd1
+declare -x LANG=en_US.UTF-8
+declare -x LANGUAGE=en
+declare -x XDG_CURRENT_DESKTOP=ubuntu:GNOME
+declare -x FT_HOOK_NAME=login-user
+declare -x FT_HOOK_PATHNAME=login-user.d
+declare -x XDG_GREETER_DATA_DIR=/var/lib/lightdm-data/htopa
+declare -x LIBVIRT_DEFAULT_URI=qemu:///system
+declare -x GPG_AGENT_INFO=/run/user/5928/gnupg/S.gpg-agent:0:1
+declare -x DESKTOP_SESSION=ubuntu
+declare -x QT_IM_MODULE=ibus
+declare -x XDG_MENU_PREFIX=gnome-
+declare -x XDG_SESSION_PATH=/org/freedesktop/DisplayManager/Session13
+declare -x PWD=/home/htopa/Desktop/Git/minishell4
+declare -x USER=htopa
+declare -x DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/5928/bus
+declare -x DOCKER_HOST=unix:///run/user/5928/docker.sock
+declare -x SSH_AGENT_LAUNCHER=gnome-keyring
+declare -x GTK_MODULES=gail:atk-bridge
+declare -x XDG_CONFIG_DIRS=/etc/xdg/xdg-ubuntu:/etc/xdg
+declare -x GTK_IM_MODULE=ibus
+declare -x XDG_SESSION_DESKTOP=ubuntu
+declare -x QT_ACCESSIBILITY=1
+declare -x GNOME_DESKTOP_SESSION_ID=this-is-deprecated
+declare -x KRB5CCNAME=FILE:/tmp/krb5cc_5928_Gqr8EB
+declare -x LOGNAME=htopa
+declare -x XDG_SEAT_PATH=/org/freedesktop/DisplayManager/Seat0
+declare -x GNOME_TERMINAL_SERVICE=:1.84
+declare -x HOME=/home/htopa
+declare -x PATH=/home/htopa/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+declare -x XDG_DATA_DIRS=/usr/share/ubuntu:/usr/share/gnome:/home/htopa/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share:/var/lib/snapd/desktop
+declare -x XMODIFIERS=@im=ibus
+declare -x XDG_RUNTIME_DIR=/run/user/5928
+declare -x XDG_SESSION_TYPE=x11
+declare -x SHELL=/bin/zsh
+declare -x VTE_VERSION=6800
+declare -x MACADDRESS=38:f9:d3:92:2f:68
+declare -x GDM_LANG=en
+declare -x XAUTHORITY=/home/htopa/.Xauthority
+declare -x COLORTERM=truecolor
+declare -x XDG_SESSION_CLASS=user
+declare -x TERM=xterm-256color
+declare -x GDMSESSION=ubuntu
+declare -x DISPLAY=:0
+declare -x SHLVL=1
+declare -x OLDPWD=/home/htopa/Desktop/Git/minishell4/minishell_tester
+declare -x MAIL=htopa@student.hive.fi
+declare -x _=/home/htopa/Desktop/Git/minishell4/./minishell
+minishell$ ls
+1	      file   file2    file.txt	leak_checker.sh  local.supp  minishell	       obj	outfile   src
+commands.txt  file1  fileout  infile	Libft		 Makefile    minishell_tester  outecho	outfile1
+minishell$ touch outfile1 outfile2
+minishell$ export VAR="outfile1 outfile2"
+minishell$ ech hihihihihi > $VAR
+ech: command not found
+minishell$ echo hihihihihi > $VAR
+minishell$ echo $?
+0
+minishell$ ls
+ 1	        file    file2	  file.txt   leak_checker.sh   local.supp   minishell	       obj	 outfile   'outfile1 outfile2'	 src
+ commands.txt   file1   fileout   infile     Libft	       Makefile     minishell_tester   outecho	 outfile1   outfile2
+minishell$ echo hihihihihi > "$VAR"
+minishell$ ls
+ 1	        file    file2	  file.txt   leak_checker.sh   local.supp   minishell	       obj	 outfile   'outfile1 outfile2'	 src
+ commands.txt   file1   fileout   infile     Libft	       Makefile     minishell_tester   outecho	 outfile1   outfile2
+minishell$ rm 'outfile1 outfile2'
+minishell$ export | grep VAR
+declare -x VAR=outfile1 outfile2
+minishell$ export VAR="cat                 dog"
+minishell$ export | grep VAR
+declare -x VAR=cat                 dog
+minishell$ echo $VAR
+cat                 dog
+minishell$ ls
+1	      file   file2    file.txt	leak_checker.sh  local.supp  minishell	       obj	outfile   outfile2
+commands.txt  file1  fileout  infile	Libft		 Makefile    minishell_tester  outecho	outfile1  src
+minishell$ /bin/ls
+1	      file   file2    file.txt	leak_checker.sh  local.supp  minishell	       obj	outfile   outfile2
+commands.txt  file1  fileout  infile	Libft		 Makefile    minishell_tester  outecho	outfile1  src
+minishell$ export VAR2
+minishell$ export | grep VAR
+declare -x VAR=cat                 dog
+declare -x VAR2
+minishell$ export VAR
+minishell$ export | greep VAR
+greep: command not found
+minishell$ export | grep VAR
+declare -x VAR=cat                 dog
+declare -x VAR2
+minishell$ unset VAR VAR2
+minishell$ export | grep VAR
+minishell$ unset PATH
+minishell$ ls
+ls: No such file or directory
+minishell$ echo $?
+127
+free(): double free detected in tcache 2
+zsh: IOT instruction (core dumped)  ./minishell
+c2r6p4% export PATH=/home/htopa/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+c2r6p4% yes | ls
+1	      file   file2    file.txt	leak_checker.sh  local.supp  minishell	       obj	outfile   outfile2
+commands.txt  file1  fileout  infile	Libft		 Makefile    minishell_tester  outecho	outfile1  src
+c2r6p4% echo $?
+0
+c2r6p4% pwd
+/home/htopa/Desktop/Git/minishell4
+c2r6p4% mkdir parent
+c2r6p4% cd parent
+c2r6p4% mkdir child
+c2r6p4% cd chld
+cd: no such file or directory: chld
+c2r6p4% cd child
+c2r6p4% cd ..
+c2r6p4% pwd
+.
+c2r6p4% pwd
+.
+c2r6p4% cd ..
+c2r6p4% pwd
+/home/htopa/Desktop/Git/minishell4
+c2r6p4% cd -
+~/Desktop/Git/minishell4
+c2r6p4% ls      
+1	      file   file2    file.txt	leak_checker.sh  local.supp  minishell	       obj	outfile   outfile2
+commands.txt  file1  fileout  infile	Libft		 Makefile    minishell_tester  outecho	outfile1  src
+c2r6p4% cd Libft 
+c2r6p4% cd -
+~/Desktop/Git/minishell4
+c2r6p4% 
+c2r6p4% echo $?
+130
+c2r6p4% 
+c2r6p4%   
+c2r6p4% 
+c2r6p4% echo $?
+130
+c2r6p4% 
+c2r6p4% 
+c2r6p4% 
+c2r6p4% echo $?
+0
+c2r6p4%  
+c2r6p4% echo $?
+130
+c2r6p4% 
+c2r6p4% echo $?
+0
+c2r6p4% echo $?
+0
+c2r6p4% ./minishell
+minishell$ ^C
+minishell$ echo $?
+130
+minishell$ 
+minishell$ echo $?
+0
+minishell$ mkdir parent
+minishell$ cd parent
+minishell$ mkdir child
+minishell$ cd chlild
+chlild: No such file or directory
+minishell$ cd child
+minishell$ pwd
+/home/htopa/Desktop/Git/minishell4/parent/child
+minishell$ cd ..
+getcwd() error.
+minishell$ echo $?
+1
+minishell$ cd ..
+minishell$ pwd
+/home/htopa/Desktop/Git/minishell4
+minishell$ cd Libft/
+minishell$ cd -
+-: No such file or directory
+minishell$ echo $?
+1
+minishell$ 
+c2r6p4% echo $?
+0
+c2r6p4% ./minishell
+minishell$ sleep 5 | sleep 10 | echo hihi
+hihi
+^C
+c2r6p4% echo $?
+130
+c2r6p4% ./minishell
+minishell$ sleep 5 | sleep 10 | echo hihi
+hihi
+^\zsh: quit (core dumped)  ./minishell
+c2r6p4% valgrind --leak-check=full --show-leak-kinds=all --supressions=/home/htopa/Desktop/Git/minishell4/local.supp --track-fds=yes --trace-children=yes ./minishell
+valgrind: Unknown option: --supressions=/home/htopa/Desktop/Git/minishell4/local.supp
+valgrind: Use --help for more information or consult the user manual.
+c2r6p4% valgrind --leak-check=full --show-leak-kinds=all --suppressions=/home/htopa/Desktop/Git/minishell4/local.supp --track-fds=yes --trace-children=yes ./minishell
+==1975149== Memcheck, a memory error detector
+==1975149== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1975149== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1975149== Command: ./minishell
+==1975149== 
+minishell$ exit
+exit
+==1975149== 
+==1975149== FILE DESCRIPTORS: 5 open (3 std) at exit.
+==1975149== Open file descriptor 4: /dev/pts/2
+==1975149==    at 0x49D9FEB: dup (syscall-template.S:120)
+==1975149==    by 0x401EA1: execute_commands (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975149==    by 0x405C38: parse_and_process_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975149==    by 0x405D4F: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975149== 
+==1975149== Open file descriptor 3: /dev/pts/2
+==1975149==    at 0x49D9FEB: dup (syscall-template.S:120)
+==1975149==    by 0x401E94: execute_commands (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975149==    by 0x405C38: parse_and_process_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975149==    by 0x405D4F: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975149== 
+==1975149== 
+==1975149== HEAP SUMMARY:
+==1975149==     in use at exit: 208,213 bytes in 225 blocks
+==1975149==   total heap usage: 531 allocs, 306 frees, 231,839 bytes allocated
+==1975149== 
+==1975149== LEAK SUMMARY:
+==1975149==    definitely lost: 0 bytes in 0 blocks
+==1975149==    indirectly lost: 0 bytes in 0 blocks
+==1975149==      possibly lost: 0 bytes in 0 blocks
+==1975149==    still reachable: 0 bytes in 0 blocks
+==1975149==         suppressed: 208,213 bytes in 225 blocks
+==1975149== 
+==1975149== For lists of detected and suppressed errors, rerun with: -s
+==1975149== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+c2r6p4% valgrind --leak-check=full --show-leak-kinds=all --suppressions=/home/htopa/Desktop/Git/minishell4/local.supp --track-fds=yes --trace-children=yes ./minishell
+==1975153== Memcheck, a memory error detector
+==1975153== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1975153== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1975153== Command: ./minishell
+==1975153== 
+minishell$ echo hihi
+hihi
+minishell$ 
+==1975153== 
+==1975153== FILE DESCRIPTORS: 3 open (3 std) at exit.
+==1975153== 
+==1975153== HEAP SUMMARY:
+==1975153==     in use at exit: 208,218 bytes in 225 blocks
+==1975153==   total heap usage: 527 allocs, 302 frees, 231,805 bytes allocated
+==1975153== 
+==1975153== LEAK SUMMARY:
+==1975153==    definitely lost: 0 bytes in 0 blocks
+==1975153==    indirectly lost: 0 bytes in 0 blocks
+==1975153==      possibly lost: 0 bytes in 0 blocks
+==1975153==    still reachable: 0 bytes in 0 blocks
+==1975153==         suppressed: 208,218 bytes in 225 blocks
+==1975153== 
+==1975153== For lists of detected and suppressed errors, rerun with: -s
+==1975153== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+c2r6p4% valgrind --leak-check=full --show-leak-kinds=all --suppressions=/home/htopa/Desktop/Git/minishell4/local.supp --track-fds=yes --trace-children=yes ./minishell
+==1975179== Memcheck, a memory error detector
+==1975179== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1975179== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1975179== Command: ./minishell
+==1975179== 
+minishell$ ls
+==1975181== Memcheck, a memory error detector
+==1975181== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1975181== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1975181== Command: /usr/bin/ls
+==1975181== 
+1	      file   file2    file.txt	leak_checker.sh  local.supp  minishell	       obj	outfile   outfile2
+commands.txt  file1  fileout  infile	Libft		 Makefile    minishell_tester  outecho	outfile1  src
+==1975181== 
+==1975181== FILE DESCRIPTORS: 1 open (1 std) at exit.
+==1975181== 
+==1975181== HEAP SUMMARY:
+==1975181==     in use at exit: 28,407 bytes in 27 blocks
+==1975181==   total heap usage: 64 allocs, 37 frees, 67,962 bytes allocated
+==1975181== 
+==1975181== 56 bytes in 1 blocks are still reachable in loss record 1 of 8
+==1975181==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975181==    by 0x115DB8: ??? (in /usr/bin/ls)
+==1975181==    by 0x115DE9: ??? (in /usr/bin/ls)
+==1975181==    by 0x10E4D9: ??? (in /usr/bin/ls)
+==1975181==    by 0x48C6D8F: (below main) (libc_start_call_main.h:58)
+==1975181== 
+==1975181== 56 bytes in 1 blocks are still reachable in loss record 2 of 8
+==1975181==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975181==    by 0x115DB8: ??? (in /usr/bin/ls)
+==1975181==    by 0x115DE9: ??? (in /usr/bin/ls)
+==1975181==    by 0x10D132: ??? (in /usr/bin/ls)
+==1975181==    by 0x48C6D8F: (below main) (libc_start_call_main.h:58)
+==1975181== 
+==1975181== 128 bytes in 1 blocks are still reachable in loss record 3 of 8
+==1975181==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975181==    by 0x1138F9: ??? (in /usr/bin/ls)
+==1975181==    by 0x10D236: ??? (in /usr/bin/ls)
+==1975181==    by 0x48C6D8F: (below main) (libc_start_call_main.h:58)
+==1975181== 
+==1975181== 167 bytes in 20 blocks are still reachable in loss record 4 of 8
+==1975181==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975181==    by 0x11665E: ??? (in /usr/bin/ls)
+==1975181==    by 0x116C9F: ??? (in /usr/bin/ls)
+==1975181==    by 0x11A20E: ??? (in /usr/bin/ls)
+==1975181==    by 0x10D33F: ??? (in /usr/bin/ls)
+==1975181==    by 0x48C6D8F: (below main) (libc_start_call_main.h:58)
+==1975181== 
+==1975181== 480 bytes in 1 blocks are still reachable in loss record 5 of 8
+==1975181==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975181==    by 0x115EBB: ??? (in /usr/bin/ls)
+==1975181==    by 0x11A067: ??? (in /usr/bin/ls)
+==1975181==    by 0x10D33F: ??? (in /usr/bin/ls)
+==1975181==    by 0x48C6D8F: (below main) (libc_start_call_main.h:58)
+==1975181== 
+==1975181== 960 bytes in 1 blocks are still reachable in loss record 6 of 8
+==1975181==    at 0x48487A9: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975181==    by 0x1161BF: ??? (in /usr/bin/ls)
+==1975181==    by 0x119ABF: ??? (in /usr/bin/ls)
+==1975181==    by 0x10D33F: ??? (in /usr/bin/ls)
+==1975181==    by 0x48C6D8F: (below main) (libc_start_call_main.h:58)
+==1975181== 
+==1975181== 6,560 bytes in 1 blocks are still reachable in loss record 7 of 8
+==1975181==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975181==    by 0x116236: ??? (in /usr/bin/ls)
+==1975181==    by 0x119ABF: ??? (in /usr/bin/ls)
+==1975181==    by 0x10D33F: ??? (in /usr/bin/ls)
+==1975181==    by 0x48C6D8F: (below main) (libc_start_call_main.h:58)
+==1975181== 
+==1975181== 20,000 bytes in 1 blocks are still reachable in loss record 8 of 8
+==1975181==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975181==    by 0x115DB8: ??? (in /usr/bin/ls)
+==1975181==    by 0x10D2A0: ??? (in /usr/bin/ls)
+==1975181==    by 0x48C6D8F: (below main) (libc_start_call_main.h:58)
+==1975181== 
+==1975181== LEAK SUMMARY:
+==1975181==    definitely lost: 0 bytes in 0 blocks
+==1975181==    indirectly lost: 0 bytes in 0 blocks
+==1975181==      possibly lost: 0 bytes in 0 blocks
+==1975181==    still reachable: 28,407 bytes in 27 blocks
+==1975181==         suppressed: 0 bytes in 0 blocks
+==1975181== 
+==1975181== For lists of detected and suppressed errors, rerun with: -s
+==1975181== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+minishell$ unset VAR3
+minishell$ echo $?
+0
+minishell$ export VAR VAR1= VAR2=hihi VAR3
+minishell$ export | grep VAR
+==1975203== Memcheck, a memory error detector
+==1975203== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1975203== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1975203== Command: /usr/bin/grep VAR
+==1975203== 
+==1975202== 
+==1975202== FILE DESCRIPTORS: 3 open (3 std) at exit.
+==1975202== 
+==1975202== HEAP SUMMARY:
+==1975202==     in use at exit: 208,424 bytes in 237 blocks
+==1975202==   total heap usage: 970 allocs, 733 frees, 246,397 bytes allocated
+==1975202== 
+==1975202== LEAK SUMMARY:
+==1975202==    definitely lost: 0 bytes in 0 blocks
+==1975202==    indirectly lost: 0 bytes in 0 blocks
+==1975202==      possibly lost: 0 bytes in 0 blocks
+==1975202==    still reachable: 0 bytes in 0 blocks
+==1975202==         suppressed: 208,424 bytes in 237 blocks
+==1975202== 
+==1975202== For lists of detected and suppressed errors, rerun with: -s
+==1975202== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+declare -x VAR
+declare -x VAR1=
+declare -x VAR2=hihi
+declare -x VAR3
+==1975203== 
+==1975203== FILE DESCRIPTORS: 1 open (1 std) at exit.
+==1975203== 
+==1975203== HEAP SUMMARY:
+==1975203==     in use at exit: 113,244 bytes in 32 blocks
+==1975203==   total heap usage: 125 allocs, 93 frees, 139,588 bytes allocated
+==1975203== 
+==1975203== 4 bytes in 1 blocks are still reachable in loss record 1 of 26
+==1975203==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975203==    by 0x12751E: ??? (in /usr/bin/grep)
+==1975203==    by 0x10E638: ??? (in /usr/bin/grep)
+==1975203==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1975203== 
+==1975203== 4 bytes in 1 blocks are indirectly lost in loss record 2 of 26
+==1975203==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975203==    by 0x49E2262: re_node_set_init_copy (regex_internal.c:1034)
+==1975203==    by 0x49E2262: create_cd_newstate (regex_internal.c:1690)
+==1975203==    by 0x49E2262: re_acquire_state_context (regex_internal.c:1562)
+==1975203==    by 0x49EC1B1: create_initial_state (regcomp.c:1050)
+==1975203==    by 0x49EC1B1: re_compile_internal (regcomp.c:806)
+==1975203==    by 0x49EC82E: re_compile_pattern (regcomp.c:230)
+==1975203==    by 0x1111B1: ??? (in /usr/bin/grep)
+==1975203==    by 0x119469: ??? (in /usr/bin/grep)
+==1975203==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1975203==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1975203== 
+==1975203== 4 bytes in 1 blocks are indirectly lost in loss record 3 of 26
+==1975203==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975203==    by 0x49DB622: re_node_set_alloc (regex_internal.c:973)
+==1975203==    by 0x49DB622: register_state (regex_internal.c:1583)
+==1975203==    by 0x49E2445: create_cd_newstate (regex_internal.c:1746)
+==1975203==    by 0x49E2445: re_acquire_state_context (regex_internal.c:1562)
+==1975203==    by 0x49EC1B1: create_initial_state (regcomp.c:1050)
+==1975203==    by 0x49EC1B1: re_compile_internal (regcomp.c:806)
+==1975203==    by 0x49EC82E: re_compile_pattern (regcomp.c:230)
+==1975203==    by 0x1111B1: ??? (in /usr/bin/grep)
+==1975203==    by 0x119469: ??? (in /usr/bin/grep)
+==1975203==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1975203==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1975203== 
+==1975203== 16 bytes in 1 blocks are still reachable in loss record 4 of 26
+==1975203==    at 0x48487A9: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975203==    by 0x11CA44: ??? (in /usr/bin/grep)
+==1975203==    by 0x1217DF: ??? (in /usr/bin/grep)
+==1975203==    by 0x1199E1: ??? (in /usr/bin/grep)
+==1975203==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1975203==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1975203== 
+==1975203== 16 bytes in 1 blocks are indirectly lost in loss record 5 of 26
+==1975203==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975203==    by 0x49EB545: analyze (regcomp.c:1169)
+==1975203==    by 0x49EB545: re_compile_internal (regcomp.c:795)
+==1975203==    by 0x49EC82E: re_compile_pattern (regcomp.c:230)
+==1975203==    by 0x1111B1: ??? (in /usr/bin/grep)
+==1975203==    by 0x119469: ??? (in /usr/bin/grep)
+==1975203==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1975203==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1975203== 
+==1975203== 16 bytes in 1 blocks are indirectly lost in loss record 6 of 26
+==1975203==    at 0x48487A9: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975203==    by 0x49DB713: register_state (regex_internal.c:1598)
+==1975203==    by 0x49E2445: create_cd_newstate (regex_internal.c:1746)
+==1975203==    by 0x49E2445: re_acquire_state_context (regex_internal.c:1562)
+==1975203==    by 0x49EC1B1: create_initial_state (regcomp.c:1050)
+==1975203==    by 0x49EC1B1: re_compile_internal (regcomp.c:806)
+==1975203==    by 0x49EC82E: re_compile_pattern (regcomp.c:230)
+==1975203==    by 0x1111B1: ??? (in /usr/bin/grep)
+==1975203==    by 0x119469: ??? (in /usr/bin/grep)
+==1975203==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1975203==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1975203== 
+==1975203== 16 bytes in 4 blocks are indirectly lost in loss record 7 of 26
+==1975203==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975203==    by 0x49E06FF: re_node_set_alloc (regex_internal.c:973)
+==1975203==    by 0x49E06FF: calc_eclosure_iter (regcomp.c:1699)
+==1975203==    by 0x49EBD13: calc_eclosure (regcomp.c:1677)
+==1975203==    by 0x49EBD13: analyze (regcomp.c:1204)
+==1975203==    by 0x49EBD13: re_compile_internal (regcomp.c:795)
+==1975203==    by 0x49EC82E: re_compile_pattern (regcomp.c:230)
+==1975203==    by 0x1111B1: ??? (in /usr/bin/grep)
+==1975203==    by 0x119469: ??? (in /usr/bin/grep)
+==1975203==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1975203==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1975203== 
+==1975203== 36 bytes in 1 blocks are still reachable in loss record 8 of 26
+==1975203==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975203==    by 0x120F88: ??? (in /usr/bin/grep)
+==1975203==    by 0x1199E1: ??? (in /usr/bin/grep)
+==1975203==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1975203==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1975203== 
+==1975203== 36 bytes in 1 blocks are still reachable in loss record 9 of 26
+==1975203==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975203==    by 0x121718: ??? (in /usr/bin/grep)
+==1975203==    by 0x1199E1: ??? (in /usr/bin/grep)
+==1975203==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1975203==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1975203== 
+==1975203== 64 bytes in 1 blocks are indirectly lost in loss record 10 of 26
+==1975203==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975203==    by 0x49EB26A: init_dfa (regcomp.c:859)
+==1975203==    by 0x49EB26A: re_compile_internal (regcomp.c:758)
+==1975203==    by 0x49EC82E: re_compile_pattern (regcomp.c:230)
+==1975203==    by 0x1111B1: ??? (in /usr/bin/grep)
+==1975203==    by 0x119469: ??? (in /usr/bin/grep)
+==1975203==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1975203==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1975203== 
+==1975203== 64 bytes in 1 blocks are indirectly lost in loss record 11 of 26
+==1975203==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975203==    by 0x49EB297: init_dfa (regcomp.c:866)
+==1975203==    by 0x49EB297: re_compile_internal (regcomp.c:758)
+==1975203==    by 0x49EC82E: re_compile_pattern (regcomp.c:230)
+==1975203==    by 0x1111B1: ??? (in /usr/bin/grep)
+==1975203==    by 0x119469: ??? (in /usr/bin/grep)
+==1975203==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1975203==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1975203== 
+==1975203== 64 bytes in 1 blocks are indirectly lost in loss record 12 of 26
+==1975203==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975203==    by 0x49EB566: analyze (regcomp.c:1171)
+==1975203==    by 0x49EB566: re_compile_internal (regcomp.c:795)
+==1975203==    by 0x49EC82E: re_compile_pattern (regcomp.c:230)
+==1975203==    by 0x1111B1: ??? (in /usr/bin/grep)
+==1975203==    by 0x119469: ??? (in /usr/bin/grep)
+==1975203==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1975203==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1975203== 
+==1975203== 64 bytes in 1 blocks are indirectly lost in loss record 13 of 26
+==1975203==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975203==    by 0x49EB575: analyze (regcomp.c:1172)
+==1975203==    by 0x49EB575: re_compile_internal (regcomp.c:795)
+==1975203==    by 0x49EC82E: re_compile_pattern (regcomp.c:230)
+==1975203==    by 0x1111B1: ??? (in /usr/bin/grep)
+==1975203==    by 0x119469: ??? (in /usr/bin/grep)
+==1975203==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1975203==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1975203== 
+==1975203== 72 bytes in 1 blocks are still reachable in loss record 14 of 26
+==1975203==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975203==    by 0x119049: ??? (in /usr/bin/grep)
+==1975203==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1975203==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1975203== 
+==1975203== 72 bytes in 1 blocks are still reachable in loss record 15 of 26
+==1975203==    at 0x48487A9: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975203==    by 0x11CB35: ??? (in /usr/bin/grep)
+==1975203==    by 0x1217DF: ??? (in /usr/bin/grep)
+==1975203==    by 0x1199E1: ??? (in /usr/bin/grep)
+==1975203==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1975203==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1975203== 
+==1975203== 88 bytes in 1 blocks are indirectly lost in loss record 16 of 26
+==1975203==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975203==    by 0x49E222B: create_cd_newstate (regex_internal.c:1687)
+==1975203==    by 0x49E222B: re_acquire_state_context (regex_internal.c:1562)
+==1975203==    by 0x49EC1B1: create_initial_state (regcomp.c:1050)
+==1975203==    by 0x49EC1B1: re_compile_internal (regcomp.c:806)
+==1975203==    by 0x49EC82E: re_compile_pattern (regcomp.c:230)
+==1975203==    by 0x1111B1: ??? (in /usr/bin/grep)
+==1975203==    by 0x119469: ??? (in /usr/bin/grep)
+==1975203==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1975203==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1975203== 
+==1975203== 120 bytes in 1 blocks are still reachable in loss record 17 of 26
+==1975203==    at 0x48487A9: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975203==    by 0x112379: ??? (in /usr/bin/grep)
+==1975203==    by 0x10E668: ??? (in /usr/bin/grep)
+==1975203==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1975203== 
+==1975203== 128 bytes in 1 blocks are still reachable in loss record 18 of 26
+==1975203==    at 0x48487A9: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975203==    by 0x11C235: ??? (in /usr/bin/grep)
+==1975203==    by 0x11A4F5: ??? (in /usr/bin/grep)
+==1975203==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1975203==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1975203== 
+==1975203== 128 bytes in 1 blocks are possibly lost in loss record 19 of 26
+==1975203==    at 0x484DCD3: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975203==    by 0x11940F: ??? (in /usr/bin/grep)
+==1975203==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1975203==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1975203== 
+==1975203== 216 bytes in 1 blocks are still reachable in loss record 20 of 26
+==1975203==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975203==    by 0x12091D: ??? (in /usr/bin/grep)
+==1975203==    by 0x1199E1: ??? (in /usr/bin/grep)
+==1975203==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1975203==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1975203== 
+==1975203== 512 bytes in 4 blocks are still reachable in loss record 21 of 26
+==1975203==    at 0x48487A9: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975203==    by 0x11C558: ??? (in /usr/bin/grep)
+==1975203==    by 0x120D01: ??? (in /usr/bin/grep)
+==1975203==    by 0x1199E1: ??? (in /usr/bin/grep)
+==1975203==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1975203==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1975203== 
+==1975203== 624 (224 direct, 400 indirect) bytes in 1 blocks are definitely lost in loss record 22 of 26
+==1975203==    at 0x48487A9: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975203==    by 0x49EC529: re_compile_internal (regcomp.c:750)
+==1975203==    by 0x49EC82E: re_compile_pattern (regcomp.c:230)
+==1975203==    by 0x1111B1: ??? (in /usr/bin/grep)
+==1975203==    by 0x119469: ??? (in /usr/bin/grep)
+==1975203==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1975203==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1975203== 
+==1975203== 2,336 bytes in 1 blocks are still reachable in loss record 23 of 26
+==1975203==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975203==    by 0x11905F: ??? (in /usr/bin/grep)
+==1975203==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1975203==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1975203== 
+==1975203== 2,472 bytes in 1 blocks are still reachable in loss record 24 of 26
+==1975203==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975203==    by 0x116B9A: ??? (in /usr/bin/grep)
+==1975203==    by 0x1195DF: ??? (in /usr/bin/grep)
+==1975203==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1975203==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1975203== 
+==1975203== 4,064 bytes in 1 blocks are still reachable in loss record 25 of 26
+==1975203==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975203==    by 0x1274EC: ??? (in /usr/bin/grep)
+==1975203==    by 0x116BCC: ??? (in /usr/bin/grep)
+==1975203==    by 0x118B04: ??? (in /usr/bin/grep)
+==1975203==    by 0x11968A: ??? (in /usr/bin/grep)
+==1975203==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1975203==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1975203== 
+==1975203== 102,408 bytes in 1 blocks are still reachable in loss record 26 of 26
+==1975203==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975203==    by 0x1274EC: ??? (in /usr/bin/grep)
+==1975203==    by 0x10E42F: ??? (in /usr/bin/grep)
+==1975203==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1975203== 
+==1975203== LEAK SUMMARY:
+==1975203==    definitely lost: 224 bytes in 1 blocks
+==1975203==    indirectly lost: 400 bytes in 13 blocks
+==1975203==      possibly lost: 128 bytes in 1 blocks
+==1975203==    still reachable: 112,492 bytes in 17 blocks
+==1975203==         suppressed: 0 bytes in 0 blocks
+==1975203== 
+==1975203== For lists of detected and suppressed errors, rerun with: -s
+==1975203== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+minishell$ echo hihi $VAR4 hehe
+hihi hehe
+minishell$ echo $?
+0
+minishell$ env
+MAIL=htopa@student.hive.fi
+LANGUAGE=en
+USER=htopa
+XDG_SESSION_TYPE=x11
+SHLVL=1
+LD_LIBRARY_PATH=/usr/lib/debug
+HOME=/home/htopa
+OLDPWD=/home/htopa/Desktop/Git/minishell4/Libft
+DESKTOP_SESSION=ubuntu
+GTK_MODULES=gail:atk-bridge
+XDG_SEAT_PATH=/org/freedesktop/DisplayManager/Seat0
+MACADDRESS=38:f9:d3:92:2f:68
+SYSTEMD_EXEC_PID=1906633
+DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/5928/bus
+LIBVIRT_DEFAULT_URI=qemu:///system
+COLORTERM=truecolor
+GTK_IM_MODULE=ibus
+LOGNAME=htopa
+_=/usr/bin/valgrind
+XDG_SESSION_CLASS=user
+TERM=xterm-256color
+FT_HOOK_PATHNAME=login-user.d
+GNOME_DESKTOP_SESSION_ID=this-is-deprecated
+PATH=/home/htopa/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+SESSION_MANAGER=local/c2r6p4.hive.fi:@/tmp/.ICE-unix/1906609,unix/c2r6p4.hive.fi:/tmp/.ICE-unix/1906609
+GDM_LANG=en
+GNOME_TERMINAL_SCREEN=/org/gnome/Terminal/screen/ecab1c13_1449_477e_8aa3_1f55dd7a6dd1
+XDG_MENU_PREFIX=gnome-
+XDG_SESSION_PATH=/org/freedesktop/DisplayManager/Session13
+XDG_RUNTIME_DIR=/run/user/5928
+GLIBCPP_FORCE_NEW=1
+DISPLAY=:0
+LANG=en_US.UTF-8
+XDG_CURRENT_DESKTOP=ubuntu:GNOME
+XDG_SESSION_DESKTOP=ubuntu
+GNOME_TERMINAL_SERVICE=:1.84
+XMODIFIERS=@im=ibus
+XAUTHORITY=/home/htopa/.Xauthority
+SSH_AUTH_SOCK=/run/user/5928/keyring/ssh
+XDG_GREETER_DATA_DIR=/var/lib/lightdm-data/htopa
+SSH_AGENT_LAUNCHER=gnome-keyring
+KRB5CCNAME=FILE:/tmp/krb5cc_5928_Gqr8EB
+SHELL=/bin/zsh
+QT_ACCESSIBILITY=1
+GDMSESSION=ubuntu
+FT_HOOK_NAME=login-user
+DOCKER_HOST=unix:///run/user/5928/docker.sock
+GPG_AGENT_INFO=/run/user/5928/gnupg/S.gpg-agent:0:1
+QT_IM_MODULE=ibus
+PWD=/home/htopa/Desktop/Git/minishell4
+XDG_CONFIG_DIRS=/etc/xdg/xdg-ubuntu:/etc/xdg
+XDG_DATA_DIRS=/usr/share/ubuntu:/usr/share/gnome:/home/htopa/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share:/var/lib/snapd/desktop
+VTE_VERSION=6800
+GLIBCXX_FORCE_NEW=1
+LD_PRELOAD=/usr/libexec/valgrind/vgpreload_core-amd64-linux.so:/usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so
+VAR1=
+VAR2=hihi
+minishell$ cat <<hihi
+> bvkdsks
+> hihi
+==1975261== Memcheck, a memory error detector
+==1975261== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1975261== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1975261== Command: /usr/bin/cat
+==1975261== 
+bvkdsks
+==1975261== 
+==1975261== FILE DESCRIPTORS: 0 open (0 std) at exit.
+==1975261== 
+==1975261== HEAP SUMMARY:
+==1975261==     in use at exit: 0 bytes in 0 blocks
+==1975261==   total heap usage: 31 allocs, 31 frees, 139,232 bytes allocated
+==1975261== 
+==1975261== All heap blocks were freed -- no leaks are possible
+==1975261== 
+==1975261== For lists of detected and suppressed errors, rerun with: -s
+==1975261== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+minishell$ cat <<hihi <<hehe | cat <<huhu
+> jdgsvjjdbv
+> $USER
+> hihi
+> dshgvjbjv heredoc2
+> 
+> bdkd
+> huhu
+==1975282== Memcheck, a memory error detector
+==1975282== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1975282== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1975282== Command: /usr/bin/cat
+==1975282== 
+==1975283== Memcheck, a memory error detector
+==1975283== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1975283== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1975283== Command: /usr/bin/cat
+==1975283== 
+bdkd
+==1975282== 
+==1975282== FILE DESCRIPTORS: 0 open (0 std) at exit.
+==1975282== 
+==1975282== HEAP SUMMARY:
+==1975282==     in use at exit: 0 bytes in 0 blocks
+==1975282==   total heap usage: 31 allocs, 31 frees, 139,232 bytes allocated
+==1975282== 
+==1975282== All heap blocks were freed -- no leaks are possible
+==1975282== 
+==1975282== For lists of detected and suppressed errors, rerun with: -s
+==1975282== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==1975283== 
+==1975283== FILE DESCRIPTORS: 1 open (0 std) at exit.
+==1975283== Open file descriptor 3:
+==1975283==    <inherited from parent>
+==1975283== 
+==1975283== 
+==1975283== HEAP SUMMARY:
+==1975283==     in use at exit: 0 bytes in 0 blocks
+==1975283==   total heap usage: 31 allocs, 31 frees, 139,232 bytes allocated
+==1975283== 
+==1975283== All heap blocks were freed -- no leaks are possible
+==1975283== 
+==1975283== For lists of detected and suppressed errors, rerun with: -s
+==1975283== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+minishell$ <<hihi
+> 
+==1976337== 
+==1976337== FILE DESCRIPTORS: 3 open (3 std) at exit.
+==1976337== 
+==1976337== HEAP SUMMARY:
+==1976337==     in use at exit: 209,302 bytes in 282 blocks
+==1976337==   total heap usage: 1,424 allocs, 1,142 frees, 255,402 bytes allocated
+==1976337== 
+==1976337== LEAK SUMMARY:
+==1976337==    definitely lost: 0 bytes in 0 blocks
+==1976337==    indirectly lost: 0 bytes in 0 blocks
+==1976337==      possibly lost: 0 bytes in 0 blocks
+==1976337==    still reachable: 0 bytes in 0 blocks
+==1976337==         suppressed: 209,302 bytes in 282 blocks
+==1976337== 
+==1976337== For lists of detected and suppressed errors, rerun with: -s
+==1976337== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+minishell$                
+minishell$    
+minishell$                   
+minishell$             
+minishell$ echo hihi
+hihi
+minishell$             
+minishell$       
+minishell$ <<hihi
+> 
+==1976406== 
+==1976406== FILE DESCRIPTORS: 3 open (3 std) at exit.
+==1976406== 
+==1976406== HEAP SUMMARY:
+==1976406==     in use at exit: 209,391 bytes in 288 blocks
+==1976406==   total heap usage: 1,551 allocs, 1,263 frees, 257,558 bytes allocated
+==1976406== 
+==1976406== LEAK SUMMARY:
+==1976406==    definitely lost: 0 bytes in 0 blocks
+==1976406==    indirectly lost: 0 bytes in 0 blocks
+==1976406==      possibly lost: 0 bytes in 0 blocks
+==1976406==    still reachable: 0 bytes in 0 blocks
+==1976406==         suppressed: 209,391 bytes in 288 blocks
+==1976406== 
+==1976406== For lists of detected and suppressed errors, rerun with: -s
+==1976406== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+minishell$ echo $?
+127
+minishell$ <<hihi
+> shgvks
+> bkh
+> ^C
+minishell$ echo $?
+130
+minishell$ <<hihi
+> jksdbvjk
+> fd
+> 
+==1976426== 
+==1976426== FILE DESCRIPTORS: 3 open (3 std) at exit.
+==1976426== 
+==1976426== HEAP SUMMARY:
+==1976426==     in use at exit: 209,732 bytes in 312 blocks
+==1976426==   total heap usage: 1,731 allocs, 1,419 frees, 260,675 bytes allocated
+==1976426== 
+==1976426== LEAK SUMMARY:
+==1976426==    definitely lost: 0 bytes in 0 blocks
+==1976426==    indirectly lost: 0 bytes in 0 blocks
+==1976426==      possibly lost: 0 bytes in 0 blocks
+==1976426==    still reachable: 0 bytes in 0 blocks
+==1976426==         suppressed: 209,732 bytes in 312 blocks
+==1976426== 
+==1976426== For lists of detected and suppressed errors, rerun with: -s
+==1976426== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+minishell$ echo $?
+127
+minishell$ sjdbvkj|jkdsavbk
+sjdbvkj: command not found
+jkdsavbk: command not found
+==1976437== 
+==1976437== FILE DESCRIPTORS: 3 open (3 std) at exit.
+==1976437== 
+==1976437== HEAP SUMMARY:
+==1976437==     in use at exit: 209,847 bytes in 318 blocks
+==1976437==   total heap usage: 1,836 allocs, 1,518 frees, 263,165 bytes allocated
+==1976437== 
+==1976438== 
+==1976438== FILE DESCRIPTORS: 3 open (3 std) at exit.
+==1976438== 
+==1976438== HEAP SUMMARY:
+==1976438==     in use at exit: 209,847 bytes in 318 blocks
+==1976438==   total heap usage: 1,841 allocs, 1,523 frees, 263,256 bytes allocated
+==1976438== 
+==1976437== LEAK SUMMARY:
+==1976437==    definitely lost: 0 bytes in 0 blocks
+==1976437==    indirectly lost: 0 bytes in 0 blocks
+==1976437==      possibly lost: 0 bytes in 0 blocks
+==1976437==    still reachable: 0 bytes in 0 blocks
+==1976437==         suppressed: 209,847 bytes in 318 blocks
+==1976437== 
+==1976437== For lists of detected and suppressed errors, rerun with: -s
+==1976437== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==1976438== LEAK SUMMARY:
+==1976438==    definitely lost: 0 bytes in 0 blocks
+==1976438==    indirectly lost: 0 bytes in 0 blocks
+==1976438==      possibly lost: 0 bytes in 0 blocks
+==1976438==    still reachable: 0 bytes in 0 blocks
+==1976438==         suppressed: 209,847 bytes in 318 blocks
+==1976438== 
+==1976438== For lists of detected and suppressed errors, rerun with: -s
+==1976438== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+minishell$ echo $?
+127
+minishell$ ""
+ : command not found
+==1976479== 
+==1976479== FILE DESCRIPTORS: 3 open (3 std) at exit.
+==1976479== 
+==1976479== HEAP SUMMARY:
+==1976479==     in use at exit: 209,930 bytes in 324 blocks
+==1976479==   total heap usage: 1,912 allocs, 1,588 frees, 264,746 bytes allocated
+==1976479== 
+==1976479== LEAK SUMMARY:
+==1976479==    definitely lost: 0 bytes in 0 blocks
+==1976479==    indirectly lost: 0 bytes in 0 blocks
+==1976479==      possibly lost: 0 bytes in 0 blocks
+==1976479==    still reachable: 0 bytes in 0 blocks
+==1976479==         suppressed: 209,930 bytes in 324 blocks
+==1976479== 
+==1976479== For lists of detected and suppressed errors, rerun with: -s
+==1976479== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+minishell$ $VAR5
+minishell$ echo $?
+127
+minishell$ $VAR5 echo hihi
+hihi
+minishell$ echo $?
+0
+minishell$ touch 1
+==1976496== Memcheck, a memory error detector
+==1976496== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1976496== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1976496== Command: /usr/bin/touch 1
+==1976496== 
+==1976496== 
+==1976496== FILE DESCRIPTORS: 1 open (1 std) at exit.
+==1976496== 
+==1976496== HEAP SUMMARY:
+==1976496==     in use at exit: 0 bytes in 0 blocks
+==1976496==   total heap usage: 30 allocs, 30 frees, 4,065 bytes allocated
+==1976496== 
+==1976496== All heap blocks were freed -- no leaks are possible
+==1976496== 
+==1976496== For lists of detected and suppressed errors, rerun with: -s
+==1976496== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+minishell$ chmod 000 1
+==1976498== Memcheck, a memory error detector
+==1976498== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1976498== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1976498== Command: /usr/bin/chmod 000 1
+==1976498== 
+==1976498== 
+==1976498== FILE DESCRIPTORS: 1 open (1 std) at exit.
+==1976498== 
+==1976498== HEAP SUMMARY:
+==1976498==     in use at exit: 32 bytes in 1 blocks
+==1976498==   total heap usage: 38 allocs, 37 frees, 9,457 bytes allocated
+==1976498== 
+==1976498== 32 bytes in 1 blocks are still reachable in loss record 1 of 1
+==1976498==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976498==    by 0x10D193: ??? (in /usr/bin/chmod)
+==1976498==    by 0x10BDBC: ??? (in /usr/bin/chmod)
+==1976498==    by 0x489AD8F: (below main) (libc_start_call_main.h:58)
+==1976498== 
+==1976498== LEAK SUMMARY:
+==1976498==    definitely lost: 0 bytes in 0 blocks
+==1976498==    indirectly lost: 0 bytes in 0 blocks
+==1976498==      possibly lost: 0 bytes in 0 blocks
+==1976498==    still reachable: 32 bytes in 1 blocks
+==1976498==         suppressed: 0 bytes in 0 blocks
+==1976498== 
+==1976498== For lists of detected and suppressed errors, rerun with: -s
+==1976498== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+minishell$ echo hehehe >2>1>3
+1: Is a directory
+minishell$ ls
+==1976512== Memcheck, a memory error detector
+==1976512== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1976512== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1976512== Command: /usr/bin/ls
+==1976512== 
+1  commands.txt  file1	fileout   infile	   Libft       Makefile   minishell_tester  outecho  outfile1  src
+2  file		 file2	file.txt  leak_checker.sh  local.supp  minishell  obj		    outfile  outfile2
+==1976512== 
+==1976512== FILE DESCRIPTORS: 1 open (1 std) at exit.
+==1976512== 
+==1976512== HEAP SUMMARY:
+==1976512==     in use at exit: 29,145 bytes in 28 blocks
+==1976512==   total heap usage: 65 allocs, 37 frees, 68,700 bytes allocated
+==1976512== 
+==1976512== 56 bytes in 1 blocks are still reachable in loss record 1 of 8
+==1976512==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976512==    by 0x115DB8: ??? (in /usr/bin/ls)
+==1976512==    by 0x115DE9: ??? (in /usr/bin/ls)
+==1976512==    by 0x10E4D9: ??? (in /usr/bin/ls)
+==1976512==    by 0x48C6D8F: (below main) (libc_start_call_main.h:58)
+==1976512== 
+==1976512== 56 bytes in 1 blocks are still reachable in loss record 2 of 8
+==1976512==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976512==    by 0x115DB8: ??? (in /usr/bin/ls)
+==1976512==    by 0x115DE9: ??? (in /usr/bin/ls)
+==1976512==    by 0x10D132: ??? (in /usr/bin/ls)
+==1976512==    by 0x48C6D8F: (below main) (libc_start_call_main.h:58)
+==1976512== 
+==1976512== 128 bytes in 1 blocks are still reachable in loss record 3 of 8
+==1976512==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976512==    by 0x1138F9: ??? (in /usr/bin/ls)
+==1976512==    by 0x10D236: ??? (in /usr/bin/ls)
+==1976512==    by 0x48C6D8F: (below main) (libc_start_call_main.h:58)
+==1976512== 
+==1976512== 169 bytes in 21 blocks are still reachable in loss record 4 of 8
+==1976512==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976512==    by 0x11665E: ??? (in /usr/bin/ls)
+==1976512==    by 0x116C9F: ??? (in /usr/bin/ls)
+==1976512==    by 0x11A20E: ??? (in /usr/bin/ls)
+==1976512==    by 0x10D33F: ??? (in /usr/bin/ls)
+==1976512==    by 0x48C6D8F: (below main) (libc_start_call_main.h:58)
+==1976512== 
+==1976512== 504 bytes in 1 blocks are still reachable in loss record 5 of 8
+==1976512==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976512==    by 0x115EBB: ??? (in /usr/bin/ls)
+==1976512==    by 0x11A067: ??? (in /usr/bin/ls)
+==1976512==    by 0x10D33F: ??? (in /usr/bin/ls)
+==1976512==    by 0x48C6D8F: (below main) (libc_start_call_main.h:58)
+==1976512== 
+==1976512== 1,008 bytes in 1 blocks are still reachable in loss record 6 of 8
+==1976512==    at 0x48487A9: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976512==    by 0x1161BF: ??? (in /usr/bin/ls)
+==1976512==    by 0x119ABF: ??? (in /usr/bin/ls)
+==1976512==    by 0x10D33F: ??? (in /usr/bin/ls)
+==1976512==    by 0x48C6D8F: (below main) (libc_start_call_main.h:58)
+==1976512== 
+==1976512== 7,224 bytes in 1 blocks are still reachable in loss record 7 of 8
+==1976512==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976512==    by 0x116236: ??? (in /usr/bin/ls)
+==1976512==    by 0x119ABF: ??? (in /usr/bin/ls)
+==1976512==    by 0x10D33F: ??? (in /usr/bin/ls)
+==1976512==    by 0x48C6D8F: (below main) (libc_start_call_main.h:58)
+==1976512== 
+==1976512== 20,000 bytes in 1 blocks are still reachable in loss record 8 of 8
+==1976512==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976512==    by 0x115DB8: ??? (in /usr/bin/ls)
+==1976512==    by 0x10D2A0: ??? (in /usr/bin/ls)
+==1976512==    by 0x48C6D8F: (below main) (libc_start_call_main.h:58)
+==1976512== 
+==1976512== LEAK SUMMARY:
+==1976512==    definitely lost: 0 bytes in 0 blocks
+==1976512==    indirectly lost: 0 bytes in 0 blocks
+==1976512==      possibly lost: 0 bytes in 0 blocks
+==1976512==    still reachable: 29,145 bytes in 28 blocks
+==1976512==         suppressed: 0 bytes in 0 blocks
+==1976512== 
+==1976512== For lists of detected and suppressed errors, rerun with: -s
+==1976512== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+minishell$ ls -la
+==1976515== Memcheck, a memory error detector
+==1976515== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1976515== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1976515== Command: /usr/bin/ls -la
+==1976515== 
+total 148
+drwxr-xr-x  9 htopa 2020  4096 Apr 15 17:53 .
+drwxr-xr-x 10 htopa 2020   178 Apr 15 11:48 ..
+d---------  2 htopa 2020     6 Apr 15 17:52 1
+-rwxr-xr-x  1 htopa 2020     0 Apr 15 17:53 2
+-rw-r--r--  1 htopa 2020  5461 Apr  2 17:08 commands.txt
+-rwxr-xr-x  1 htopa 2020    13 Apr  3 18:09 file
+-rwxr-xr-x  1 htopa 2020     7 Apr  2 17:10 file1
+-rwxr-xr-x  1 htopa 2020     7 Apr  2 16:39 file2
+-rwxr-xr-x  1 htopa 2020     6 Apr  2 19:58 fileout
+-rwxr-xr-x  1 htopa 2020     0 Apr 14 10:58 file.txt
+drwxr-xr-x  8 htopa 2020  4096 Apr 15 16:59 .git
+-rw-r--r--  1 htopa 2020     6 Mar 31 15:22 infile
+-rwxrwxrwx  1 htopa 2020  1298 Apr  1 11:21 leak_checker.sh
+drwxr-xr-x  2 htopa 2020  4096 Apr 15 17:02 Libft
+-rw-r--r--  1 htopa 2020   220 Apr 15 13:35 local.supp
+-rw-r--r--  1 htopa 2020  2210 Apr 15 13:35 Makefile
+-rwxr-xr-x  1 htopa 2020 76016 Apr 15 17:02 minishell
+drwxr-xr-x  6 htopa 2020  4096 Apr 15 16:51 minishell_tester
+drwxr-xr-x  2 htopa 2020  4096 Apr 15 17:02 obj
+-rwxr-xr-x  1 htopa 2020     3 Apr 14 15:42 outecho
+-rwxr-xr-x  1 htopa 2020     0 Apr 15 13:35 outfile
+-rwxr-xr-x  1 htopa 2020     5 Apr 15 17:19 outfile1
+-rw-r--r--  1 htopa 2020     0 Apr 15 17:19 outfile2
+drwxr-xr-x  2 htopa 2020  4096 Apr 15 16:58 src
+drwxr-xr-x  2 htopa 2020    27 Apr 14 13:07 .vscode
+==1976515== 
+==1976515== FILE DESCRIPTORS: 1 open (1 std) at exit.
+==1976515== 
+==1976515== HEAP SUMMARY:
+==1976515==     in use at exit: 21,075 bytes in 32 blocks
+==1976515==   total heap usage: 148 allocs, 116 frees, 85,546 bytes allocated
+==1976515== 
+==1976515== 24 bytes in 1 blocks are still reachable in loss record 1 of 8
+==1976515==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976515==    by 0x1164CF: ??? (in /usr/bin/ls)
+==1976515==    by 0x11656C: ??? (in /usr/bin/ls)
+==1976515==    by 0x117837: ??? (in /usr/bin/ls)
+==1976515==    by 0x11A20E: ??? (in /usr/bin/ls)
+==1976515==    by 0x10D33F: ??? (in /usr/bin/ls)
+==1976515==    by 0x48C6D8F: (below main) (libc_start_call_main.h:58)
+==1976515== 
+==1976515== 24 bytes in 1 blocks are still reachable in loss record 2 of 8
+==1976515==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976515==    by 0x11660F: ??? (in /usr/bin/ls)
+==1976515==    by 0x117A1E: ??? (in /usr/bin/ls)
+==1976515==    by 0x11A20E: ??? (in /usr/bin/ls)
+==1976515==    by 0x10D33F: ??? (in /usr/bin/ls)
+==1976515==    by 0x48C6D8F: (below main) (libc_start_call_main.h:58)
+==1976515== 
+==1976515== 56 bytes in 1 blocks are still reachable in loss record 3 of 8
+==1976515==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976515==    by 0x115DB8: ??? (in /usr/bin/ls)
+==1976515==    by 0x115DE9: ??? (in /usr/bin/ls)
+==1976515==    by 0x10E4D9: ??? (in /usr/bin/ls)
+==1976515==    by 0x48C6D8F: (below main) (libc_start_call_main.h:58)
+==1976515== 
+==1976515== 56 bytes in 1 blocks are still reachable in loss record 4 of 8
+==1976515==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976515==    by 0x115DB8: ??? (in /usr/bin/ls)
+==1976515==    by 0x115DE9: ??? (in /usr/bin/ls)
+==1976515==    by 0x10D132: ??? (in /usr/bin/ls)
+==1976515==    by 0x48C6D8F: (below main) (libc_start_call_main.h:58)
+==1976515== 
+==1976515== 128 bytes in 1 blocks are still reachable in loss record 5 of 8
+==1976515==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976515==    by 0x1138F9: ??? (in /usr/bin/ls)
+==1976515==    by 0x10D236: ??? (in /usr/bin/ls)
+==1976515==    by 0x48C6D8F: (below main) (libc_start_call_main.h:58)
+==1976515== 
+==1976515== 187 bytes in 25 blocks are still reachable in loss record 6 of 8
+==1976515==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976515==    by 0x11665E: ??? (in /usr/bin/ls)
+==1976515==    by 0x116C9F: ??? (in /usr/bin/ls)
+==1976515==    by 0x11A20E: ??? (in /usr/bin/ls)
+==1976515==    by 0x10D33F: ??? (in /usr/bin/ls)
+==1976515==    by 0x48C6D8F: (below main) (libc_start_call_main.h:58)
+==1976515== 
+==1976515== 600 bytes in 1 blocks are still reachable in loss record 7 of 8
+==1976515==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976515==    by 0x115EBB: ??? (in /usr/bin/ls)
+==1976515==    by 0x11A067: ??? (in /usr/bin/ls)
+==1976515==    by 0x10D33F: ??? (in /usr/bin/ls)
+==1976515==    by 0x48C6D8F: (below main) (libc_start_call_main.h:58)
+==1976515== 
+==1976515== 20,000 bytes in 1 blocks are still reachable in loss record 8 of 8
+==1976515==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976515==    by 0x115DB8: ??? (in /usr/bin/ls)
+==1976515==    by 0x10D2A0: ??? (in /usr/bin/ls)
+==1976515==    by 0x48C6D8F: (below main) (libc_start_call_main.h:58)
+==1976515== 
+==1976515== LEAK SUMMARY:
+==1976515==    definitely lost: 0 bytes in 0 blocks
+==1976515==    indirectly lost: 0 bytes in 0 blocks
+==1976515==      possibly lost: 0 bytes in 0 blocks
+==1976515==    still reachable: 21,075 bytes in 32 blocks
+==1976515==         suppressed: 0 bytes in 0 blocks
+==1976515== 
+==1976515== For lists of detected and suppressed errors, rerun with: -s
+==1976515== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+minishell$ rm -rf 1
+==1976520== Memcheck, a memory error detector
+==1976520== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1976520== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1976520== Command: /usr/bin/rm -rf 1
+==1976520== 
+==1976520== 
+==1976520== FILE DESCRIPTORS: 0 open (0 std) at exit.
+==1976520== 
+==1976520== HEAP SUMMARY:
+==1976520==     in use at exit: 0 bytes in 0 blocks
+==1976520==   total heap usage: 37 allocs, 37 frees, 9,425 bytes allocated
+==1976520== 
+==1976520== All heap blocks were freed -- no leaks are possible
+==1976520== 
+==1976520== For lists of detected and suppressed errors, rerun with: -s
+==1976520== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+minishell$ rm 2
+==1976521== Memcheck, a memory error detector
+==1976521== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1976521== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1976521== Command: /usr/bin/rm 2
+==1976521== 
+==1976521== 
+==1976521== FILE DESCRIPTORS: 0 open (0 std) at exit.
+==1976521== 
+==1976521== HEAP SUMMARY:
+==1976521==     in use at exit: 0 bytes in 0 blocks
+==1976521==   total heap usage: 37 allocs, 37 frees, 9,425 bytes allocated
+==1976521== 
+==1976521== All heap blocks were freed -- no leaks are possible
+==1976521== 
+==1976521== For lists of detected and suppressed errors, rerun with: -s
+==1976521== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+minishell$ touch out1 out2
+==1976523== Memcheck, a memory error detector
+==1976523== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1976523== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1976523== Command: /usr/bin/touch out1 out2
+==1976523== 
+==1976523== 
+==1976523== FILE DESCRIPTORS: 0 open (0 std) at exit.
+==1976523== 
+==1976523== HEAP SUMMARY:
+==1976523==     in use at exit: 0 bytes in 0 blocks
+==1976523==   total heap usage: 30 allocs, 30 frees, 4,065 bytes allocated
+==1976523== 
+==1976523== All heap blocks were freed -- no leaks are possible
+==1976523== 
+==1976523== For lists of detected and suppressed errors, rerun with: -s
+==1976523== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+minishell$ echo heheheh >out2>out1>out3
+minishell$ ls | grep out3
+==1976529== Memcheck, a memory error detector
+==1976529== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1976529== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1976529== Command: /usr/bin/ls
+==1976529== 
+==1976530== Memcheck, a memory error detector
+==1976530== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1976530== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1976530== Command: /usr/bin/grep out3
+==1976530== 
+==1976529== 
+==1976529== FILE DESCRIPTORS: 1 open (1 std) at exit.
+==1976529== 
+==1976529== HEAP SUMMARY:
+==1976529==     in use at exit: 20,948 bytes in 27 blocks
+==1976529==   total heap usage: 64 allocs, 37 frees, 63,575 bytes allocated
+==1976529== 
+==1976529== 56 bytes in 1 blocks are still reachable in loss record 1 of 6
+==1976529==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976529==    by 0x115DB8: ??? (in /usr/bin/ls)
+==1976529==    by 0x115DE9: ??? (in /usr/bin/ls)
+==1976529==    by 0x10D528: ??? (in /usr/bin/ls)
+==1976529==    by 0x48C6D8F: (below main) (libc_start_call_main.h:58)
+==1976529== 
+==1976529== 56 bytes in 1 blocks are still reachable in loss record 2 of 6
+==1976529==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976529==    by 0x115DB8: ??? (in /usr/bin/ls)
+==1976529==    by 0x115DE9: ??? (in /usr/bin/ls)
+==1976529==    by 0x10D132: ??? (in /usr/bin/ls)
+==1976529==    by 0x48C6D8F: (below main) (libc_start_call_main.h:58)
+==1976529== 
+==1976529== 128 bytes in 1 blocks are still reachable in loss record 3 of 6
+==1976529==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976529==    by 0x1138F9: ??? (in /usr/bin/ls)
+==1976529==    by 0x10D236: ??? (in /usr/bin/ls)
+==1976529==    by 0x48C6D8F: (below main) (libc_start_call_main.h:58)
+==1976529== 
+==1976529== 180 bytes in 22 blocks are still reachable in loss record 4 of 6
+==1976529==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976529==    by 0x11665E: ??? (in /usr/bin/ls)
+==1976529==    by 0x116C9F: ??? (in /usr/bin/ls)
+==1976529==    by 0x11A20E: ??? (in /usr/bin/ls)
+==1976529==    by 0x10D33F: ??? (in /usr/bin/ls)
+==1976529==    by 0x48C6D8F: (below main) (libc_start_call_main.h:58)
+==1976529== 
+==1976529== 528 bytes in 1 blocks are still reachable in loss record 5 of 6
+==1976529==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976529==    by 0x115EBB: ??? (in /usr/bin/ls)
+==1976529==    by 0x11A067: ??? (in /usr/bin/ls)
+==1976529==    by 0x10D33F: ??? (in /usr/bin/ls)
+==1976529==    by 0x48C6D8F: (below main) (libc_start_call_main.h:58)
+==1976529== 
+==1976529== 20,000 bytes in 1 blocks are still reachable in loss record 6 of 6
+==1976529==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976529==    by 0x115DB8: ??? (in /usr/bin/ls)
+==1976529==    by 0x10D2A0: ??? (in /usr/bin/ls)
+==1976529==    by 0x48C6D8F: (below main) (libc_start_call_main.h:58)
+==1976529== 
+==1976529== LEAK SUMMARY:
+==1976529==    definitely lost: 0 bytes in 0 blocks
+==1976529==    indirectly lost: 0 bytes in 0 blocks
+==1976529==      possibly lost: 0 bytes in 0 blocks
+==1976529==    still reachable: 20,948 bytes in 27 blocks
+==1976529==         suppressed: 0 bytes in 0 blocks
+==1976529== 
+==1976529== For lists of detected and suppressed errors, rerun with: -s
+==1976529== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+out3
+==1976530== 
+==1976530== FILE DESCRIPTORS: 1 open (1 std) at exit.
+==1976530== 
+==1976530== HEAP SUMMARY:
+==1976530==     in use at exit: 113,557 bytes in 34 blocks
+==1976530==   total heap usage: 127 allocs, 93 frees, 140,070 bytes allocated
+==1976530== 
+==1976530== 4 bytes in 1 blocks are indirectly lost in loss record 1 of 26
+==1976530==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976530==    by 0x49E2262: re_node_set_init_copy (regex_internal.c:1034)
+==1976530==    by 0x49E2262: create_cd_newstate (regex_internal.c:1690)
+==1976530==    by 0x49E2262: re_acquire_state_context (regex_internal.c:1562)
+==1976530==    by 0x49EC1B1: create_initial_state (regcomp.c:1050)
+==1976530==    by 0x49EC1B1: re_compile_internal (regcomp.c:806)
+==1976530==    by 0x49EC82E: re_compile_pattern (regcomp.c:230)
+==1976530==    by 0x1111B1: ??? (in /usr/bin/grep)
+==1976530==    by 0x119469: ??? (in /usr/bin/grep)
+==1976530==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1976530==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1976530== 
+==1976530== 4 bytes in 1 blocks are indirectly lost in loss record 2 of 26
+==1976530==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976530==    by 0x49DB622: re_node_set_alloc (regex_internal.c:973)
+==1976530==    by 0x49DB622: register_state (regex_internal.c:1583)
+==1976530==    by 0x49E2445: create_cd_newstate (regex_internal.c:1746)
+==1976530==    by 0x49E2445: re_acquire_state_context (regex_internal.c:1562)
+==1976530==    by 0x49EC1B1: create_initial_state (regcomp.c:1050)
+==1976530==    by 0x49EC1B1: re_compile_internal (regcomp.c:806)
+==1976530==    by 0x49EC82E: re_compile_pattern (regcomp.c:230)
+==1976530==    by 0x1111B1: ??? (in /usr/bin/grep)
+==1976530==    by 0x119469: ??? (in /usr/bin/grep)
+==1976530==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1976530==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1976530== 
+==1976530== 5 bytes in 1 blocks are still reachable in loss record 3 of 26
+==1976530==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976530==    by 0x12751E: ??? (in /usr/bin/grep)
+==1976530==    by 0x10E638: ??? (in /usr/bin/grep)
+==1976530==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1976530== 
+==1976530== 16 bytes in 1 blocks are still reachable in loss record 4 of 26
+==1976530==    at 0x48487A9: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976530==    by 0x11CA44: ??? (in /usr/bin/grep)
+==1976530==    by 0x1217DF: ??? (in /usr/bin/grep)
+==1976530==    by 0x1199E1: ??? (in /usr/bin/grep)
+==1976530==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1976530==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1976530== 
+==1976530== 16 bytes in 1 blocks are indirectly lost in loss record 5 of 26
+==1976530==    at 0x48487A9: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976530==    by 0x49DB713: register_state (regex_internal.c:1598)
+==1976530==    by 0x49E2445: create_cd_newstate (regex_internal.c:1746)
+==1976530==    by 0x49E2445: re_acquire_state_context (regex_internal.c:1562)
+==1976530==    by 0x49EC1B1: create_initial_state (regcomp.c:1050)
+==1976530==    by 0x49EC1B1: re_compile_internal (regcomp.c:806)
+==1976530==    by 0x49EC82E: re_compile_pattern (regcomp.c:230)
+==1976530==    by 0x1111B1: ??? (in /usr/bin/grep)
+==1976530==    by 0x119469: ??? (in /usr/bin/grep)
+==1976530==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1976530==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1976530== 
+==1976530== 20 bytes in 1 blocks are indirectly lost in loss record 6 of 26
+==1976530==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976530==    by 0x49EB545: analyze (regcomp.c:1169)
+==1976530==    by 0x49EB545: re_compile_internal (regcomp.c:795)
+==1976530==    by 0x49EC82E: re_compile_pattern (regcomp.c:230)
+==1976530==    by 0x1111B1: ??? (in /usr/bin/grep)
+==1976530==    by 0x119469: ??? (in /usr/bin/grep)
+==1976530==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1976530==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1976530== 
+==1976530== 20 bytes in 5 blocks are indirectly lost in loss record 7 of 26
+==1976530==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976530==    by 0x49E06FF: re_node_set_alloc (regex_internal.c:973)
+==1976530==    by 0x49E06FF: calc_eclosure_iter (regcomp.c:1699)
+==1976530==    by 0x49EBD13: calc_eclosure (regcomp.c:1677)
+==1976530==    by 0x49EBD13: analyze (regcomp.c:1204)
+==1976530==    by 0x49EBD13: re_compile_internal (regcomp.c:795)
+==1976530==    by 0x49EC82E: re_compile_pattern (regcomp.c:230)
+==1976530==    by 0x1111B1: ??? (in /usr/bin/grep)
+==1976530==    by 0x119469: ??? (in /usr/bin/grep)
+==1976530==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1976530==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1976530== 
+==1976530== 44 bytes in 1 blocks are still reachable in loss record 8 of 26
+==1976530==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976530==    by 0x120F88: ??? (in /usr/bin/grep)
+==1976530==    by 0x1199E1: ??? (in /usr/bin/grep)
+==1976530==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1976530==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1976530== 
+==1976530== 44 bytes in 1 blocks are still reachable in loss record 9 of 26
+==1976530==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976530==    by 0x121718: ??? (in /usr/bin/grep)
+==1976530==    by 0x1199E1: ??? (in /usr/bin/grep)
+==1976530==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1976530==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1976530== 
+==1976530== 72 bytes in 1 blocks are still reachable in loss record 10 of 26
+==1976530==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976530==    by 0x119049: ??? (in /usr/bin/grep)
+==1976530==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1976530==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1976530== 
+==1976530== 72 bytes in 1 blocks are still reachable in loss record 11 of 26
+==1976530==    at 0x48487A9: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976530==    by 0x11CB35: ??? (in /usr/bin/grep)
+==1976530==    by 0x1217DF: ??? (in /usr/bin/grep)
+==1976530==    by 0x1199E1: ??? (in /usr/bin/grep)
+==1976530==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1976530==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1976530== 
+==1976530== 80 bytes in 1 blocks are indirectly lost in loss record 12 of 26
+==1976530==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976530==    by 0x49EB26A: init_dfa (regcomp.c:859)
+==1976530==    by 0x49EB26A: re_compile_internal (regcomp.c:758)
+==1976530==    by 0x49EC82E: re_compile_pattern (regcomp.c:230)
+==1976530==    by 0x1111B1: ??? (in /usr/bin/grep)
+==1976530==    by 0x119469: ??? (in /usr/bin/grep)
+==1976530==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1976530==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1976530== 
+==1976530== 80 bytes in 1 blocks are indirectly lost in loss record 13 of 26
+==1976530==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976530==    by 0x49EB566: analyze (regcomp.c:1171)
+==1976530==    by 0x49EB566: re_compile_internal (regcomp.c:795)
+==1976530==    by 0x49EC82E: re_compile_pattern (regcomp.c:230)
+==1976530==    by 0x1111B1: ??? (in /usr/bin/grep)
+==1976530==    by 0x119469: ??? (in /usr/bin/grep)
+==1976530==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1976530==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1976530== 
+==1976530== 80 bytes in 1 blocks are indirectly lost in loss record 14 of 26
+==1976530==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976530==    by 0x49EB575: analyze (regcomp.c:1172)
+==1976530==    by 0x49EB575: re_compile_internal (regcomp.c:795)
+==1976530==    by 0x49EC82E: re_compile_pattern (regcomp.c:230)
+==1976530==    by 0x1111B1: ??? (in /usr/bin/grep)
+==1976530==    by 0x119469: ??? (in /usr/bin/grep)
+==1976530==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1976530==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1976530== 
+==1976530== 88 bytes in 1 blocks are indirectly lost in loss record 15 of 26
+==1976530==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976530==    by 0x49E222B: create_cd_newstate (regex_internal.c:1687)
+==1976530==    by 0x49E222B: re_acquire_state_context (regex_internal.c:1562)
+==1976530==    by 0x49EC1B1: create_initial_state (regcomp.c:1050)
+==1976530==    by 0x49EC1B1: re_compile_internal (regcomp.c:806)
+==1976530==    by 0x49EC82E: re_compile_pattern (regcomp.c:230)
+==1976530==    by 0x1111B1: ??? (in /usr/bin/grep)
+==1976530==    by 0x119469: ??? (in /usr/bin/grep)
+==1976530==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1976530==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1976530== 
+==1976530== 120 bytes in 1 blocks are still reachable in loss record 16 of 26
+==1976530==    at 0x48487A9: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976530==    by 0x112379: ??? (in /usr/bin/grep)
+==1976530==    by 0x10E668: ??? (in /usr/bin/grep)
+==1976530==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1976530== 
+==1976530== 128 bytes in 1 blocks are still reachable in loss record 17 of 26
+==1976530==    at 0x48487A9: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976530==    by 0x11C235: ??? (in /usr/bin/grep)
+==1976530==    by 0x11A4F5: ??? (in /usr/bin/grep)
+==1976530==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1976530==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1976530== 
+==1976530== 128 bytes in 1 blocks are possibly lost in loss record 18 of 26
+==1976530==    at 0x484DCD3: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976530==    by 0x11940F: ??? (in /usr/bin/grep)
+==1976530==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1976530==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1976530== 
+==1976530== 128 bytes in 1 blocks are indirectly lost in loss record 19 of 26
+==1976530==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976530==    by 0x49EB297: init_dfa (regcomp.c:866)
+==1976530==    by 0x49EB297: re_compile_internal (regcomp.c:758)
+==1976530==    by 0x49EC82E: re_compile_pattern (regcomp.c:230)
+==1976530==    by 0x1111B1: ??? (in /usr/bin/grep)
+==1976530==    by 0x119469: ??? (in /usr/bin/grep)
+==1976530==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1976530==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1976530== 
+==1976530== 264 bytes in 1 blocks are still reachable in loss record 20 of 26
+==1976530==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976530==    by 0x12091D: ??? (in /usr/bin/grep)
+==1976530==    by 0x1199E1: ??? (in /usr/bin/grep)
+==1976530==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1976530==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1976530== 
+==1976530== 640 bytes in 5 blocks are still reachable in loss record 21 of 26
+==1976530==    at 0x48487A9: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976530==    by 0x11C558: ??? (in /usr/bin/grep)
+==1976530==    by 0x120D01: ??? (in /usr/bin/grep)
+==1976530==    by 0x1199E1: ??? (in /usr/bin/grep)
+==1976530==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1976530==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1976530== 
+==1976530== 744 (224 direct, 520 indirect) bytes in 1 blocks are definitely lost in loss record 22 of 26
+==1976530==    at 0x48487A9: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976530==    by 0x49EC529: re_compile_internal (regcomp.c:750)
+==1976530==    by 0x49EC82E: re_compile_pattern (regcomp.c:230)
+==1976530==    by 0x1111B1: ??? (in /usr/bin/grep)
+==1976530==    by 0x119469: ??? (in /usr/bin/grep)
+==1976530==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1976530==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1976530== 
+==1976530== 2,336 bytes in 1 blocks are still reachable in loss record 23 of 26
+==1976530==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976530==    by 0x11905F: ??? (in /usr/bin/grep)
+==1976530==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1976530==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1976530== 
+==1976530== 2,472 bytes in 1 blocks are still reachable in loss record 24 of 26
+==1976530==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976530==    by 0x116B9A: ??? (in /usr/bin/grep)
+==1976530==    by 0x1195DF: ??? (in /usr/bin/grep)
+==1976530==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1976530==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1976530== 
+==1976530== 4,064 bytes in 1 blocks are still reachable in loss record 25 of 26
+==1976530==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976530==    by 0x1274EC: ??? (in /usr/bin/grep)
+==1976530==    by 0x116BCC: ??? (in /usr/bin/grep)
+==1976530==    by 0x118B04: ??? (in /usr/bin/grep)
+==1976530==    by 0x11968A: ??? (in /usr/bin/grep)
+==1976530==    by 0x10E34A: ??? (in /usr/bin/grep)
+==1976530==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1976530== 
+==1976530== 102,408 bytes in 1 blocks are still reachable in loss record 26 of 26
+==1976530==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976530==    by 0x1274EC: ??? (in /usr/bin/grep)
+==1976530==    by 0x10E42F: ??? (in /usr/bin/grep)
+==1976530==    by 0x4910D8F: (below main) (libc_start_call_main.h:58)
+==1976530== 
+==1976530== LEAK SUMMARY:
+==1976530==    definitely lost: 224 bytes in 1 blocks
+==1976530==    indirectly lost: 520 bytes in 14 blocks
+==1976530==      possibly lost: 128 bytes in 1 blocks
+==1976530==    still reachable: 112,685 bytes in 18 blocks
+==1976530==         suppressed: 0 bytes in 0 blocks
+==1976530== 
+==1976530== For lists of detected and suppressed errors, rerun with: -s
+==1976530== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+minishell$ cat out3
+==1976532== Memcheck, a memory error detector
+==1976532== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1976532== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1976532== Command: /usr/bin/cat out3
+==1976532== 
+heheheh
+==1976532== 
+==1976532== FILE DESCRIPTORS: 1 open (1 std) at exit.
+==1976532== 
+==1976532== HEAP SUMMARY:
+==1976532==     in use at exit: 0 bytes in 0 blocks
+==1976532==   total heap usage: 31 allocs, 31 frees, 139,232 bytes allocated
+==1976532== 
+==1976532== All heap blocks were freed -- no leaks are possible
+==1976532== 
+==1976532== For lists of detected and suppressed errors, rerun with: -s
+==1976532== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+minishell$ chmod 000 out2
+==1976538== Memcheck, a memory error detector
+==1976538== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1976538== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1976538== Command: /usr/bin/chmod 000 out2
+==1976538== 
+==1976538== 
+==1976538== FILE DESCRIPTORS: 1 open (1 std) at exit.
+==1976538== 
+==1976538== HEAP SUMMARY:
+==1976538==     in use at exit: 32 bytes in 1 blocks
+==1976538==   total heap usage: 38 allocs, 37 frees, 9,457 bytes allocated
+==1976538== 
+==1976538== 32 bytes in 1 blocks are still reachable in loss record 1 of 1
+==1976538==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1976538==    by 0x10D193: ??? (in /usr/bin/chmod)
+==1976538==    by 0x10BDBC: ??? (in /usr/bin/chmod)
+==1976538==    by 0x489AD8F: (below main) (libc_start_call_main.h:58)
+==1976538== 
+==1976538== LEAK SUMMARY:
+==1976538==    definitely lost: 0 bytes in 0 blocks
+==1976538==    indirectly lost: 0 bytes in 0 blocks
+==1976538==      possibly lost: 0 bytes in 0 blocks
+==1976538==    still reachable: 32 bytes in 1 blocks
+==1976538==         suppressed: 0 bytes in 0 blocks
+==1976538== 
+==1976538== For lists of detected and suppressed errors, rerun with: -s
+==1976538== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+minishell$ echo heheheh >out2>out1>out3
+out2: Permission denied
+minishell$ echo $?
+1
+minishell$ export VAR5=out2 VAR6=out1
+minishell$ echo huhu >$VAR6>$VAR5
+out2: Permission denied
+minishell$ echo huhu >$VAR5>$VAR6
+out2: Permission denied
+minishell$ <<hihi
+> $USER
+> rbhs
+> hihi
+==1976556== 
+==1976556== FILE DESCRIPTORS: 3 open (3 std) at exit.
+==1976556== 
+==1976556== HEAP SUMMARY:
+==1976556==     in use at exit: 211,309 bytes in 402 blocks
+==1976556==   total heap usage: 2,954 allocs, 2,552 frees, 289,391 bytes allocated
+==1976556== 
+==1976556== LEAK SUMMARY:
+==1976556==    definitely lost: 0 bytes in 0 blocks
+==1976556==    indirectly lost: 0 bytes in 0 blocks
+==1976556==      possibly lost: 0 bytes in 0 blocks
+==1976556==    still reachable: 0 bytes in 0 blocks
+==1976556==         suppressed: 211,309 bytes in 402 blocks
+==1976556== 
+==1976556== For lists of detected and suppressed errors, rerun with: -s
+==1976556== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+minishell$ cat <<hihi
+> $USER
+> fdbx
+> hihi
+==1976564== Memcheck, a memory error detector
+==1976564== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1976564== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1976564== Command: /usr/bin/cat
+==1976564== 
+htopa
+fdbx
+==1976564== 
+==1976564== FILE DESCRIPTORS: 0 open (0 std) at exit.
+==1976564== 
+==1976564== HEAP SUMMARY:
+==1976564==     in use at exit: 0 bytes in 0 blocks
+==1976564==   total heap usage: 31 allocs, 31 frees, 139,232 bytes allocated
+==1976564== 
+==1976564== All heap blocks were freed -- no leaks are possible
+==1976564== 
+==1976564== For lists of detected and suppressed errors, rerun with: -s
+==1976564== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+minishell$ cat <<"hihi"
+> $USER
+> fdnxgf
+> hihi
+==1977589== Memcheck, a memory error detector
+==1977589== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1977589== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1977589== Command: /usr/bin/cat
+==1977589== 
+htopa
+fdnxgf
+==1977589== 
+==1977589== FILE DESCRIPTORS: 0 open (0 std) at exit.
+==1977589== 
+==1977589== HEAP SUMMARY:
+==1977589==     in use at exit: 0 bytes in 0 blocks
+==1977589==   total heap usage: 31 allocs, 31 frees, 139,232 bytes allocated
+==1977589== 
+==1977589== All heap blocks were freed -- no leaks are possible
+==1977589== 
+==1977589== For lists of detected and suppressed errors, rerun with: -s
+==1977589== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+minishell$ echo $?
+0
+minishell$ sleep 5 | sleep 6 | sleep 10
+==1977598== Memcheck, a memory error detector
+==1977598== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1977598== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1977598== Command: /usr/bin/sleep 5
+==1977598== 
+==1977599== Memcheck, a memory error detector
+==1977599== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1977599== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1977599== Command: /usr/bin/sleep 6
+==1977599== 
+==1977600== Memcheck, a memory error detector
+==1977600== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1977600== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1977600== Command: /usr/bin/sleep 10
+==1977600== 
+^C==1975179== 
+==1975179== Process terminating with default action of signal 2 (SIGINT)
+==1977600== 
+==1977600== Process terminating with default action of signal 2 (SIGINT)
+==1977598== 
+==1977598== Process terminating with default action of signal 2 (SIGINT)
+==1977599== 
+==1977599== Process terminating with default action of signal 2 (SIGINT)
+==1977600==    at 0x495678A: clock_nanosleep@@GLIBC_2.17 (clock_nanosleep.c:78)
+==1977598==    at 0x495678A: clock_nanosleep@@GLIBC_2.17 (clock_nanosleep.c:78)
+==1977599==    at 0x495678A: clock_nanosleep@@GLIBC_2.17 (clock_nanosleep.c:78)
+==1977598==    by 0x495B676: nanosleep (nanosleep.c:25)
+==1975179==    at 0x49AF3E8: wait4 (wait4.c:30)
+==1977600==    by 0x495B676: nanosleep (nanosleep.c:25)
+==1977599==    by 0x495B676: nanosleep (nanosleep.c:25)
+==1975179==    by 0x4020BE: execute_commands (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977598==    by 0x10A9EF: ??? (in /usr/bin/sleep)
+==1977600==    by 0x10A9EF: ??? (in /usr/bin/sleep)
+==1977599==    by 0x10A9EF: ??? (in /usr/bin/sleep)
+==1975179==    by 0x405C38: parse_and_process_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977598==    by 0x489AD8F: (below main) (libc_start_call_main.h:58)
+==1977600==    by 0x489AD8F: (below main) (libc_start_call_main.h:58)
+==1977599==    by 0x489AD8F: (below main) (libc_start_call_main.h:58)
+==1975179==    by 0x405D4F: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977598== 
+==1977600== 
+==1977599== 
+==1977598== FILE DESCRIPTORS: 3 open (3 std) at exit.
+==1977600== FILE DESCRIPTORS: 3 open (3 std) at exit.
+==1975179== 
+==1977598== 
+==1977599== FILE DESCRIPTORS: 3 open (3 std) at exit.
+==1977600== 
+==1975179== FILE DESCRIPTORS: 3 open (3 std) at exit.
+==1977599== 
+==1977598== HEAP SUMMARY:
+==1977598==     in use at exit: 4,060 bytes in 29 blocks
+==1977598==   total heap usage: 30 allocs, 1 frees, 4,065 bytes allocated
+==1977598== 
+==1975179== 
+==1977600== HEAP SUMMARY:
+==1977600==     in use at exit: 4,060 bytes in 29 blocks
+==1977600==   total heap usage: 30 allocs, 1 frees, 4,065 bytes allocated
+==1977600== 
+==1977599== HEAP SUMMARY:
+==1977599==     in use at exit: 4,060 bytes in 29 blocks
+==1977599==   total heap usage: 30 allocs, 1 frees, 4,065 bytes allocated
+==1977599== 
+==1975179== HEAP SUMMARY:
+==1975179==     in use at exit: 221,286 bytes in 570 blocks
+==1975179==   total heap usage: 3,224 allocs, 2,654 frees, 295,004 bytes allocated
+==1975179== 
+==1977598== 10 bytes in 1 blocks are still reachable in loss record 1 of 7
+==1977600== 10 bytes in 1 blocks are still reachable in loss record 1 of 7
+==1977599== 10 bytes in 1 blocks are still reachable in loss record 1 of 7
+==1977598==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977600==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977599==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977598==    by 0x491958E: strdup (strdup.c:42)
+==1977600==    by 0x491958E: strdup (strdup.c:42)
+==1977599==    by 0x491958E: strdup (strdup.c:42)
+==1977598==    by 0x48AED57: __textdomain (textdomain.c:94)
+==1977600==    by 0x48AED57: __textdomain (textdomain.c:94)
+==1977599==    by 0x48AED57: __textdomain (textdomain.c:94)
+==1977598==    by 0x48AED57: textdomain (textdomain.c:64)
+==1977600==    by 0x48AED57: textdomain (textdomain.c:64)
+==1977599==    by 0x48AED57: textdomain (textdomain.c:64)
+==1977598==    by 0x10A6BF: ??? (in /usr/bin/sleep)
+==1977600==    by 0x10A6BF: ??? (in /usr/bin/sleep)
+==1977599==    by 0x10A6BF: ??? (in /usr/bin/sleep)
+==1977598==    by 0x489AD8F: (below main) (libc_start_call_main.h:58)
+==1977600==    by 0x489AD8F: (below main) (libc_start_call_main.h:58)
+==1977599==    by 0x489AD8F: (below main) (libc_start_call_main.h:58)
+==1977598== 
+==1977600== 
+==1977599== 
+==1977598== 12 bytes in 1 blocks are still reachable in loss record 2 of 7
+==1977600== 12 bytes in 1 blocks are still reachable in loss record 2 of 7
+==1977599== 12 bytes in 1 blocks are still reachable in loss record 2 of 7
+==1977598==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977600==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977599==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977598==    by 0x491958E: strdup (strdup.c:42)
+==1977600==    by 0x491958E: strdup (strdup.c:42)
+==1977599==    by 0x491958E: strdup (strdup.c:42)
+==1977598==    by 0x48A931A: _nl_load_locale_from_archive (loadarchive.c:464)
+==1977600==    by 0x48A931A: _nl_load_locale_from_archive (loadarchive.c:464)
+==1977599==    by 0x48A931A: _nl_load_locale_from_archive (loadarchive.c:464)
+==1977598==    by 0x48A80DF: _nl_find_locale (findlocale.c:152)
+==1977600==    by 0x48A80DF: _nl_find_locale (findlocale.c:152)
+==1977599==    by 0x48A80DF: _nl_find_locale (findlocale.c:152)
+==1977598==    by 0x48A7856: setlocale (setlocale.c:337)
+==1977600==    by 0x48A7856: setlocale (setlocale.c:337)
+==1977599==    by 0x48A7856: setlocale (setlocale.c:337)
+==1977598==    by 0x48A7856: setlocale (setlocale.c:217)
+==1977600==    by 0x48A7856: setlocale (setlocale.c:217)
+==1977599==    by 0x48A7856: setlocale (setlocale.c:217)
+==1977598==    by 0x10A6A8: ??? (in /usr/bin/sleep)
+==1977600==    by 0x10A6A8: ??? (in /usr/bin/sleep)
+==1977599==    by 0x10A6A8: ??? (in /usr/bin/sleep)
+==1977598==    by 0x489AD8F: (below main) (libc_start_call_main.h:58)
+==1977600==    by 0x489AD8F: (below main) (libc_start_call_main.h:58)
+==1977599==    by 0x489AD8F: (below main) (libc_start_call_main.h:58)
+==1977600== 
+==1977598== 
+==1977599== 
+==1977600== 12 bytes in 1 blocks are still reachable in loss record 3 of 7
+==1977598== 12 bytes in 1 blocks are still reachable in loss record 3 of 7
+==1977599== 12 bytes in 1 blocks are still reachable in loss record 3 of 7
+==1977600==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977598==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977599==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977600==    by 0x48A76EB: new_composite_name (setlocale.c:165)
+==1977598==    by 0x48A76EB: new_composite_name (setlocale.c:165)
+==1977599==    by 0x48A76EB: new_composite_name (setlocale.c:165)
+==1977600==    by 0x48A7BAA: setlocale (setlocale.c:375)
+==1977598==    by 0x48A7BAA: setlocale (setlocale.c:375)
+==1977599==    by 0x48A7BAA: setlocale (setlocale.c:375)
+==1977600==    by 0x48A7BAA: setlocale (setlocale.c:217)
+==1977598==    by 0x48A7BAA: setlocale (setlocale.c:217)
+==1977599==    by 0x48A7BAA: setlocale (setlocale.c:217)
+==1977600==    by 0x10A6A8: ??? (in /usr/bin/sleep)
+==1977598==    by 0x10A6A8: ??? (in /usr/bin/sleep)
+==1977599==    by 0x10A6A8: ??? (in /usr/bin/sleep)
+==1977600==    by 0x489AD8F: (below main) (libc_start_call_main.h:58)
+==1977598==    by 0x489AD8F: (below main) (libc_start_call_main.h:58)
+==1977599==    by 0x489AD8F: (below main) (libc_start_call_main.h:58)
+==1977600== 
+==1977598== 
+==1977599== 
+==1977598== 34 bytes in 1 blocks are still reachable in loss record 4 of 7
+==1977600== 34 bytes in 1 blocks are still reachable in loss record 4 of 7
+==1977599== 34 bytes in 1 blocks are still reachable in loss record 4 of 7
+==1977598==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977600==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977599==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977598==    by 0x48AB5DE: set_binding_values.part.0 (bindtextdom.c:203)
+==1977600==    by 0x48AB5DE: set_binding_values.part.0 (bindtextdom.c:203)
+==1977599==    by 0x48AB5DE: set_binding_values.part.0 (bindtextdom.c:203)
+==1977598==    by 0x48AB89B: set_binding_values (bindtextdom.c:322)
+==1977600==    by 0x48AB89B: set_binding_values (bindtextdom.c:322)
+==1977599==    by 0x48AB89B: set_binding_values (bindtextdom.c:322)
+==1977598==    by 0x48AB89B: bindtextdomain (bindtextdom.c:320)
+==1977600==    by 0x48AB89B: bindtextdomain (bindtextdom.c:320)
+==1977599==    by 0x48AB89B: bindtextdomain (bindtextdom.c:320)
+==1977598==    by 0x10A6B7: ??? (in /usr/bin/sleep)
+==1977600==    by 0x10A6B7: ??? (in /usr/bin/sleep)
+==1977599==    by 0x10A6B7: ??? (in /usr/bin/sleep)
+==1977598==    by 0x489AD8F: (below main) (libc_start_call_main.h:58)
+==1977600==    by 0x489AD8F: (below main) (libc_start_call_main.h:58)
+==1977599==    by 0x489AD8F: (below main) (libc_start_call_main.h:58)
+==1977598== 
+==1977600== 
+==1977599== 
+==1977598== 120 bytes in 1 blocks are still reachable in loss record 5 of 7
+==1977600== 120 bytes in 1 blocks are still reachable in loss record 5 of 7
+==1977599== 120 bytes in 1 blocks are still reachable in loss record 5 of 7
+==1977598==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977600==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977599==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977598==    by 0x48A92FF: _nl_load_locale_from_archive (loadarchive.c:460)
+==1977600==    by 0x48A92FF: _nl_load_locale_from_archive (loadarchive.c:460)
+==1977599==    by 0x48A92FF: _nl_load_locale_from_archive (loadarchive.c:460)
+==1977598==    by 0x48A80DF: _nl_find_locale (findlocale.c:152)
+==1977600==    by 0x48A80DF: _nl_find_locale (findlocale.c:152)
+==1977599==    by 0x48A80DF: _nl_find_locale (findlocale.c:152)
+==1977598==    by 0x48A7856: setlocale (setlocale.c:337)
+==1977600==    by 0x48A7856: setlocale (setlocale.c:337)
+==1977599==    by 0x48A7856: setlocale (setlocale.c:337)
+==1977598==    by 0x48A7856: setlocale (setlocale.c:217)
+==1977600==    by 0x48A7856: setlocale (setlocale.c:217)
+==1977599==    by 0x48A7856: setlocale (setlocale.c:217)
+==1977598==    by 0x10A6A8: ??? (in /usr/bin/sleep)
+==1977600==    by 0x10A6A8: ??? (in /usr/bin/sleep)
+==1977599==    by 0x10A6A8: ??? (in /usr/bin/sleep)
+==1977598==    by 0x489AD8F: (below main) (libc_start_call_main.h:58)
+==1977600==    by 0x489AD8F: (below main) (libc_start_call_main.h:58)
+==1977599==    by 0x489AD8F: (below main) (libc_start_call_main.h:58)
+==1977598== 
+==1977600== 
+==1977599== 
+==1977598== 144 bytes in 12 blocks are still reachable in loss record 6 of 7
+==1977600== 144 bytes in 12 blocks are still reachable in loss record 6 of 7
+==1977599== 144 bytes in 12 blocks are still reachable in loss record 6 of 7
+==1977598==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977600==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977599==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977598==    by 0x491958E: strdup (strdup.c:42)
+==1977600==    by 0x491958E: strdup (strdup.c:42)
+==1977599==    by 0x491958E: strdup (strdup.c:42)
+==1977598==    by 0x48A7C84: setlocale (setlocale.c:366)
+==1977600==    by 0x48A7C84: setlocale (setlocale.c:366)
+==1977599==    by 0x48A7C84: setlocale (setlocale.c:366)
+==1977598==    by 0x48A7C84: setlocale (setlocale.c:217)
+==1977600==    by 0x48A7C84: setlocale (setlocale.c:217)
+==1977599==    by 0x48A7C84: setlocale (setlocale.c:217)
+==1977598==    by 0x10A6A8: ??? (in /usr/bin/sleep)
+==1977600==    by 0x10A6A8: ??? (in /usr/bin/sleep)
+==1977599==    by 0x10A6A8: ??? (in /usr/bin/sleep)
+==1977598==    by 0x489AD8F: (below main) (libc_start_call_main.h:58)
+==1977600==    by 0x489AD8F: (below main) (libc_start_call_main.h:58)
+==1977599==    by 0x489AD8F: (below main) (libc_start_call_main.h:58)
+==1977598== 
+==1977600== 
+==1977599== 
+==1977598== 3,728 bytes in 12 blocks are still reachable in loss record 7 of 7
+==1977600== 3,728 bytes in 12 blocks are still reachable in loss record 7 of 7
+==1977599== 3,728 bytes in 12 blocks are still reachable in loss record 7 of 7
+==1977598==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977600==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977599==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977598==    by 0x48A896E: _nl_intern_locale_data (loadlocale.c:97)
+==1977600==    by 0x48A896E: _nl_intern_locale_data (loadlocale.c:97)
+==1977599==    by 0x48A896E: _nl_intern_locale_data (loadlocale.c:97)
+==1977598==    by 0x48A9370: _nl_load_locale_from_archive (loadarchive.c:477)
+==1977600==    by 0x48A9370: _nl_load_locale_from_archive (loadarchive.c:477)
+==1977599==    by 0x48A9370: _nl_load_locale_from_archive (loadarchive.c:477)
+==1977598==    by 0x48A80DF: _nl_find_locale (findlocale.c:152)
+==1977600==    by 0x48A80DF: _nl_find_locale (findlocale.c:152)
+==1977599==    by 0x48A80DF: _nl_find_locale (findlocale.c:152)
+==1977598==    by 0x48A7856: setlocale (setlocale.c:337)
+==1977600==    by 0x48A7856: setlocale (setlocale.c:337)
+==1977599==    by 0x48A7856: setlocale (setlocale.c:337)
+==1977598==    by 0x48A7856: setlocale (setlocale.c:217)
+==1977600==    by 0x48A7856: setlocale (setlocale.c:217)
+==1977599==    by 0x48A7856: setlocale (setlocale.c:217)
+==1977598==    by 0x10A6A8: ??? (in /usr/bin/sleep)
+==1977600==    by 0x10A6A8: ??? (in /usr/bin/sleep)
+==1977598==    by 0x489AD8F: (below main) (libc_start_call_main.h:58)
+==1977599==    by 0x10A6A8: ??? (in /usr/bin/sleep)
+==1977600==    by 0x489AD8F: (below main) (libc_start_call_main.h:58)
+==1977598== 
+==1977599==    by 0x489AD8F: (below main) (libc_start_call_main.h:58)
+==1977600== 
+==1977598== LEAK SUMMARY:
+==1977599== 
+==1977600== LEAK SUMMARY:
+==1977598==    definitely lost: 0 bytes in 0 blocks
+==1977599== LEAK SUMMARY:
+==1977600==    definitely lost: 0 bytes in 0 blocks
+==1977598==    indirectly lost: 0 bytes in 0 blocks
+==1977599==    definitely lost: 0 bytes in 0 blocks
+==1977600==    indirectly lost: 0 bytes in 0 blocks
+==1977598==      possibly lost: 0 bytes in 0 blocks
+==1977599==    indirectly lost: 0 bytes in 0 blocks
+==1977600==      possibly lost: 0 bytes in 0 blocks
+==1977598==    still reachable: 4,060 bytes in 29 blocks
+==1977599==      possibly lost: 0 bytes in 0 blocks
+==1977600==    still reachable: 4,060 bytes in 29 blocks
+==1977598==         suppressed: 0 bytes in 0 blocks
+==1977599==    still reachable: 4,060 bytes in 29 blocks
+==1977600==         suppressed: 0 bytes in 0 blocks
+==1977598== 
+==1977599==         suppressed: 0 bytes in 0 blocks
+==1977600== 
+==1977598== For lists of detected and suppressed errors, rerun with: -s
+==1977599== 
+==1977600== For lists of detected and suppressed errors, rerun with: -s
+==1977598== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==1977599== For lists of detected and suppressed errors, rerun with: -s
+==1977600== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==1977599== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==1975179== 4 bytes in 2 blocks are still reachable in loss record 1 of 114
+==1975179==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975179==    by 0x408C15: create_new_token_range (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x409269: parse_single_char_operator (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x40908F: process_token_parsing (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x408FCD: tokenize (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x405BAD: parse_and_process_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x405D4F: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179== 
+==1975179== 8 bytes in 1 blocks are still reachable in loss record 4 of 114
+==1975179==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975179==    by 0x40A3D4: ft_strdup (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x401597: allocate_command_string (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x401519: create_ast_command_node (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x406040: create_command_node_or_cleanup (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x405E82: parse_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x406326: parse_term (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x406439: parse_expression (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x40135D: build_ast (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x405BE6: parse_and_process_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x405D4F: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179== 
+==1975179== 10 bytes in 1 blocks are still reachable in loss record 9 of 114
+==1975179==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975179==    by 0x40A3D4: ft_strdup (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x404E07: ft_add_env_var (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x402FF5: ft_set (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x404354: check_and_run_builtins_single (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x40776A: run_single_builtin (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x401F0F: execute_commands (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x405C38: parse_and_process_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x405D4F: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179== 
+==1975179== 12 bytes in 1 blocks are still reachable in loss record 15 of 114
+==1975179==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975179==    by 0x406E5D: initialize_struct_with_pids_and_fd (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x406EC6: prepare_struct (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x401F6E: execute_commands (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x405C38: parse_and_process_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x405D4F: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179== 
+==1975179== 17 bytes in 2 blocks are still reachable in loss record 20 of 114
+==1975179==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975179==    by 0x40A3D4: ft_strdup (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x401597: allocate_command_string (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x401519: create_ast_command_node (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x406040: create_command_node_or_cleanup (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x405E82: parse_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x406326: parse_term (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x406439: parse_expression (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x40656B: parse_right_node (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x4064D8: parse_expression (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x40135D: build_ast (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x405BE6: parse_and_process_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179== 
+==1975179== 25 bytes in 6 blocks are still reachable in loss record 28 of 114
+==1975179==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975179==    by 0x40AB74: ft_substr (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x40987F: read_word_range (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x408E4E: parse_word (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x4090F8: process_token_parsing (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x408FCD: tokenize (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x405BAD: parse_and_process_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x405D4F: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179== 
+==1975179== 29 bytes in 1 blocks are still reachable in loss record 29 of 114
+==1975179==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975179==    by 0x40AB74: ft_substr (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x40AD07: ft_strtrim (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x405993: get_input (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x405D02: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179== 
+==1975179== 32 bytes in 1 blocks are still reachable in loss record 31 of 114
+==1975179==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975179==    by 0x406E34: initialize_struct_with_pids_and_fd (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x406EC6: prepare_struct (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x401F6E: execute_commands (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x405C38: parse_and_process_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x405D4F: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179== 
+==1975179== 36 bytes in 4 blocks are possibly lost in loss record 32 of 114
+==1975179==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975179==    by 0x490A03F: __add_to_environ (setenv.c:217)
+==1975179==    by 0x48543FF: setenv (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975179==    by 0x48AA005: sh_set_lines_and_columns (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1975179==    by 0x48A4AF7: _rl_get_screen_size (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1975179==    by 0x48A4DD2: rl_resize_terminal (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1975179==    by 0x48A4F77: _rl_signal_handler (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1975179==    by 0x48A5BEC: rl_getc (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1975179==    by 0x48A5460: rl_read_key (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1975179==    by 0x4889C86: readline_internal_char (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1975179==    by 0x4892D14: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1975179==    by 0x405964: get_input (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179== 
+==1975179== 40 bytes in 1 blocks are still reachable in loss record 34 of 114
+==1975179==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975179==    by 0x4014B9: create_ast_command_node (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x406040: create_command_node_or_cleanup (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x405E82: parse_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x406326: parse_term (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x406439: parse_expression (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x40135D: build_ast (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x405BE6: parse_and_process_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x405D4F: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179== 
+==1975179== 48 bytes in 2 blocks are still reachable in loss record 39 of 114
+==1975179==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975179==    by 0x408BDE: create_new_token_range (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x409269: parse_single_char_operator (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x40908F: process_token_parsing (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x408FCD: tokenize (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x405BAD: parse_and_process_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x405D4F: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179== 
+==1975179== 80 bytes in 2 blocks are still reachable in loss record 43 of 114
+==1975179==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975179==    by 0x4014B9: create_ast_command_node (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x406040: create_command_node_or_cleanup (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x405E82: parse_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x406326: parse_term (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x406439: parse_expression (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x40656B: parse_right_node (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x4064D8: parse_expression (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x40135D: build_ast (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x405BE6: parse_and_process_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x405D4F: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179== 
+==1975179== 80 bytes in 2 blocks are still reachable in loss record 44 of 114
+==1975179==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975179==    by 0x40142C: create_ast_operator_node (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x40639F: built_operator_node (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x406508: parse_expression (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x40135D: build_ast (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x405BE6: parse_and_process_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x405D4F: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179== 
+==1975179== 96 bytes in 4 blocks are possibly lost in loss record 51 of 114
+==1975179==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975179==    by 0x49E4F9E: tsearch (tsearch.c:337)
+==1975179==    by 0x490A06A: __add_to_environ (setenv.c:233)
+==1975179==    by 0x48543FF: setenv (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975179==    by 0x48AA005: sh_set_lines_and_columns (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1975179==    by 0x48A4AF7: _rl_get_screen_size (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1975179==    by 0x48A4DD2: rl_resize_terminal (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1975179==    by 0x48A4F77: _rl_signal_handler (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1975179==    by 0x48A5BEC: rl_getc (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1975179==    by 0x48A5460: rl_read_key (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1975179==    by 0x4889C86: readline_internal_char (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1975179==    by 0x4892D14: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==1975179== 
+==1975179== 144 bytes in 6 blocks are still reachable in loss record 53 of 114
+==1975179==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975179==    by 0x408E5C: parse_word (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x4090F8: process_token_parsing (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x408FCD: tokenize (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x405BAD: parse_and_process_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x405D4F: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179== 
+==1975179== 496 bytes in 1 blocks are still reachable in loss record 67 of 114
+==1975179==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975179==    by 0x404DBA: ft_add_env_var (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x402FF5: ft_set (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x404354: check_and_run_builtins_single (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x40776A: run_single_builtin (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x401F0F: execute_commands (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x405C38: parse_and_process_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x405D4F: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179== 
+==1975179== 2,046 bytes in 60 blocks are still reachable in loss record 87 of 114
+==1975179==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1975179==    by 0x40A3D4: ft_strdup (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x404EB6: copy_env_vars (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x404DF0: ft_add_env_var (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x402FF5: ft_set (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x404354: check_and_run_builtins_single (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x40776A: run_single_builtin (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x401F0F: execute_commands (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x405C38: parse_and_process_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179==    by 0x405D4F: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1975179== 
+==1975179== LEAK SUMMARY:
+==1975179==    definitely lost: 0 bytes in 0 blocks
+==1975179==    indirectly lost: 0 bytes in 0 blocks
+==1975179==      possibly lost: 132 bytes in 8 blocks
+==1975179==    still reachable: 3,071 bytes in 89 blocks
+==1975179==         suppressed: 218,083 bytes in 473 blocks
+==1975179== 
+==1975179== For lists of detected and suppressed errors, rerun with: -s
+==1975179== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+
+c2r6p4% valgrind --leak-check=full --show-leak-kinds=all --suppressions=/home/htopa/Desktop/Git/minishell4/local.supp --track-fds=yes --trace-children=yes ./minishell
+==1977606== Memcheck, a memory error detector
+==1977606== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1977606== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1977606== Command: ./minishell
+==1977606== 
+minishell$ sleep 2 | sleep 1| sleep 5
+==1977608== Memcheck, a memory error detector
+==1977608== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1977608== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1977608== Command: /usr/bin/sleep 2
+==1977608== 
+==1977609== Memcheck, a memory error detector
+==1977609== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1977609== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1977609== Command: /usr/bin/sleep 1
+==1977609== 
+==1977610== Memcheck, a memory error detector
+==1977610== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1977610== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1977610== Command: /usr/bin/sleep 5
+==1977610== 
+==1977609== 
+==1977609== FILE DESCRIPTORS: 1 open (1 std) at exit.
+==1977609== 
+==1977609== HEAP SUMMARY:
+==1977609==     in use at exit: 0 bytes in 0 blocks
+==1977609==   total heap usage: 30 allocs, 30 frees, 4,065 bytes allocated
+==1977609== 
+==1977609== All heap blocks were freed -- no leaks are possible
+==1977609== 
+==1977609== For lists of detected and suppressed errors, rerun with: -s
+==1977609== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==1977608== 
+==1977608== FILE DESCRIPTORS: 1 open (1 std) at exit.
+==1977608== 
+==1977608== HEAP SUMMARY:
+==1977608==     in use at exit: 0 bytes in 0 blocks
+==1977608==   total heap usage: 30 allocs, 30 frees, 4,065 bytes allocated
+==1977608== 
+==1977608== All heap blocks were freed -- no leaks are possible
+==1977608== 
+==1977608== For lists of detected and suppressed errors, rerun with: -s
+==1977608== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==1977610== 
+==1977610== FILE DESCRIPTORS: 1 open (1 std) at exit.
+==1977610== 
+==1977610== HEAP SUMMARY:
+==1977610==     in use at exit: 0 bytes in 0 blocks
+==1977610==   total heap usage: 30 allocs, 30 frees, 4,065 bytes allocated
+==1977610== 
+==1977610== All heap blocks were freed -- no leaks are possible
+==1977610== 
+==1977610== For lists of detected and suppressed errors, rerun with: -s
+==1977610== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+minishell$ sleep 2 | sleep 1| sleep 5 | echo hihi
+hihi
+==1977613== Memcheck, a memory error detector
+==1977613== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1977613== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1977613== Command: /usr/bin/sleep 2
+==1977613== 
+==1977614== Memcheck, a memory error detector
+==1977614== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1977614== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1977614== Command: /usr/bin/sleep 1
+==1977614== 
+==1977615== Memcheck, a memory error detector
+==1977615== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1977615== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1977615== Command: /usr/bin/sleep 5
+==1977615== 
+==1977616== 
+==1977616== FILE DESCRIPTORS: 3 open (3 std) at exit.
+==1977616== 
+==1977616== HEAP SUMMARY:
+==1977616==     in use at exit: 208,324 bytes in 230 blocks
+==1977616==   total heap usage: 650 allocs, 420 frees, 235,493 bytes allocated
+==1977616== 
+==1977616== LEAK SUMMARY:
+==1977616==    definitely lost: 0 bytes in 0 blocks
+==1977616==    indirectly lost: 0 bytes in 0 blocks
+==1977616==      possibly lost: 0 bytes in 0 blocks
+==1977616==    still reachable: 0 bytes in 0 blocks
+==1977616==         suppressed: 208,324 bytes in 230 blocks
+==1977616== 
+==1977616== For lists of detected and suppressed errors, rerun with: -s
+==1977616== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==1977614== 
+==1977614== FILE DESCRIPTORS: 1 open (1 std) at exit.
+==1977614== 
+==1977614== HEAP SUMMARY:
+==1977614==     in use at exit: 0 bytes in 0 blocks
+==1977614==   total heap usage: 30 allocs, 30 frees, 4,065 bytes allocated
+==1977614== 
+==1977614== All heap blocks were freed -- no leaks are possible
+==1977614== 
+==1977614== For lists of detected and suppressed errors, rerun with: -s
+==1977614== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==1977613== 
+==1977613== FILE DESCRIPTORS: 1 open (1 std) at exit.
+==1977613== 
+==1977613== HEAP SUMMARY:
+==1977613==     in use at exit: 0 bytes in 0 blocks
+==1977613==   total heap usage: 30 allocs, 30 frees, 4,065 bytes allocated
+==1977613== 
+==1977613== All heap blocks were freed -- no leaks are possible
+==1977613== 
+==1977613== For lists of detected and suppressed errors, rerun with: -s
+==1977613== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+^C==1977615== 
+==1977615== Process terminating with default action of signal 2 (SIGINT)
+==1977606== 
+==1977606== Process terminating with default action of signal 2 (SIGINT)
+==1977615==    at 0x495678A: clock_nanosleep@@GLIBC_2.17 (clock_nanosleep.c:78)
+==1977615==    by 0x495B676: nanosleep (nanosleep.c:25)
+==1977615==    by 0x10A9EF: ??? (in /usr/bin/sleep)
+==1977615==    by 0x489AD8F: (below main) (libc_start_call_main.h:58)
+==1977606==    at 0x49AF3E8: wait4 (wait4.c:30)
+==1977606==    by 0x4020BE: execute_commands (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977615== 
+==1977606==    by 0x405C38: parse_and_process_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977615== FILE DESCRIPTORS: 3 open (3 std) at exit.
+==1977606==    by 0x405D4F: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977615== 
+==1977615== HEAP SUMMARY:
+==1977615==     in use at exit: 4,060 bytes in 29 blocks
+==1977615==   total heap usage: 30 allocs, 1 frees, 4,065 bytes allocated
+==1977615== 
+==1977606== 
+==1977606== FILE DESCRIPTORS: 3 open (3 std) at exit.
+==1977606== 
+==1977606== HEAP SUMMARY:
+==1977606==     in use at exit: 217,536 bytes in 347 blocks
+==1977606==   total heap usage: 629 allocs, 282 frees, 235,128 bytes allocated
+==1977606== 
+==1977615== 10 bytes in 1 blocks are still reachable in loss record 1 of 7
+==1977615==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977615==    by 0x491958E: strdup (strdup.c:42)
+==1977615==    by 0x48AED57: __textdomain (textdomain.c:94)
+==1977615==    by 0x48AED57: textdomain (textdomain.c:64)
+==1977615==    by 0x10A6BF: ??? (in /usr/bin/sleep)
+==1977615==    by 0x489AD8F: (below main) (libc_start_call_main.h:58)
+==1977615== 
+==1977615== 12 bytes in 1 blocks are still reachable in loss record 2 of 7
+==1977615==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977615==    by 0x491958E: strdup (strdup.c:42)
+==1977615==    by 0x48A931A: _nl_load_locale_from_archive (loadarchive.c:464)
+==1977615==    by 0x48A80DF: _nl_find_locale (findlocale.c:152)
+==1977615==    by 0x48A7856: setlocale (setlocale.c:337)
+==1977615==    by 0x48A7856: setlocale (setlocale.c:217)
+==1977615==    by 0x10A6A8: ??? (in /usr/bin/sleep)
+==1977615==    by 0x489AD8F: (below main) (libc_start_call_main.h:58)
+==1977615== 
+==1977615== 12 bytes in 1 blocks are still reachable in loss record 3 of 7
+==1977615==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977615==    by 0x48A76EB: new_composite_name (setlocale.c:165)
+==1977615==    by 0x48A7BAA: setlocale (setlocale.c:375)
+==1977615==    by 0x48A7BAA: setlocale (setlocale.c:217)
+==1977615==    by 0x10A6A8: ??? (in /usr/bin/sleep)
+==1977615==    by 0x489AD8F: (below main) (libc_start_call_main.h:58)
+==1977615== 
+==1977615== 34 bytes in 1 blocks are still reachable in loss record 4 of 7
+==1977615==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977615==    by 0x48AB5DE: set_binding_values.part.0 (bindtextdom.c:203)
+==1977615==    by 0x48AB89B: set_binding_values (bindtextdom.c:322)
+==1977615==    by 0x48AB89B: bindtextdomain (bindtextdom.c:320)
+==1977615==    by 0x10A6B7: ??? (in /usr/bin/sleep)
+==1977615==    by 0x489AD8F: (below main) (libc_start_call_main.h:58)
+==1977615== 
+==1977615== 120 bytes in 1 blocks are still reachable in loss record 5 of 7
+==1977615==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977615==    by 0x48A92FF: _nl_load_locale_from_archive (loadarchive.c:460)
+==1977615==    by 0x48A80DF: _nl_find_locale (findlocale.c:152)
+==1977615==    by 0x48A7856: setlocale (setlocale.c:337)
+==1977615==    by 0x48A7856: setlocale (setlocale.c:217)
+==1977615==    by 0x10A6A8: ??? (in /usr/bin/sleep)
+==1977615==    by 0x489AD8F: (below main) (libc_start_call_main.h:58)
+==1977615== 
+==1977615== 144 bytes in 12 blocks are still reachable in loss record 6 of 7
+==1977615==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977615==    by 0x491958E: strdup (strdup.c:42)
+==1977615==    by 0x48A7C84: setlocale (setlocale.c:366)
+==1977615==    by 0x48A7C84: setlocale (setlocale.c:217)
+==1977615==    by 0x10A6A8: ??? (in /usr/bin/sleep)
+==1977615==    by 0x489AD8F: (below main) (libc_start_call_main.h:58)
+==1977615== 
+==1977615== 3,728 bytes in 12 blocks are still reachable in loss record 7 of 7
+==1977615==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977615==    by 0x48A896E: _nl_intern_locale_data (loadlocale.c:97)
+==1977615==    by 0x48A9370: _nl_load_locale_from_archive (loadarchive.c:477)
+==1977615==    by 0x48A80DF: _nl_find_locale (findlocale.c:152)
+==1977615==    by 0x48A7856: setlocale (setlocale.c:337)
+==1977615==    by 0x48A7856: setlocale (setlocale.c:217)
+==1977615==    by 0x10A6A8: ??? (in /usr/bin/sleep)
+==1977615==    by 0x489AD8F: (below main) (libc_start_call_main.h:58)
+==1977615== 
+==1977615== LEAK SUMMARY:
+==1977615==    definitely lost: 0 bytes in 0 blocks
+==1977615==    indirectly lost: 0 bytes in 0 blocks
+==1977615==      possibly lost: 0 bytes in 0 blocks
+==1977615==    still reachable: 4,060 bytes in 29 blocks
+==1977615==         suppressed: 0 bytes in 0 blocks
+==1977615== 
+==1977615== For lists of detected and suppressed errors, rerun with: -s
+==1977615== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==1977606== 6 bytes in 3 blocks are still reachable in loss record 3 of 99
+==1977606==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977606==    by 0x408C15: create_new_token_range (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x409269: parse_single_char_operator (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x40908F: process_token_parsing (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x408FCD: tokenize (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x405BAD: parse_and_process_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x405D4F: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606== 
+==1977606== 8 bytes in 1 blocks are still reachable in loss record 5 of 99
+==1977606==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977606==    by 0x40A3D4: ft_strdup (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x401597: allocate_command_string (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x401519: create_ast_command_node (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x406040: create_command_node_or_cleanup (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x405E82: parse_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x406326: parse_term (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x406439: parse_expression (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x40135D: build_ast (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x405BE6: parse_and_process_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x405D4F: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606== 
+==1977606== 16 bytes in 1 blocks are still reachable in loss record 19 of 99
+==1977606==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977606==    by 0x406E5D: initialize_struct_with_pids_and_fd (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x406EC6: prepare_struct (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x401F6E: execute_commands (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x405C38: parse_and_process_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x405D4F: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606== 
+==1977606== 26 bytes in 3 blocks are still reachable in loss record 28 of 99
+==1977606==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977606==    by 0x40A3D4: ft_strdup (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x401597: allocate_command_string (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x401519: create_ast_command_node (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x406040: create_command_node_or_cleanup (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x405E82: parse_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x406326: parse_term (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x406439: parse_expression (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x40656B: parse_right_node (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x4064D8: parse_expression (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x40135D: build_ast (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x405BE6: parse_and_process_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606== 
+==1977606== 32 bytes in 1 blocks are still reachable in loss record 31 of 99
+==1977606==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977606==    by 0x406E34: initialize_struct_with_pids_and_fd (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x406EC6: prepare_struct (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x401F6E: execute_commands (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x405C38: parse_and_process_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x405D4F: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606== 
+==1977606== 34 bytes in 8 blocks are still reachable in loss record 32 of 99
+==1977606==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977606==    by 0x40AB74: ft_substr (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x40987F: read_word_range (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x408E4E: parse_word (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x4090F8: process_token_parsing (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x408FCD: tokenize (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x405BAD: parse_and_process_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x405D4F: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606== 
+==1977606== 39 bytes in 1 blocks are still reachable in loss record 33 of 99
+==1977606==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977606==    by 0x40AB74: ft_substr (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x40AD07: ft_strtrim (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x405993: get_input (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x405D02: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606== 
+==1977606== 40 bytes in 1 blocks are still reachable in loss record 35 of 99
+==1977606==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977606==    by 0x4014B9: create_ast_command_node (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x406040: create_command_node_or_cleanup (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x405E82: parse_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x406326: parse_term (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x406439: parse_expression (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x40135D: build_ast (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x405BE6: parse_and_process_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x405D4F: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606== 
+==1977606== 72 bytes in 3 blocks are still reachable in loss record 39 of 99
+==1977606==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977606==    by 0x408BDE: create_new_token_range (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x409269: parse_single_char_operator (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x40908F: process_token_parsing (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x408FCD: tokenize (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x405BAD: parse_and_process_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x405D4F: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606== 
+==1977606== 120 bytes in 3 blocks are still reachable in loss record 45 of 99
+==1977606==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977606==    by 0x4014B9: create_ast_command_node (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x406040: create_command_node_or_cleanup (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x405E82: parse_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x406326: parse_term (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x406439: parse_expression (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x40656B: parse_right_node (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x4064D8: parse_expression (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x40135D: build_ast (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x405BE6: parse_and_process_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x405D4F: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606== 
+==1977606== 120 bytes in 3 blocks are still reachable in loss record 46 of 99
+==1977606==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977606==    by 0x40142C: create_ast_operator_node (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x40639F: built_operator_node (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x406508: parse_expression (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x40135D: build_ast (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x405BE6: parse_and_process_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x405D4F: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606== 
+==1977606== 192 bytes in 8 blocks are still reachable in loss record 50 of 99
+==1977606==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977606==    by 0x408E5C: parse_word (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x4090F8: process_token_parsing (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x408FCD: tokenize (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x405BAD: parse_and_process_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x405D4F: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606== 
+==1977606== 448 bytes in 1 blocks are still reachable in loss record 54 of 99
+==1977606==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977606==    by 0x407E05: copy_envp (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x405C89: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606== 
+==1977606== 2,011 bytes in 55 blocks are still reachable in loss record 71 of 99
+==1977606==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977606==    by 0x40A3D4: ft_strdup (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x407E54: copy_envp (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606==    by 0x405C89: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977606== 
+==1977606== LEAK SUMMARY:
+==1977606==    definitely lost: 0 bytes in 0 blocks
+==1977606==    indirectly lost: 0 bytes in 0 blocks
+==1977606==      possibly lost: 0 bytes in 0 blocks
+==1977606==    still reachable: 3,164 bytes in 92 blocks
+==1977606==         suppressed: 214,372 bytes in 255 blocks
+==1977606== 
+==1977606== For lists of detected and suppressed errors, rerun with: -s
+==1977606== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+c2r6p4% ./minishell
+minishell$ sleep 2 | sleep 5 | sleep 7
+minishell$ echo $?
+0
+minishell$ sleep 2 | sleep 5 | sleep 7
+^\zsh: quit (core dumped)  ./minishell
+c2r6p4% echo $?
+131
+c2r6p4% valgrind --leak-check=full --show-leak-kinds=all --suppressions=/home/htopa/Desktop/Git/minishell4/local.supp --track-fds=yes --trace-children=yes ./minishell
+==1977671== Memcheck, a memory error detector
+==1977671== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1977671== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1977671== Command: ./minishell
+==1977671== 
+minishell$ sleep 5 | exit | echo hi
+exit
+hi
+==1977692== Memcheck, a memory error detector
+==1977692== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1977692== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1977692== Command: /usr/bin/sleep 5
+==1977692== 
+==1977693== 
+==1977693== FILE DESCRIPTORS: 3 open (3 std) at exit.
+==1977693== 
+==1977693== HEAP SUMMARY:
+==1977693==     in use at exit: 210,692 bytes in 281 blocks
+==1977693==   total heap usage: 586 allocs, 305 frees, 233,353 bytes allocated
+==1977693== 
+==1977693== 448 bytes in 1 blocks are still reachable in loss record 26 of 68
+==1977693==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977693==    by 0x407E05: copy_envp (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977693==    by 0x405C89: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977693== 
+==1977693== 2,011 bytes in 55 blocks are still reachable in loss record 41 of 68
+==1977693==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977693==    by 0x40A3D4: ft_strdup (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977693==    by 0x407E54: copy_envp (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977693==    by 0x405C89: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977693== 
+==1977693== LEAK SUMMARY:
+==1977693==    definitely lost: 0 bytes in 0 blocks
+==1977693==    indirectly lost: 0 bytes in 0 blocks
+==1977693==      possibly lost: 0 bytes in 0 blocks
+==1977693==    still reachable: 2,459 bytes in 56 blocks
+==1977693==         suppressed: 208,233 bytes in 225 blocks
+==1977693== 
+==1977693== For lists of detected and suppressed errors, rerun with: -s
+==1977693== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==1977694== 
+==1977694== FILE DESCRIPTORS: 3 open (3 std) at exit.
+==1977694== 
+==1977694== HEAP SUMMARY:
+==1977694==     in use at exit: 208,233 bytes in 225 blocks
+==1977694==   total heap usage: 582 allocs, 357 frees, 233,313 bytes allocated
+==1977694== 
+==1977694== LEAK SUMMARY:
+==1977694==    definitely lost: 0 bytes in 0 blocks
+==1977694==    indirectly lost: 0 bytes in 0 blocks
+==1977694==      possibly lost: 0 bytes in 0 blocks
+==1977694==    still reachable: 0 bytes in 0 blocks
+==1977694==         suppressed: 208,233 bytes in 225 blocks
+==1977694== 
+==1977694== For lists of detected and suppressed errors, rerun with: -s
+==1977694== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==1977692== 
+==1977692== FILE DESCRIPTORS: 1 open (1 std) at exit.
+==1977692== 
+==1977692== HEAP SUMMARY:
+==1977692==     in use at exit: 0 bytes in 0 blocks
+==1977692==   total heap usage: 30 allocs, 30 frees, 4,065 bytes allocated
+==1977692== 
+==1977692== All heap blocks were freed -- no leaks are possible
+==1977692== 
+==1977692== For lists of detected and suppressed errors, rerun with: -s
+==1977692== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+minishell$ exit 7465783458
+exit
+==1977671== 
+==1977671== FILE DESCRIPTORS: 5 open (3 std) at exit.
+==1977671== Open file descriptor 4: /dev/pts/2
+==1977671==    at 0x49D9FEB: dup (syscall-template.S:120)
+==1977671==    by 0x401EA1: execute_commands (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977671==    by 0x405C38: parse_and_process_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977671==    by 0x405D4F: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977671== 
+==1977671== Open file descriptor 3: /dev/pts/2
+==1977671==    at 0x49D9FEB: dup (syscall-template.S:120)
+==1977671==    by 0x401E94: execute_commands (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977671==    by 0x405C38: parse_and_process_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977671==    by 0x405D4F: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977671== 
+==1977671== 
+==1977671== HEAP SUMMARY:
+==1977671==     in use at exit: 208,331 bytes in 232 blocks
+==1977671==   total heap usage: 671 allocs, 439 frees, 235,016 bytes allocated
+==1977671== 
+==1977671== 11 bytes in 1 blocks are definitely lost in loss record 5 of 73
+==1977671==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977671==    by 0x40AF69: ft_itoa_longlong (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977671==    by 0x402C9E: is_number (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977671==    by 0x402D38: ft_exit (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977671==    by 0x4045BE: check_and_run_builtins_single (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977671==    by 0x40776A: run_single_builtin (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977671==    by 0x401F0F: execute_commands (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977671==    by 0x405C38: parse_and_process_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977671==    by 0x405D4F: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977671== 
+==1977671== 21 bytes in 1 blocks are definitely lost in loss record 16 of 73
+==1977671==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==1977671==    by 0x40AF69: ft_itoa_longlong (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977671==    by 0x40AD42: ft_atoi_longlong (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977671==    by 0x402C91: is_number (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977671==    by 0x402D38: ft_exit (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977671==    by 0x4045BE: check_and_run_builtins_single (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977671==    by 0x40776A: run_single_builtin (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977671==    by 0x401F0F: execute_commands (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977671==    by 0x405C38: parse_and_process_command (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977671==    by 0x405D4F: main (in /home/htopa/Desktop/Git/minishell4/minishell)
+==1977671== 
+==1977671== LEAK SUMMARY:
+==1977671==    definitely lost: 32 bytes in 2 blocks
+==1977671==    indirectly lost: 0 bytes in 0 blocks
+==1977671==      possibly lost: 0 bytes in 0 blocks
+==1977671==    still reachable: 0 bytes in 0 blocks
+==1977671==         suppressed: 208,299 bytes in 230 blocks
+==1977671== 
+==1977671== For lists of detected and suppressed errors, rerun with: -s
+==1977671== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+c2r6p4% echo $?
+156
+c2r6p4% ./exit
+zsh: no such file or directory: ./exit
+c2r6p4% ./minishell
+minishell$ exit -1
+exit
+c2r6p4% echo $?
+156
+c2r6p4% valgrind --leak-check=full --show-leak-kinds=all --suppressions=/home/htopa/Desktop/Git/minishell4/local.supp --track-fds=yes --trace-children=yes ./minishell
+==1977775== Memcheck, a memory error detector
+==1977775== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1977775== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1977775== Command: ./minishell
+==1977775== 
+minishell$ ""
+ : command not found
+==1977776== 
+==1977776== FILE DESCRIPTORS: 3 open (3 std) at exit.
+==1977776== 
+==1977776== HEAP SUMMARY:
+==1977776==     in use at exit: 208,211 bytes in 225 blocks
+==1977776==   total heap usage: 540 allocs, 315 frees, 231,907 bytes allocated
+==1977776== 
+==1977776== LEAK SUMMARY:
+==1977776==    definitely lost: 0 bytes in 0 blocks
+==1977776==    indirectly lost: 0 bytes in 0 blocks
+==1977776==      possibly lost: 0 bytes in 0 blocks
+==1977776==    still reachable: 0 bytes in 0 blocks
+==1977776==         suppressed: 208,211 bytes in 225 blocks
+==1977776== 
+==1977776== For lists of detected and suppressed errors, rerun with: -s
+==1977776== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+minishell$ ft_lock
+ft_lock: Permission denied
+==1977971== 
+==1977971== FILE DESCRIPTORS: 3 open (3 std) at exit.
+==1977971== 
+==1977971== HEAP SUMMARY:
+==1977971==     in use at exit: 208,255 bytes in 228 blocks
+==1977971==   total heap usage: 555 allocs, 327 frees, 233,920 bytes allocated
+==1977971== 
+==1977971== LEAK SUMMARY:
+==1977971==    definitely lost: 0 bytes in 0 blocks
+==1977971==    indirectly lost: 0 bytes in 0 blocks
+==1977971==      possibly lost: 0 bytes in 0 blocks
+==1977971==    still reachable: 0 bytes in 0 blocks
+==1977971==         suppressed: 208,255 bytes in 228 blocks
+==1977971== 
+==1977971== For lists of detected and suppressed errors, rerun with: -s
+==1977971== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+minishell$ 
+==1977775== 
+==1977775== FILE DESCRIPTORS: 3 open (3 std) at exit.
+==1977775== 
+==1977775== HEAP SUMMARY:
+==1977775==     in use at exit: 208,255 bytes in 228 blocks
+==1977775==   total heap usage: 539 allocs, 311 frees, 232,132 bytes allocated
+==1977775== 
+==1977775== LEAK SUMMARY:
+==1977775==    definitely lost: 0 bytes in 0 blocks
+==1977775==    indirectly lost: 0 bytes in 0 blocks
+==1977775==      possibly lost: 0 bytes in 0 blocks
+==1977775==    still reachable: 0 bytes in 0 blocks
+==1977775==         suppressed: 208,255 bytes in 228 blocks
+==1977775== 
+==1977775== For lists of detected and suppressed errors, rerun with: -s
+==1977775== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+c2r6p4%   
+
+
+
+
