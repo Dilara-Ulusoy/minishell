@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_built.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 09:03:53 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/14 08:02:04 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/15 16:18:00 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,10 @@ t_ast_node	*build_ast(t_token *token_list, t_shell *shell)
 	root = NULL;
 	init_parser(&parser, token_list);
 	if (!check_syntax_errors(&parser))
+	{
+		shell->exit_code = 2;
 		return (NULL);
+	}
 	root = parse_expression(&parser, 0, shell);
 	if (!root || parser.error_status != PARSE_OK)
 	{
