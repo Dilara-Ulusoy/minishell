@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:03 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/15 20:41:02 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/16 02:04:09 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -824,7 +824,7 @@ int check_and_run_builtins(t_shell *shell, t_cmd_parts **cmd_parts, t_args *arg_
 	return (0);
 }
 
-int check_and_run_builtins_single(t_shell *shell, t_cmd_parts **cmd_parts, char ***envp)
+int check_and_run_builtins_single(t_shell *shell, t_cmd_parts **cmd_parts, char ***envp, int *original_fd)
 {
 	int k;
 	int len;
@@ -907,6 +907,10 @@ int check_and_run_builtins_single(t_shell *shell, t_cmd_parts **cmd_parts, char 
 			ft_putstr_fd("exit\n", 1);
 			free_cmd_parts(cmd_parts);
 			free_envp(*envp);
+			dup2(original_fd[0], STDIN_FILENO);
+			dup2(original_fd[1], STDOUT_FILENO);
+			close(original_fd[0]);
+			close(original_fd[1]);
 			//cmd_parts = NULL;
 			cleanup_shell(shell);
 			exit(EXIT_SUCCESS);
@@ -916,6 +920,10 @@ int check_and_run_builtins_single(t_shell *shell, t_cmd_parts **cmd_parts, char 
 			exit_code = ft_exit((*cmd_parts)->cmd_array[1]);
 			free_cmd_parts(cmd_parts);
 			free_envp(*envp);
+			dup2(original_fd[0], STDIN_FILENO);
+			dup2(original_fd[1], STDOUT_FILENO);
+			close(original_fd[0]);
+			close(original_fd[1]);
 			//cmd_parts = NULL;
 			cleanup_shell(shell);
 			exit(exit_code);
@@ -940,6 +948,10 @@ int check_and_run_builtins_single(t_shell *shell, t_cmd_parts **cmd_parts, char 
 				//printf("exit: %s: numeric argument required\n", (*cmd_parts)->cmd_array[1]);
 				free_cmd_parts(cmd_parts);
 				free_envp(*envp);
+				dup2(original_fd[0], STDIN_FILENO);
+				dup2(original_fd[1], STDOUT_FILENO);
+				close(original_fd[0]);
+				close(original_fd[1]);
 				//cmd_parts = NULL;
 				cleanup_shell(shell);
 				exit(2);

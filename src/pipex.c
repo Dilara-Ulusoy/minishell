@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 16:07:31 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/15 20:17:44 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/16 02:04:12 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ static int	execute_command(char *path, t_cmd_parts **cmd_parts,
 	return (get_exit_code());
 }
 
-int	run_single_builtin(t_cmd_parts **cmd_parts, t_shell *shell, char ***envp)
+int	run_single_builtin(t_cmd_parts **cmd_parts, t_shell *shell, char ***envp, int *original_fd)
 {
 	char	*path;
 	char	**command_array;
@@ -90,7 +90,7 @@ int	run_single_builtin(t_cmd_parts **cmd_parts, t_shell *shell, char ***envp)
 
 	// 👇 Sinyalleri çalıştırmadan önce geçici olarak CHILD olarak ayarla
 	set_signals(NULL, SIGNAL_CHILD);
-	ret = check_and_run_builtins_single(shell, cmd_parts, envp);
+	ret = check_and_run_builtins_single(shell, cmd_parts, envp, original_fd);
 	set_signals(NULL, SIGNAL_PARENT); // Tekrar eski haline getir
 	shell->exit_code = ret; // Eğer bu alan shell struct'ında varsa
 	free(path);

@@ -17,24 +17,29 @@ int	execute_commands(t_shell *shell, int num_commands, char ***envp)
 		cmd_parts->num_commands = num_commands;
 		if (is_builtin(cmd_parts))
 		{
-			int original_stdin = dup(STDIN_FILENO);
-			int original_stdout = dup(STDOUT_FILENO);
+			//int original_stdin = dup(STDIN_FILENO);
+			//int original_stdout = dup(STDOUT_FILENO);
+			int		original_fd[2];
 			exit_code = set_pipe_single_builtin(cmd_parts);
 			if (exit_code != 0)
 			{
-				dup2(original_stdin, STDIN_FILENO);
-				dup2(original_stdout, STDOUT_FILENO);
-				close(original_stdin);
-				close(original_stdout);
+				//dup2(original_stdin, STDIN_FILENO);
+				//dup2(original_stdout, STDOUT_FILENO);
+				//close(original_stdin);
+				//close(original_stdout);
+				dup2(original_fd[0], STDIN_FILENO);
+				dup2(original_fd[1], STDOUT_FILENO);
+				close(original_fd[0]);
+				close(original_fd[1]);
 				free_cmd_parts(&cmd_parts);
 				cleanup_shell(shell);
 				return (exit_code);
 			}
-			exit_code = run_single_builtin(&cmd_parts, shell, envp);
-			dup2(original_stdin, STDIN_FILENO);
-			dup2(original_stdout, STDOUT_FILENO);
-			close(original_stdin);
-			close(original_stdout);
+			exit_code = run_single_builtin(&cmd_parts, shell, envp, original_fd);
+			dup2(original_fd[0], STDIN_FILENO);
+			dup2(original_fd[1], STDOUT_FILENO);
+			close(original_fd[0]);
+			close(original_fd[1]);
 			free_cmd_parts(&cmd_parts);
 			cleanup_shell(shell);
 			return (exit_code);
