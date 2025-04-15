@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:03 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/15 13:25:29 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/15 16:23:07 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -354,6 +354,8 @@ int ft_pwd(t_shell *shell)
 int is_number(char *str)
 {
 	int i;
+	char *str_check;
+	long long n;
 
 	i = 0;
 	while (str[i] != '\0')
@@ -364,6 +366,12 @@ int is_number(char *str)
 			return (0);
 		i++;
 	}
+	n = ft_atoi_longlong(str);
+	str_check = ft_itoa_longlong(n);
+	if (str[0] == '+')
+		str++;
+	if (strncmp(str, str_check, ft_strlen(str)) != 0)
+		return (0);
 	return (1);
 }
 
@@ -371,6 +379,7 @@ int ft_exit(char *exit_code)
 {
 	int exit_number;
 
+	ft_putstr_fd("exit\n", 2);
 	if (is_number(exit_code) == 0)
 	{
 		ft_putstr_fd("exit: ", 2);
@@ -723,6 +732,7 @@ int check_and_run_builtins(t_shell *shell, t_cmd_parts **cmd_parts, t_args *arg_
 		//ft_putstr_fd("exit\n", 2);
 		if (len == 1)
 		{
+			ft_putstr_fd("exit\n", 2);
 			free_cmd_parts(cmd_parts);
 			free(arg_struct->pids);
 			free(arg_struct);
@@ -744,6 +754,7 @@ int check_and_run_builtins(t_shell *shell, t_cmd_parts **cmd_parts, t_args *arg_
 		{
 			if (is_number((*cmd_parts)->cmd_array[1]))
 			{
+				ft_putstr_fd("exit\n", 2);
 				ft_putstr_fd("exit: too many arguments\n", 2);
 				free_cmd_parts(cmd_parts);
 				//cmd_parts = NULL;
@@ -752,6 +763,7 @@ int check_and_run_builtins(t_shell *shell, t_cmd_parts **cmd_parts, t_args *arg_
 			}
 			else
 			{
+				ft_putstr_fd("exit\n", 2);
 				ft_putstr_fd("exit: ", 2);
 				ft_putstr_fd((*cmd_parts)->cmd_array[1], 2);
 				ft_putstr_fd(": numeric argument required\n", 2);
@@ -883,6 +895,7 @@ int check_and_run_builtins_single(t_shell *shell, t_cmd_parts **cmd_parts, char 
 		//ft_putstr_fd("exit\n", 2);
 		if (len == 1)
 		{
+			ft_putstr_fd("exit\n", 2);
 			free_cmd_parts(cmd_parts);
 			free_envp(*envp);
 			//cmd_parts = NULL;
@@ -902,6 +915,7 @@ int check_and_run_builtins_single(t_shell *shell, t_cmd_parts **cmd_parts, char 
 		{
 			if (is_number((*cmd_parts)->cmd_array[1]))
 			{
+				ft_putstr_fd("exit\n", 2);
 				ft_putstr_fd("exit: too many arguments\n", 2);
 				free_cmd_parts(cmd_parts);
 				//cmd_parts = NULL;
@@ -910,6 +924,7 @@ int check_and_run_builtins_single(t_shell *shell, t_cmd_parts **cmd_parts, char 
 			}
 			else
 			{
+				ft_putstr_fd("exit\n", 2);
 				ft_putstr_fd("exit: ", 2);
 				ft_putstr_fd((*cmd_parts)->cmd_array[1], 2);
 				ft_putstr_fd(": numeric argument required\n", 2);
