@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 15:00:56 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/14 09:10:26 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/15 13:40:21 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ int main(int argc, char **argv, char **envp)
 	t_shell shell;
 	char **envp_copy;
 
+	shell.exit_code = 0;
 	envp_copy = copy_envp(envp);
 	(void)argv;
 	if (argc != 1)
@@ -82,13 +83,20 @@ int main(int argc, char **argv, char **envp)
 		exit(1);
 	}
 	init_shell(&shell, &envp_copy);
-	setup_signal_handlers();
+	init_term_and_signal(argc, argv, &shell.exit_code);
 	while (1)
 	{
+		set_signals(&shell.exit_code, SIGNAL_PARENT);
+		g_signal = 1;
 		shell.line = get_input("minishell$ ");
-		if (!shell.line) /* Exit condition (Ctrl+D or EOF) */
+		g_signal = 0;
+		if (!shell.line)
+		{
+			shell.exit_code = 0; // <--- Buraya ekle
 			break ;
+		}
 		shell.line_length = ft_strlen(shell.line);
+		set_signals(NULL, SIGNAL_CHILD);
 		parse_and_process_command(&shell, &envp_copy);
 	}
 	free_envp(envp_copy);

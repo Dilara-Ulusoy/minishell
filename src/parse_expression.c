@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_expression.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 10:49:26 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/14 08:07:44 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/15 15:49:50 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,10 @@ static	t_ast_node	*parse_right_node(t_parser *p, int op_prec, t_shell *shell)
 	WHY DO THIS?
 	  - Parentheses allow users to group commands and operators.
 		For instance: (echo hello || echo fail) && ls
-		means "echo hello || echo fail" is treated as a single grouped expression.
-	  - If we didn't handle parentheses specially, we couldn't override normal
+		means "echo hello || echo fail" is treated
+		as a single grouped expression.
+	  - If we didn't handle parentheses specially,
+	  we couldn't override normal
 		precedence rules in the shell grammar.
 
 	SIMPLE EXAMPLE:
