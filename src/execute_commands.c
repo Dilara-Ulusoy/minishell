@@ -1,17 +1,14 @@
 #include "minishell.h"
 #include "execution.h"
 
+
 int	execute_commands(t_shell *shell, int num_commands, char ***envp)
 {
-	int		wstatus;
-	int		j;
-	//int		k;
-	t_args	*arg_struct;
-	t_cmd_parts *cmd_parts;
-	//int used_execve[num_commands];
-	//int last_exit_code;
-	//pid_t exited_pid;
-	int exit_code;
+	int				wstatus;
+	int				j;
+	int				exit_code;
+	t_args			*arg_struct;
+	t_cmd_parts		*cmd_parts;
 
 	if (num_commands == 1)
 	{
@@ -28,85 +25,80 @@ int	execute_commands(t_shell *shell, int num_commands, char ***envp)
 				dup2(original_stdout, STDOUT_FILENO);
 				close(original_stdin);
 				close(original_stdout);
-
 				free_cmd_parts(&cmd_parts);
 				cleanup_shell(shell);
 				return (exit_code);
 			}
 			exit_code = run_single_builtin(&cmd_parts, shell, envp);
-
 			dup2(original_stdin, STDIN_FILENO);
 			dup2(original_stdout, STDOUT_FILENO);
 			close(original_stdin);
 			close(original_stdout);
-
 			free_cmd_parts(&cmd_parts);
 			cleanup_shell(shell);
 			return (exit_code);
 		}
 		free_cmd_parts(&cmd_parts);
 	}
-	//(*envp)[0][0] = 'H';
-	//ft_addA(envp);
-	//ft_env(*envp);
-	//printf("num_commands: %d\n", num_commands);
+
 	arg_struct = prepare_struct(num_commands, *envp);
-	//ft_env(arg_struct->envp);
-	//ft_addA(&(arg_struct->envp)); // NOPE
 	if (arg_struct == NULL)
 		exit(EXIT_FAILURE);
-	//setup_signal_handlers();
+
 	j = -1;
 	while (++j < num_commands)
 	{
 		cmd_parts = get_command_array(shell->tokens, j + 1);
 		cmd_parts->num_commands = num_commands;
-		// if (is_builtin(cmd_parts) == 1)
-		// 	used_execve[j] = 0;
-		// else
-		// 	used_execve[j] = 1;
+
 		arg_struct->pids[j] = fork();
 		if (arg_struct->pids[j] < 0)
 		{
 			free_cmd_parts(&cmd_parts);
-			// if (cmd_parts)
-			// {
-			// 	free_cmd_parts(cmd_parts);
-			// 	cmd_parts = NULL;
-			// }
 			cleanup_shell(shell);
-			exit(display_error_message(2, arg_struct)); // exit
+			exit(display_error_message(2, arg_struct));
 		}
 		if (arg_struct->pids[j] == 0)
 		{
+			// ✅ CHILD process sinyal ayarları
+			signal(SIGINT, SIG_DFL);
+			signal(SIGQUIT, SIG_DFL);
+
 			exit_code = run_pid(arg_struct, &cmd_parts, shell, is_builtin(cmd_parts));
 			free_cmd_parts(&cmd_parts);
-			// if (cmd_parts)
-			// {
-			// 	free_cmd_parts(cmd_parts);
-			// 	cmd_parts = NULL;
-			// }
 			cleanup_shell(shell);
 			exit(exit_code);
 		}
-		free_cmd_parts(&cmd_parts); // Always free after use
-		// if (cmd_parts)
-		// {
-		// 	free_cmd_parts(cmd_parts);
-		// 	cmd_parts = NULL;
-		// }
+		else
+		{
+			// ✅ PARENT process sinyalleri ignore edilir
+			signal(SIGINT, SIG_IGN);
+			signal(SIGQUIT, SIG_IGN);
+		}
+		free_cmd_parts(&cmd_parts);
 	}
+
 	close_and_free(arg_struct, 0);
+
 	j = -1;
 	while (++j < num_commands)
+	{
 		waitpid(arg_struct->pids[j], &wstatus, 0);
+
+		// ✅ CTRL+C ile kesilirse yeni satır yaz
+		if (WIFSIGNALED(wstatus) && WTERMSIG(wstatus) == SIGINT)
+			write(1, "\n", 1);
+	}
+
 	free(arg_struct->pids);
 	free(arg_struct);
+
 	if (WIFEXITED(wstatus))
 		return (WEXITSTATUS(wstatus));
+	else if (WIFSIGNALED(wstatus))
+		return (128 + WTERMSIG(wstatus));
 	return (EXIT_FAILURE);
 }
-
 	// // Wait for all child processes
 	// last_exit_code = EXIT_FAILURE;
 	// j = -1;
