@@ -6,15 +6,39 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:21:29 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/15 13:42:14 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/15 19:44:40 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/**
- * Initializes the shell structure.
- */
+static size_t	ft_strspn(const char *s, const char *accept)
+{
+	size_t	i;
+	size_t	j;
+	int		found;
+
+	i = 0;
+	while (s[i])
+	{
+		found = 0;
+		j = 0;
+		while (accept[j])
+		{
+			if (s[i] == accept[j])
+			{
+				found = 1;
+				break;
+			}
+			j++;
+		}
+		if (!found)
+			break;
+		i++;
+	}
+	return (i);
+}
+
 void	init_shell(t_shell *shell, char ***envp)
 {
 	shell->line = NULL;
@@ -43,6 +67,11 @@ char	*get_input(const char *prompt)
 	line = readline(prompt);
 	if (!line)
 		return (NULL);
+	if (ft_strspn(line, " \t\n") == ft_strlen(line))
+	{
+		add_history(line);
+		return (line);
+	}
 	trimmed_line = ft_strtrim(line, " \t\n");
 	free(line);
 	if (!trimmed_line)
