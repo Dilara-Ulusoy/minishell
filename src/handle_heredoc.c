@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_heredoc.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 16:33:55 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/03 14:01:39 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/15 13:45:41 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,21 @@ int	heredoc_to_tempfile(const char *delimiter, t_shell *shell, const char *path)
 	char	*line;
 	int		tmp_fd;
 
+	set_signals(NULL, SIGNAL_HEREDOC);
 	tmp_fd = open(path, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (tmp_fd == -1)
 		return (-1);
 	while (1)
 	{
 		line = get_input("> ");
+		if (g_signal == SIGINT)
+		{
+			free(line);
+			close(tmp_fd);
+			unlink(path);
+			set_signals(NULL,SIGNAL_PARENT);
+			return(-1);
+		}
 		if (!line || ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0)
 		{
 			free(line);
@@ -56,6 +65,7 @@ int	heredoc_to_tempfile(const char *delimiter, t_shell *shell, const char *path)
 		free(line);
 	}
 	close(tmp_fd);
+	set_signals(NULL,SIGNAL_PARENT);
 	return (0);
 }
 
@@ -75,7 +85,6 @@ int	handle_heredoc(char **delimiter, t_shell *shell, int index)
 		return (-1);
 	if (heredoc_to_tempfile(*delimiter, shell, path) == -1)
 	{
-		perror("heredoc");
 		free(path);
 		return (-1);
 	}
