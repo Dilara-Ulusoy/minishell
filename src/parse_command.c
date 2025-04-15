@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_command.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 10:22:37 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/14 08:19:49 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/15 16:06:30 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,38 +50,6 @@ static int	handle_post_redirection(t_parser *p, t_io_node **io_list,
 	return (0);
 }
 
-// t_ast_node	*parse_command(t_parser *p, t_shell *shell)
-// {
-// 	t_io_node	*io_list;
-// 	t_ast_node	*cmd_node;
-// 	char		*cmd_args;
-
-// 	cmd_node = NULL;
-// 	io_list = NULL;
-// 	cmd_args = NULL;
-// 	if (!p->current_token || p->error_status != PARSE_OK)
-// 		return (NULL);
-// 	if (handle_initial_redirection(p, &io_list, shell) == -1)
-// 		return (NULL);
-// 	if (p->current_token->type == TOKEN_WORD)
-// 	{
-// 		cmd_args = handle_command_string(p, io_list);
-// 		if (!cmd_args)
-// 			return (NULL);
-// 	}
-// 	if (handle_post_redirection(p, &io_list, cmd_args, shell) == -1)
-// 		return (NULL);
-// 	cmd_node = create_ast_command_node(cmd_args, io_list);
-// 	if (!cmd_node)
-// 	{
-// 		p->error_status = PARSE_MEMORY_ERROR;
-// 		cleanup_resources(cmd_args, io_list);
-// 		return (NULL);
-// 	}
-// 	free(cmd_args);
-// 	return (cmd_node);
-// }
-
 static t_ast_node	*create_command_node_or_cleanup(t_parser *p, char *cmd_args,
 	t_io_node *io_list)
 {
@@ -124,35 +92,6 @@ t_ast_node	*parse_command(t_parser *p, t_shell *shell)
 	free(cmd_args);
 	return (cmd_node);
 }
-
-// t_ast_node	*parse_command(t_parser *p, t_shell *shell)
-// {
-// 	t_io_node	*io_list;
-// 	t_ast_node	*cmd_node;
-// 	char		*cmd_args;
-
-// 	cmd_node = NULL;
-// 	io_list = NULL;
-// 	cmd_args = NULL;
-// 	if (!p->current_token || p->error_status != PARSE_OK)
-// 		return (NULL);
-// 	if (handle_initial_redirection(p, &io_list, shell) == -1)
-// 		return (NULL);
-// 	cmd_args = handle_command_string(p, io_list);
-// 	if (!cmd_args)
-// 		return (NULL);
-// 	if (handle_post_redirection(p, &io_list, cmd_args, shell) == -1)
-// 		return (NULL);
-// 	cmd_node = create_ast_command_node(cmd_args, io_list);
-// 	if (!cmd_node)
-// 	{
-// 		p->error_status = PARSE_MEMORY_ERROR;
-// 		cleanup_resources(cmd_args, io_list);
-// 		return (NULL);
-// 	}
-// 	free(cmd_args);
-// 	return (cmd_node);
-// }
 
 /*
 📌 build_command_string(p)

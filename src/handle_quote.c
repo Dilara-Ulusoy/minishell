@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 18:18:52 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/15 16:00:19 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/15 16:04:25 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,5 +165,3 @@ char	*process_quote_loop(t_parse_quote *p, t_shell *shell)
 	}
 	return (p->result);
 }
-
-

@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 17:12:38 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/15 13:41:12 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/15 16:05:47 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	cleanup_shell(t_shell *shell)
 		free_ast(shell->ast);
 		shell->ast = NULL;
 	}
-	if(shell->heredoc_tmp)
+	if (shell->heredoc_tmp)
 	{
 		unlink(shell->heredoc_tmp);
 		free(shell->heredoc_tmp);
