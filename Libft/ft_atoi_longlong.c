@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 10:37:58 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/15 15:56:17 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/15 16:50:39 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,10 @@ static int	ft_isspace(const char c)
 		return (0);
 }
 
-long long	ft_atoi_longlong(char *str)
+static long long	ft_atoi_main_longlong(char *str)
 {
 	long long	result;
 	int			sign;
-
-	if (ft_strncmp(str, ft_itoa_longlong(LLONG_MIN), ft_strlen(str)) == 0)
-		return (LLONG_MIN);
 
 	result = 0;
 	sign = 1;
@@ -50,6 +47,15 @@ long long	ft_atoi_longlong(char *str)
 	}
 	return ((long long)result * sign);
 }
+
+long long	ft_atoi_longlong(char *str)
+{
+	if (ft_strncmp(str, ft_itoa_longlong(LLONG_MIN), ft_strlen(str)) == 0)
+		return (LLONG_MIN);
+	else
+		return (ft_atoi_main_longlong(str));
+}
+
 /*
 This function converts the initial portion of the string
 pointed to by str to int representation.
