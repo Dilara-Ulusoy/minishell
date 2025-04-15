@@ -9,6 +9,7 @@ int	execute_commands(t_shell *shell, int num_commands, char ***envp)
 	int				exit_code;
 	t_args			*arg_struct;
 	t_cmd_parts		*cmd_parts;
+	int printed_newline;
 
 	if (num_commands == 1)
 	{
@@ -60,7 +61,6 @@ int	execute_commands(t_shell *shell, int num_commands, char ***envp)
 		}
 		if (arg_struct->pids[j] == 0)
 		{
-			// ✅ CHILD process sinyal ayarları
 			signal(SIGINT, SIG_DFL);
 			signal(SIGQUIT, SIG_DFL);
 
@@ -71,7 +71,6 @@ int	execute_commands(t_shell *shell, int num_commands, char ***envp)
 		}
 		else
 		{
-			// ✅ PARENT process sinyalleri ignore edilir
 			signal(SIGINT, SIG_IGN);
 			signal(SIGQUIT, SIG_IGN);
 		}
@@ -79,20 +78,19 @@ int	execute_commands(t_shell *shell, int num_commands, char ***envp)
 	}
 
 	close_and_free(arg_struct, 0);
-
+	printed_newline = 0;
 	j = -1;
 	while (++j < num_commands)
 	{
 		waitpid(arg_struct->pids[j], &wstatus, 0);
-
-		// ✅ CTRL+C ile kesilirse yeni satır yaz
-		if (WIFSIGNALED(wstatus) && WTERMSIG(wstatus) == SIGINT)
+		if (WIFSIGNALED(wstatus) && WTERMSIG(wstatus) == SIGINT && !printed_newline)
+		{
 			write(1, "\n", 1);
+			printed_newline = 1;
+		}
 	}
-
 	free(arg_struct->pids);
 	free(arg_struct);
-
 	if (WIFEXITED(wstatus))
 		return (WEXITSTATUS(wstatus));
 	else if (WIFSIGNALED(wstatus))
