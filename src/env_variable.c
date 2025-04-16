@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:23:12 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/30 16:49:50 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/16 15:19:54 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,40 @@ char	*get_var_name(const char *line, int *index)
 	return (var_name);
 }
 
+static void	copy_without_extra_spaces(const char *src, char *dst, char *base)
+{
+	int		in_space;
+
+	in_space = 0;
+	while (*src)
+	{
+		if (*src != ' ' && *src != '\t')
+		{
+			if (in_space && dst != base)
+				*dst++ = ' ';
+			*dst++ = *src;
+			in_space = 0;
+		}
+		else
+			in_space = 1;
+		src++;
+	}
+	*dst = '\0';
+}
+
+static char	*remove_spaces(const char *str)
+{
+	char	*res;
+
+	if (!str)
+		return (NULL);
+	res = malloc(ft_strlen(str) + 1);
+	if (!res)
+		return (NULL);
+	copy_without_extra_spaces(str, res, res);
+	return (res);
+}
+
 /*
 📌 append_env_value(&result, var_name)
 
@@ -54,12 +88,17 @@ Effect: Expands environment variables in the parsed string.
 static void	append_env_value(char **result, char *var_name, t_shell *shell)
 {
 	char	*var_value;
+	char	*normalized;
 	char	*temp;
 
 	var_value = ft_getenv(var_name, shell);
 	temp = *result;
 	if (var_value != NULL)
-		*result = ft_strjoin(*result, var_value);
+	{
+		normalized = remove_spaces(var_value);
+		*result = ft_strjoin(*result, normalized);
+		free(normalized);
+	}
 	else
 		*result = ft_strjoin(*result, "");
 	free_this(temp, var_name, NULL, NULL);

@@ -3,37 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 15:00:56 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/16 14:17:50 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/16 15:16:16 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "execution.h"
-
-
-void	handle_sigint(int sig)
-{
-	(void)sig;
-	write(1, "\n", 1);
-	rl_on_new_line();  // Yeni satır başına geç
-	rl_replace_line("", 0);  // Mevcut girdiyi temizle
-	rl_redisplay();  // Yeni prompt'u göster
-}
-
-// void	handle_sigquit(int sig)
-// {
-// 	(void)sig;
-// }
-
-void	setup_signal_handlers(void)
-{
-	signal(SIGINT, handle_sigint);  // `Ctrl-C` için
-	signal(SIGQUIT, SIG_IGN);  // `Ctrl-\` için
-}
-
 
 
 void parse_and_process_command(t_shell *shell, char ***envp_copy)
