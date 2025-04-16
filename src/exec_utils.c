@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 13:01:11 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/02 19:13:10 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/16 15:29:58 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,20 +41,6 @@ void	free_array(void **arr, int is_int, int j)
 	arr = NULL;
 }
 
-// int	close_and_free(t_args *arg_struct, int free_pid)
-// {
-// 	close_pipes(arg_struct->fd, arg_struct->argc + 1);
-// 	free_array((void **)arg_struct->fd, 1, arg_struct->argc + 1);
-// 	if (free_pid == 1)
-// 	{
-// 		free(arg_struct->pids);
-// 		free(arg_struct);
-// 		return (-1);
-// 	}
-// 	else
-// 		return (0);
-// }
-
 int	close_and_free(t_args *arg_struct, int free_pid)
 {
 	close_pipes(arg_struct->fd, arg_struct->argc - 1);
@@ -78,7 +64,7 @@ int	open_and_check_file(char *filename, int type)
 		file = open(filename, O_RDONLY, 0777);
 	else if (type == 1)
 		file = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0777);
-	else // if (type == 2)
+	else
 		file = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0777);
 	if (file == -1)
 	{
