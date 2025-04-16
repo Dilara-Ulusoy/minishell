@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:23:33 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/16 18:46:47 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/16 18:59:07 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,18 +48,18 @@ static char	*handle_exit_code(const char *line, int *index,
 	return (NULL);
 }
 
- // Case: If invalid variable name (non-alpha and not `_`), skip invalid chars
+// Case: If invalid variable name (non-alpha and not `_`), skip invalid chars
 static char	*handle_invalid_variable(const char *line, int *index, int start)
 {
+	int		size;
+
+	size = ft_strlen(line) - (start + 1);
 	if (*index > 0 && is_space(line[*index - 1])
 		&& !ft_isalpha(line[start]) && line[start] != '_')
 	{
 		(*index)++;
-		char *result = ft_substr(line, start + 1, ft_strlen(line) - (start + 1));
-		if (!result)
-			return (NULL);
 		*index = ft_strlen(line);
-		return (result);
+		return (ft_substr(line, start + 1, size));
 	}
 	return (NULL);
 }
@@ -80,4 +80,3 @@ char	*handle_special_cases(const char *line, int *index,
 		return (result);
 	return (NULL);
 }
-
