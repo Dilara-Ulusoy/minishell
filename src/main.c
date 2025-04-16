@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 15:00:56 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/16 02:09:53 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/16 14:17:50 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ int main(int argc, char **argv, char **envp)
 		if (!shell.line)
 		{
 			shell.exit_code = 0; // <--- Buraya ekle
+			printf("exit\n");
 			break ;
 		}
 		shell.line_length = ft_strlen(shell.line);
