@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:23:33 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/27 16:35:18 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/16 18:39:43 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,22 +48,22 @@ static char	*handle_exit_code(const char *line, int *index,
 	return (NULL);
 }
 
-// Case: If invalid variable name (non-alpha and not `_`), skip invalid chars
+ // Case: If invalid variable name (non-alpha and not `_`), skip invalid chars
 static char	*handle_invalid_variable(const char *line, int *index, int start)
 {
 	if (*index > 0 && is_space(line[*index - 1])
 		&& !ft_isalpha(line[start]) && line[start] != '_')
 	{
 		(*index)++;
-		while (!ft_isalpha(line[*index]) && line[*index] != '_'
-			&& line[*index] != '\0')
-			(*index)++;
-		return (ft_strdup(""));
+		char *result = ft_substr(line, start + 1, ft_strlen(line) - (start + 1));
+		if (!result)
+			return (NULL);
+		*index = ft_strlen(line);
+		return (result);
 	}
 	return (NULL);
 }
 
-// Main dispatcher for special cases following a `$`
 char	*handle_special_cases(const char *line, int *index,
 		int start, t_shell *shell)
 {
@@ -80,3 +80,4 @@ char	*handle_special_cases(const char *line, int *index,
 		return (result);
 	return (NULL);
 }
+
