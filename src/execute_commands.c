@@ -20,6 +20,8 @@ int	execute_commands(t_shell *shell, int num_commands, char ***envp)
 			//int original_stdin = dup(STDIN_FILENO);
 			//int original_stdout = dup(STDOUT_FILENO);
 			int		original_fd[2];
+			original_fd[0] = dup(STDIN_FILENO);
+			original_fd[1] = dup(STDOUT_FILENO);
 			exit_code = set_pipe_single_builtin(cmd_parts);
 			if (exit_code != 0)
 			{
