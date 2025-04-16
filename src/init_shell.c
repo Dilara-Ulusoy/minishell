@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_shell.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:21:29 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/15 19:44:40 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/16 15:30:32 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,12 @@ static size_t	ft_strspn(const char *s, const char *accept)
 			if (s[i] == accept[j])
 			{
 				found = 1;
-				break;
+				break ;
 			}
 			j++;
 		}
 		if (!found)
-			break;
+			break ;
 		i++;
 	}
 	return (i);
