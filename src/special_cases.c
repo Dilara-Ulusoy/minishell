@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:23:33 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/16 18:59:07 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/17 12:46:19 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,11 @@ static char	*handle_invalid_variable(const char *line, int *index, int start)
 		(*index)++;
 		*index = ft_strlen(line);
 		return (ft_substr(line, start + 1, size));
+	}
+	if (!ft_isalpha(line[start]) && line[start] != '_')
+	{
+		*index = ft_strlen(line);
+		return (ft_substr(line, start + 1, size -1));
 	}
 	return (NULL);
 }
