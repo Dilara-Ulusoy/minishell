@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:23:33 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/17 12:46:19 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/17 13:43:06 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ static char	*handle_exit_code(const char *line, int *index,
 }
 
 // Case: If invalid variable name (non-alpha and not `_`), skip invalid chars
+// Eg: "echo $123ggg" → returns "23ggg"
+// Eg : "echo "$123dilara"" → returns "23dilara"
 static char	*handle_invalid_variable(const char *line, int *index, int start)
 {
 	int		size;
@@ -61,10 +63,10 @@ static char	*handle_invalid_variable(const char *line, int *index, int start)
 		*index = ft_strlen(line);
 		return (ft_substr(line, start + 1, size));
 	}
-	if (!ft_isalpha(line[start]) && line[start] != '_')
+	if (!ft_isalpha(line[start]) && line[start] != '_' )
 	{
 		*index = ft_strlen(line);
-		return (ft_substr(line, start + 1, size -1));
+		return (ft_substr(line, start + 1, size - 1));
 	}
 	return (NULL);
 }

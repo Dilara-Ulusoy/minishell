@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 18:18:52 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/15 16:04:25 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/17 13:46:15 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,22 @@ static int	expand_env_variable(t_parse_quote *p, t_shell *shell)
 ** the result buffer and moves to the next index.
 */
 
+int	has_digit_then_alpha(const char *line, int index)
+{
+	int	i;
+
+	if (!line || !ft_isdigit(line[index + 1]))
+		return (0);
+	i = index + 1;
+	while (ft_isdigit(line[i]))
+	{
+		i++;
+		if (ft_isalpha(line[i]))
+			return (1);
+	}
+	return (1);
+}
+
 static int	process_character(t_parse_quote *p, t_shell *shell)
 {
 	char	current;
@@ -140,6 +156,8 @@ static int	process_character(t_parse_quote *p, t_shell *shell)
 	}
 	if (p->quote_is_double && current == '$')
 	{
+		if (has_digit_then_alpha(p->line, p->index))
+			p->quote = 0;
 		if (expand_env_variable(p, shell) == -1)
 			return (-1);
 		return (0);
