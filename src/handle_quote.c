@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 18:18:52 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/17 13:46:15 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/17 14:26:22 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,12 +156,14 @@ static int	process_character(t_parse_quote *p, t_shell *shell)
 	}
 	if (p->quote_is_double && current == '$')
 	{
-		if (has_digit_then_alpha(p->line, p->index))
+		 if (has_digit_then_alpha(p->line, p->index))
 			p->quote = 0;
 		if (expand_env_variable(p, shell) == -1)
 			return (-1);
 		return (0);
 	}
+	if (current == ' ' && p->quote == 0)
+		return (1);
 	p->result[p->result_index++] = p->line[p->index++];
 	return (0);
 }
