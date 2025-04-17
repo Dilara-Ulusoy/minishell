@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:23:33 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/17 14:26:26 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/17 16:43:20 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,12 @@ static char	*handle_lonely_dollar(const char *line, int *index)
 		(*index)++;
 		return (ft_strdup("$"));
 	}
+	if (*index > 0 && (line[*index - 1] == '"')
+		&& (line[*index + 1] == '"'))
+	{
+		(*index)++;
+		return (ft_strdup("$"));
+	}
 	return (NULL);
 }
 
@@ -47,21 +53,43 @@ static char	*handle_exit_code(const char *line, int *index,
 	}
 	return (NULL);
 }
+char *remove_all_quotes(char *str)
+{
+	int i, j;
+	char *result;
 
+	if (!str)
+		return (NULL);
+	result = malloc(strlen(str) + 1);
+	if (!result)
+		return (NULL);
+	i = 0;
+	j = 0;
+	while (str[i])
+	{
+		if (str[i] != '"' && str[i] != '\'')
+			result[j++] = str[i];
+		i++;
+	}
+	result[j] = '\0';
+	free(str);
+	return (result);
+}
 // Case: If invalid variable name (non-alpha and not `_`), skip invalid chars
 // Eg: "echo $123ggg" → returns "23ggg"
 // Eg : "echo "$123dilara"" → returns "23dilara"
 static char	*handle_invalid_variable(const char *line, int *index, int start)
 {
 	int		size;
-
+	char 	*trimmed;
 	size = ft_strlen(line) - (start + 1);
 	if (*index > 0 && is_space(line[*index - 1])
 		&& !ft_isalpha(line[start]) && line[start] != '_')
 	{
 		(*index)++;
 		*index = ft_strlen(line);
-		return (ft_substr(line, start + 1, size));
+		trimmed = remove_all_quotes(ft_substr(line, start + 1, size));
+		return (trimmed);
 	}
  	if (!ft_isalpha(line[start]) && line[start] != '_' )
 	{
