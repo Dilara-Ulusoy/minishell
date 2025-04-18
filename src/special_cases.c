@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:23:33 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/17 16:43:20 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/17 23:44:18 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,14 +82,25 @@ static char	*handle_invalid_variable(const char *line, int *index, int start)
 {
 	int		size;
 	char 	*trimmed;
+	
 	size = ft_strlen(line) - (start + 1);
 	if (*index > 0 && is_space(line[*index - 1])
 		&& !ft_isalpha(line[start]) && line[start] != '_')
 	{
-		(*index)++;
-		*index = ft_strlen(line);
-		trimmed = remove_all_quotes(ft_substr(line, start + 1, size));
-		return (trimmed);
+		if(!ft_isalnum(line[*index]) && ft_strchr(line + start, '$') == NULL)
+		{
+			(*index)++;
+			*index = ft_strlen(line);
+			trimmed = remove_all_quotes(ft_substr(line, start + 1, size));
+			return (trimmed);
+		}
+		else
+		{
+			(*index)++;
+			while (line[*index] && (ft_isalnum(line[*index]) || line[*index] == '_'))
+				(*index)++;
+			return (ft_substr(line, start + 1, *index - start - 1));
+		}
 	}
  	if (!ft_isalpha(line[start]) && line[start] != '_' )
 	{

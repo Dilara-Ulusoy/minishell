@@ -3,14 +3,42 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize_word.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:14:48 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/14 12:09:46 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/17 23:57:02 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static char	*handle_dollar_and_quote(const char *line, int *index,
+		int start, t_shell *shell)
+{
+	char	*dollar;
+	char	*temp;
+	char	*joined;
+
+	dollar = handle_dollar_sign(line, index, start, shell);
+	if (!dollar)
+		return (NULL);
+	if (line[*index] == '"' && (line[*index + 1] == '$' || ft_isalpha(line[*index + 1])))
+	{
+		temp = parse_quotes(line, index, shell);
+		if (!temp)
+		{
+			free(dollar);
+			return (NULL);
+		}
+		joined = ft_strjoin(dollar, temp);
+		free(dollar);
+		free(temp);
+		if (!joined)
+			return (NULL);
+		return (joined);
+	}
+	return (dollar);
+}
 
 /**
  * read_word_range - Extracts a word from a given position in the input line.
@@ -42,7 +70,7 @@ char	*read_word_range(const char *line, int *index,
 			return (parse_quotes(line, index, shell));
 		}
 		if (c == '$')
-			return (handle_dollar_sign(line, index, start, shell));
+			return (handle_dollar_and_quote(line, index, start, shell));
 		if (is_space(c) || is_two_char_operator(c) || c == '(' || c == ')')
 			break ;
 		(*index)++;
