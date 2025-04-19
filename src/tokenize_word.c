@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:14:48 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/19 17:20:25 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/19 18:24:12 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,9 @@ static char	*handle_dollar_and_quote(const char *line, int *index,
 	{
 		temp = parse_quotes(line, index, shell);
 		if (!temp)
-		{
-			free(dollar);
-			return (NULL);
-		}
+			free_this(dollar, NULL, NULL, "parse_quotes failed");
 		joined = ft_strjoin(dollar, temp);
-		free(dollar);
-		free(temp);
+		free_this(temp, dollar, NULL, "strjoin failed");
 		if (!joined)
 			return (NULL);
 		return (joined);
