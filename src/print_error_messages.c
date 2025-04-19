@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 12:58:25 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/03 15:00:31 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/19 19:08:42 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,23 +56,17 @@ void	free_cmd_parts(t_cmd_parts **cmd_parts)
 		return ;
 	if ((*cmd_parts)->cmd_array != NULL)
 	{
-		i = 0;
-		while ((*cmd_parts)->cmd_array[i] != NULL)
-		{
+		i = -1;
+		while ((*cmd_parts)->cmd_array[++i] != NULL)
 			free((*cmd_parts)->cmd_array[i]);
-			i++;
-		}
 		free((*cmd_parts)->cmd_array);
 		(*cmd_parts)->cmd_array = NULL;
 	}
 	if ((*cmd_parts)->files_array != NULL)
 	{
-		i = 0;
-		while ((*cmd_parts)->files_array[i] != NULL)
-		{
+		i = -1;
+		while ((*cmd_parts)->files_array[++i] != NULL)
 			free((*cmd_parts)->files_array[i]);
-			i++;
-		}
 		free((*cmd_parts)->files_array);
 		(*cmd_parts)->files_array = NULL;
 	}
