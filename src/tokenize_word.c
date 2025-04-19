@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:14:48 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/17 23:57:02 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/19 17:20:25 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,11 @@ static char	*handle_dollar_and_quote(const char *line, int *index,
 	char	*temp;
 	char	*joined;
 
+	if(line[*index] == '$' && ft_strlen(line) == 1)
+	{
+		(*index)++;
+		return (ft_strdup("$"));
+	}
 	dollar = handle_dollar_sign(line, index, start, shell);
 	if (!dollar)
 		return (NULL);

@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:23:33 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/17 23:44:18 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/19 17:18:11 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ static char	*handle_invalid_variable(const char *line, int *index, int start)
 {
 	int		size;
 	char 	*trimmed;
-	
+
 	size = ft_strlen(line) - (start + 1);
 	if (*index > 0 && is_space(line[*index - 1])
 		&& !ft_isalpha(line[start]) && line[start] != '_')
