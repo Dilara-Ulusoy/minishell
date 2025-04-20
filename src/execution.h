@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:15 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/19 18:55:55 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/21 01:00:56 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,13 +49,15 @@ typedef struct s_args
 }	t_args;
 
 //void count_pipes(t_ast_node *node, int *i);
-t_cmd_parts *count_tokens(const t_token *head, int command_number);
+//void count_pipes(const t_token *head, int *i);
+//t_cmd_parts *count_tokens(const t_token *head, int command_number);
 t_cmd_parts *get_command_array(const t_token *head, int command_number);
 int ft_pwd(t_shell *shell);
 int is_number(char *str);
 int ft_exit(char *exit_code);
 int ft_env(char **envp);
 int ft_cd(char *new_path, char ***envp);
+int    ft_unset(char *value, char ***envp);
 //int get_num_commands(t_shell *shell);
 int check_and_run_builtins(t_shell *shell, t_cmd_parts **cmd_parts, t_args *arg_struct);
 int execute_commands(t_shell *shell, int num_commands, char ***envp);
@@ -83,8 +85,20 @@ int	get_exit_code(void);
 int	run_pid(t_args *arg_struct, t_cmd_parts **cmd_parts, t_shell *shell, int is_builtin);
 int	run_single_builtin(t_cmd_parts **cmd_parts, t_shell *shell, char ***envp, int *original_fd);
 int get_num_commands(const t_token *head);
-void count_pipes(const t_token *head, int *i);
 void	free_cmd_clean_shell(t_shell *shell, t_cmd_parts *cmd_parts);
 void	set_signal_in_child(void);
 void	set_signal_in_parent(void);
+t_cmd_parts	*initialize_cmd_parts(void);
+int	get_file_type(const t_token *curr);
+int	contains_equal(char *s);
+char	*copy_until_equal(char *src);
+int	ft_strcmp_wo_equal(char *s1, char *s2);
+int	check_echo_option(char *str);
+int	run_unset(t_cmd_parts **cmd_parts, char ***envp);
+int	run_export(t_cmd_parts **cmd_parts, char ***envp);
+int	run_echo(t_cmd_parts **cmd_parts);
+int	run_env(t_cmd_parts **cmd_parts, char ***envp);
+int	run_cd(t_cmd_parts **cmd_parts, char ***envp);
+void	restore_fd(int *original_fd);
+
 #endif
