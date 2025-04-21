@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:15 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/21 01:00:56 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/21 14:45:27 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,13 @@ typedef struct s_args
 	int		**fd;
 	pid_t		*pids;
 }	t_args;
+
+typedef struct s_helper
+{
+	int		fileno;
+	int		is_builtin;
+	char	*path;
+}	t_helper;
 
 //void count_pipes(t_ast_node *node, int *i);
 //void count_pipes(const t_token *head, int *i);
@@ -100,5 +107,9 @@ int	run_echo(t_cmd_parts **cmd_parts);
 int	run_env(t_cmd_parts **cmd_parts, char ***envp);
 int	run_cd(t_cmd_parts **cmd_parts, char ***envp);
 void	restore_fd(int *original_fd);
+int	arrange_in_file(t_cmd_parts *cmd_parts, t_args *arg_struct, int fileno, int i);
+int	arrange_out_file(t_cmd_parts *cmd_parts, t_args *arg_struct, t_helper *helper, int i);
+t_helper	*initialize_helper(t_cmd_parts *cmd_parts, char *path, int is_builtin, int i);
+void	free_helper(t_helper *helper);
 
 #endif
