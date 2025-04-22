@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 15:56:13 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/22 14:46:11 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/22 14:56:21 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,12 +59,9 @@ char	*parse_quotes(const char *line, int *index, t_shell *shell)
 	{
 		free(p.result);
 		if(ft_strchr(line, '$') != NULL)
-		{
-			while(line[*index] && is_space(line[*index]))
-				(*index)++;
-			printf("index: %d\n", *index);
-		}
-		p.result = ft_strdup("");
+			p.result = ft_strdup(" ");
+		else
+			p.result = ft_strdup("");
 		if (p.result == NULL)
 			return (NULL);
 	}
