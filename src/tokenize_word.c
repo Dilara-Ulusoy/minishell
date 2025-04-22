@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:14:48 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/22 11:15:26 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/22 13:36:31 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,11 @@ char	*handle_env_variable_without_space(const char
 	temp2 = get_env_var_value(line, index, shell);
 	if (!temp2)
 		return (free_this(temp, NULL, NULL, "get_env_var_value failed"));
+	if(temp2[0] == '\0')
+	{
+		while(line[*index] && is_space(line[*index]))
+			(*index)++;
+	}
 	result = ft_strjoin(temp, temp2);
 	if (!result)
 		return (free_this(temp, temp2, NULL, "strjoin failed"));
