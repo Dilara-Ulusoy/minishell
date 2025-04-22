@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 15:35:01 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/22 19:04:55 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/22 19:14:18 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ static int	heredoc_loop(int tmp_fd, const char *delimiter,
 		line = get_input("> ");
 		if (g_signal == SIGINT || !line)
 		{
-			if(!line)
-				fprintf(stderr, "warning: heredoc delimited by end-of-file (wanted `%s')\n", delimiter);
+			if (!line)
+				ft_putstr_fd("warning: heredoc delimited by end-of-file\n", 1);
 			free(line);
 			close(tmp_fd);
 			unlink(path);
