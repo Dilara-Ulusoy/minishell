@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 23:15:20 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/21 01:52:38 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 12:55:14 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	run_export(t_cmd_parts **cmd_parts, char ***envp)
 		while ((*envp)[++k] != NULL)
 		{
 			ft_putstr_fd("declare -x ", 1);
-			ft_putstr_fd((*envp)[k], 1);
+			ft_putstr_with_quotes_fd((*envp)[k], 1);
 			ft_putstr_fd("\n", 1);
 		}
 	}
