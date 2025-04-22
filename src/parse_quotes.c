@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 15:56:13 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/22 15:30:11 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 16:40:40 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,8 @@ char	*parse_quotes(const char *line, int *index, t_shell *shell)
 	if (p.result[0] == '\0')
 	{
 		free(p.result);
-		if (*index > 0 && ft_strchr(line, '$') != NULL
-			&& !ft_isalnum(line[*index - 1]))
+		if (ft_strchr(line, '$') != NULL && ((*index > 0
+					&& !ft_isalnum(line[*index - 1])) || (*index == 0)))
 			p.result = ft_strdup(" ");
 		else
 			p.result = ft_strdup("");
