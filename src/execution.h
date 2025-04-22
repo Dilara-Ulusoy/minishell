@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:15 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/21 20:33:58 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 13:02:23 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,5 +117,6 @@ void		free_before_return_2(t_args *arg_struct,
 				t_cmd_parts **cmd_parts, char *path);
 char		**free_before_return_3(char **new_envp, int i);
 void		free_cmd_array(t_cmd_parts **cmd_parts);
+void		ft_putstr_with_quotes_fd(char *s, int fd);
 
 #endif
