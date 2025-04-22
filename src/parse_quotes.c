@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_quotes.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 15:56:13 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/22 12:20:30 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 14:12:09 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,18 @@
  * Return: A newly allocated string with processed content, or NULL
  */
 
+static void	handle_empty_quote_after_non_alnum(t_parse_quote *p, const char *line, int index)
+{
+	if (!ft_isalnum(line[index - 1]) && line[index])
+	{
+		if (line[index + 1] == '"' || line[index + 1] == '\'')
+		{
+			free(p->result);
+			p->result = ft_strdup(" ");
+		}
+	}
+}
+
 char	*parse_quotes(const char *line, int *index, t_shell *shell)
 {
 	t_parse_quote	p;
@@ -39,10 +51,11 @@ char	*parse_quotes(const char *line, int *index, t_shell *shell)
 	if (p.quote != 0)
 		return (check_unmatched_quote(&p));
 	p.result[p.result_index] = '\0';
+	handle_empty_quote_after_non_alnum(&p, line, *index);
 	if (p.result[0] == '\0')
 	{
 		free(p.result);
-		p.result = ft_strdup(" ");
+		p.result = ft_strdup("");
 		if (p.result == NULL)
 			return (NULL);
 	}
