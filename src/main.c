@@ -6,12 +6,15 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 15:00:56 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/22 14:27:49 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 15:36:27 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "execution.h"
+
+//debug_ast(shell->ast, 0);   // -------> FOR DUBEGGING
+//print_tokens(shell->tokens);  // -------> FOR DUBEGGING
 
 void	parse_and_process_command(t_shell *shell, char ***envp_copy)
 {
@@ -27,19 +30,15 @@ void	parse_and_process_command(t_shell *shell, char ***envp_copy)
 			shell->line_length, shell);
 	if (!shell->tokens)
 	{
-		//printf("Error: Tokenization failed.\n");
 		cleanup_shell(shell);
 		return ;
 	}
-	shell->ast = build_ast(shell->tokens, shell); /* Build the AST */
+	shell->ast = build_ast(shell->tokens, shell);
 	if (!shell->ast)
 	{
-		//printf("Error: Parsing failed.\n");
 		cleanup_shell(shell);
 		return ;
 	}
-	//debug_ast(shell->ast, 0);   // -------> FOR DUBEGGING
-	//print_tokens(shell->tokens);  // -------> FOR DUBEGGING
 	num_commands = get_num_commands(shell->tokens);
 	if (num_commands > 0)
 		shell->exit_code = execute_commands(shell, num_commands, envp_copy);

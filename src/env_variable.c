@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_variable.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:23:12 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/22 13:25:11 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/22 15:37:03 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,7 @@ when they are not part of valid variable names.
 static void	append_dollar_if_no_var(char **result)
 {
 	char	*temp;
+
 	temp = *result;
 	*result = ft_strjoin(*result, "$");
 	if (!*result)
