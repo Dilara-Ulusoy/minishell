@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 16:07:31 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/22 19:13:27 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 19:28:03 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ static int	execute_command(char *path, t_cmd_parts **cmd_parts,
 		ft_putstr_fd(path, 2);
 		ft_putstr_fd(": ", 2);
 		ft_putstr_fd(strerror(21), 2);
+		ft_putstr_fd("\n", 2);
 		free_before_return_2(arg_struct, cmd_parts, path);
 		return (126);
 	}
