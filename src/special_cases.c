@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:23:33 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/22 15:01:16 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 15:33:25 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,12 @@ static char	*handle_exit_code(const char *line, int *index,
 	}
 	return (NULL);
 }
-char *remove_all_quotes(char *str)
+
+char	*remove_all_quotes(char *str)
 {
-	int i, j;
-	char *result;
+	int		i;
+	int		j;
+	char	*result;
 
 	if (!str)
 		return (NULL);
@@ -78,16 +80,17 @@ char *remove_all_quotes(char *str)
 // Case: If invalid variable name (non-alpha and not `_`), skip invalid chars
 // Eg: "echo $123ggg" → returns "23ggg"
 // Eg : "echo "$123dilara"" → returns "23dilara"
+
 static char	*handle_invalid_variable(const char *line, int *index, int start)
 {
 	int		size;
-	char 	*trimmed;
+	char	*trimmed;
 
 	size = ft_strlen(line) - (start + 1);
 	if (*index > 0 && is_space(line[*index - 1])
 		&& !ft_isalpha(line[start]) && line[start] != '_')
 	{
-		if(!ft_isalnum(line[*index]) && ft_strchr(line + start, '$') == NULL)
+		if (!ft_isalnum(line[*index]) && ft_strchr(line + start, '$') == NULL)
 		{
 			(*index)++;
 			*index = ft_strlen(line);
@@ -97,12 +100,13 @@ static char	*handle_invalid_variable(const char *line, int *index, int start)
 		else
 		{
 			(*index)++;
-			while (line[*index] && (ft_isalnum(line[*index]) || line[*index] == '_'))
+			while (line[*index]
+				&& (ft_isalnum(line[*index]) || line[*index] == '_'))
 				(*index)++;
 			return (ft_substr(line, start + 1, *index - start - 1));
 		}
 	}
- 	if (!ft_isalpha(line[start]) && line[start] != '_' )
+	if (!ft_isalpha(line[start]) && line[start] != '_' )
 	{
 		*index = ft_strlen(line);
 		return (ft_substr(line, start + 1, size));
