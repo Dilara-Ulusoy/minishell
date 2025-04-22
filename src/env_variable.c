@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:23:12 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/22 15:37:03 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 16:58:44 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,40 +41,6 @@ char	*get_var_name(const char *line, int *index)
 	return (var_name);
 }
 
-static void	copy_without_extra_spaces(const char *src, char *dst, char *base)
-{
-	int		in_space;
-
-	in_space = 0;
-	while (*src)
-	{
-		if (*src != ' ' && *src != '\t')
-		{
-			if (in_space && dst != base)
-				*dst++ = ' ';
-			*dst++ = *src;
-			in_space = 0;
-		}
-		else
-			in_space = 1;
-		src++;
-	}
-	*dst = '\0';
-}
-
-static char	*remove_spaces(const char *str)
-{
-	char	*res;
-
-	if (!str)
-		return (NULL);
-	res = malloc(ft_strlen(str) + 1);
-	if (!res)
-		return (NULL);
-	copy_without_extra_spaces(str, res, res);
-	return (res);
-}
-
 /*
 📌 append_env_value(&result, var_name)
 
@@ -85,7 +51,7 @@ If var_name = "HOME" and $HOME="/home/user", then result becomes "/home/user".
 
 Effect: Expands environment variables in the parsed string.
 */
-static void	append_env_value(char **result, char *var_name, t_shell *shell)
+void	append_env_value(char **result, char *var_name, t_shell *shell)
 {
 	char	*var_value;
 	char	*normalized;
@@ -116,7 +82,7 @@ If get_var_name() fails (returns NULL), result is updated to " $".
 Effect: Ensures $ signs remain in the output
 when they are not part of valid variable names.
 */
-static void	append_dollar_if_no_var(char **result)
+void	append_dollar_if_no_var(char **result)
 {
 	char	*temp;
 
@@ -127,7 +93,7 @@ static void	append_dollar_if_no_var(char **result)
 	free(temp);
 }
 
-static char	*append_remaining_text(const char *line, int *index, char *prefix)
+char	*append_remaining_text(const char *line, int *index, char *prefix)
 {
 	char	*result;
 	char	*new_result;

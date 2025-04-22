@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:59:15 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/22 15:10:47 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 17:06:04 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,12 @@ char	*handle_dollar_sign(const char *line, int *index,
 			int start, t_shell *shell);
 char	*handle_special_cases(const char *line, int *index,
 			int start, t_shell *shell);
+void	append_dollar_if_no_var(char **result);
+char	*append_remaining_text(const char *line, int *index, char *prefix);
+void	append_env_value(char **result, char *var_name, t_shell *shell);
+char	*remove_spaces(const char *str);
+void	copy_without_extra_spaces(const char *src, char *dst, char *base);
+int		has_digit_then_alpha(const char *line, int index);
 
 /* Quote Parsing */
 char	*join_string_with_quoted_if_no_space(const char *line,
@@ -108,8 +114,6 @@ int		parse_single_char_operator(t_token **head, const char *line,
 
 /* Step 4: Parse Word */
 int		parse_word(t_token **head, t_shell *shell);
-int		handle_newline(t_token **head, const char *line, int *pos);
-
 // Heredoc
 
 void	write_heredoc_line(int fd, char *line, t_shell *shell);

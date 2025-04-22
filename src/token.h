@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 13:06:41 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/03/27 17:09:55 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/22 16:49:37 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ typedef enum e_token_type
 	TOKEN_REDIR_HERE,
 	TOKEN_PAREN_OPEN,
 	TOKEN_PAREN_CLOSE,
-	TOKEN_NL,
 	TOKEN_UNKNOWN,
 }	t_token_type;
 

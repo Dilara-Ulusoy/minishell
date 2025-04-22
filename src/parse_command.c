@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_command.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 10:22:37 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/15 16:06:30 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/22 17:01:23 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,50 +91,4 @@ t_ast_node	*parse_command(t_parser *p, t_shell *shell)
 		return (NULL);
 	free(cmd_args);
 	return (cmd_node);
-}
-
-/*
-📌 build_command_string(p)
-Purpose: Constructs a single command string by
-concatenating consecutive WORD tokens.
-
-Steps:
-1) Initializes a dynamic buffer (`cmd_buffer`) with an initial size of 256 bytes.
-2) Iterates through `TOKEN_WORD` tokens, appending their values to `cmd_buffer`.
-3) Expands the buffer if needed using `append_to_buffer()`.
-4) Stops when a non-WORD token is encountered.
-5) Returns the built command string or NULL on memory allocation failure.
-
-Example:
-- Tokens: [ WORD("echo"), WORD("hello"), WORD("world") ]
-- Returns: `"echo hello world"`
-
-Effect:
-- Moves `p->current_token` forward past the processed WORD tokens.
-- If memory allocation fails,
-sets `p->error_status = PARSE_MEMORY_ERROR` and returns NULL.
-*/
-char	*build_command_string(t_parser *p)
-{
-	t_buffer	cmd_buffer;
-
-	cmd_buffer.size = 256;
-	cmd_buffer.pos = 0;
-	cmd_buffer.data = ft_calloc(cmd_buffer.size, 1);
-	if (!cmd_buffer.data)
-	{
-		p->error_status = PARSE_MEMORY_ERROR;
-		return (NULL);
-	}
-	while (p->current_token && p->current_token->type == TOKEN_WORD)
-	{
-		if (!append_to_buffer(&cmd_buffer, p->current_token->value))
-		{
-			p->error_status = PARSE_MEMORY_ERROR;
-			free(cmd_buffer.data);
-			return (NULL);
-		}
-		get_next_token(p);
-	}
-	return (cmd_buffer.data);
 }

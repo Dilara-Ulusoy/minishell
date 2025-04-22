@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 16:07:31 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/21 20:22:48 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 17:03:58 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ int	run_pid(t_args *arg_struct, t_cmd_parts **cmd_parts, t_shell *shell,
 		// 👇 Built-in de olsa sinyaller child gibi ayarlanır
 		set_signals(NULL, SIGNAL_CHILD);
 		ret = check_and_run_builtins(shell, cmd_parts, arg_struct);
-		set_signals(NULL, SIGNAL_PARENT); // restore
+		set_signals(NULL, SIGNAL_PARENT);
 		free_before_return_1(arg_struct, path);
 		return (ret);
 	}

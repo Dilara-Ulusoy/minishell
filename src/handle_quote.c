@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_quote.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 18:18:52 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/22 14:16:09 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/22 17:00:12 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,22 +126,6 @@ static int	expand_env_variable(t_parse_quote *p, t_shell *shell)
 ** - Otherwise, it copies the character to
 ** the result buffer and moves to the next index.
 */
-
-int	has_digit_then_alpha(const char *line, int index)
-{
-	int	i;
-
-	if (!line || !ft_isdigit(line[index + 1]))
-		return (0);
-	i = index + 1;
-	while (ft_isdigit(line[i]))
-	{
-		i++;
-		if (ft_isalpha(line[i]))
-			return (1);
-	}
-	return (1);
-}
 
 static int	process_character(t_parse_quote *p, t_shell *shell)
 {

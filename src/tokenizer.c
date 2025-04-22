@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 22:34:26 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/03 14:25:04 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 16:52:16 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,6 @@ static int	process_token_parsing(t_token **head, t_shell *shell)
 		return (result);
 	result = parse_single_char_operator(head, shell->line,
 			&shell->index, shell->line_length);
-	if (result == -1 || result == 1)
-		return (result);
-	result = handle_newline(head, shell->line, &shell->index);
 	if (result == -1 || result == 1)
 		return (result);
 	result = parse_word(head, shell);
@@ -149,50 +146,27 @@ int	parse_single_char_operator(t_token **head, const char *line,
 	return (0);
 }
 
-int	handle_newline(t_token **head, const char *line, int *pos)
+char	*handle_env_variable_without_space(const char
+	*line, int *index, int start, t_shell *shell)
 {
-	t_token	*nl_token;
+	char	*temp;
+	char	*temp2;
+	char	*result;
 
-	if (line[*pos] == '\n')
+	temp = ft_substr(line, start, (*index) - start);
+	if (!temp)
+		return (free_this(NULL, NULL, NULL, "substr failed"));
+	temp2 = get_env_var_value(line, index, shell);
+	if (!temp2)
+		return (free_this(temp, NULL, NULL, "get_env_var_value failed"));
+	if (temp2[0] == '\0')
 	{
-		nl_token = create_new_token_range(TOKEN_NL, "\\n", 0, 2);
-		if (!nl_token)
-			return (-1);
-		if (append_token(head, nl_token) == -1)
-		{
-			free(nl_token);
-			return (-1);
-		}
-		(*pos)++;
-		return (1);
+		while (line[*index] && is_space(line[*index]))
+			(*index)++;
 	}
-	return (0);
+	result = ft_strjoin(temp, temp2);
+	if (!result)
+		return (free_this(temp, temp2, NULL, "strjoin failed"));
+	free_this(temp, temp2, NULL, NULL);
+	return (result);
 }
-
-/**
- * @brief Parses a word from the current position in the input line.
- *
- * This function reads a sequence of non-operator, non-whitespace characters
- * (a "word") starting from the position indicated by `*pos`. If a valid word
- * is found:
- *   - Allocates memory for the word and creates a TOKEN_WORD token.
- *   - Appends the new token to the token list pointed to by `*head`.
- *   - Updates `*pos` to the position after the parsed word.
- *   - Returns 1 to indicate success.
- *
- * If no valid word is found at the current position (e.g., the character is
- * an operator or whitespace), the function does not modify `*head` or `*pos`,
- * and returns 0.
- *
- * If memory allocation fails, it frees any allocated memory and the token list
- * to prevent leaks, then returns 0 to indicate failure.
- *
- * @param head A pointer to the head of the token linked list. The new token
- *             will be appended here if a word is successfully parsed.
- * @param line The input string being tokenized.
- * @param pos  A pointer to the current parsing index in the input line. This
- *             is updated to point to the first character after the parsed word.
- *
- * @return int 1 if a word was successfully parsed and added to the token list,
- *             0 otherwise (e.g., no word found or memory allocation failure).
- */

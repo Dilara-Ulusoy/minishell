@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:14:48 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/22 15:18:59 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 16:52:32 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,31 +81,6 @@ char	*read_word_range(const char *line, int *index,
 	if (wordlength == 0)
 		return (NULL);
 	return (ft_substr(line, start, wordlength));
-}
-
-char	*handle_env_variable_without_space(const char
-	*line, int *index, int start, t_shell *shell)
-{
-	char	*temp;
-	char	*temp2;
-	char	*result;
-
-	temp = ft_substr(line, start, (*index) - start);
-	if (!temp)
-		return (free_this(NULL, NULL, NULL, "substr failed"));
-	temp2 = get_env_var_value(line, index, shell);
-	if (!temp2)
-		return (free_this(temp, NULL, NULL, "get_env_var_value failed"));
-	if (temp2[0] == '\0')
-	{
-		while (line[*index] && is_space(line[*index]))
-			(*index)++;
-	}
-	result = ft_strjoin(temp, temp2);
-	if (!result)
-		return (free_this(temp, temp2, NULL, "strjoin failed"));
-	free_this(temp, temp2, NULL, NULL);
-	return (result);
 }
 
 /*
