@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 16:07:31 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/22 20:50:27 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 23:59:34 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,10 +70,8 @@ static int	execute_command(char *path, t_cmd_parts **cmd_parts,
 int	run_single_builtin(t_cmd_parts **cmd_parts, t_shell *shell,
 	char ***envp, int *original_fd)
 {
-	char	**command_array;
 	int		ret;
 
-	command_array = (*cmd_parts)->cmd_array;
 	set_signals(NULL, SIGNAL_CHILD);
 	ret = check_and_run_builtins_single(shell, cmd_parts, envp, original_fd);
 	set_signals(NULL, SIGNAL_PARENT);
