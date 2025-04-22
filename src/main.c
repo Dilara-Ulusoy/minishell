@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 15:00:56 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/22 14:17:12 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/22 14:18:35 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,21 +46,8 @@ void	parse_and_process_command(t_shell *shell, char ***envp_copy)
 	cleanup_shell(shell);
 }
 
-int	main(int argc, char **argv, char **envp)
+static void	handle_input(t_shell shell, char **envp_copy)
 {
-	t_shell	shell;
-	char	**envp_copy;
-
-	shell.exit_code = 0;
-	envp_copy = copy_envp(envp);
-	(void)argv;
-	if (argc != 1)
-	{
-		ft_putendl_fd("Too many args. Usage: ./minishell", 2);
-		exit(1);
-	}
-	init_shell(&shell, &envp_copy);
-	init_term_and_signal(argc, argv, &shell.exit_code);
 	while (1)
 	{
 		set_signals(&shell.exit_code, SIGNAL_PARENT);
@@ -77,6 +64,24 @@ int	main(int argc, char **argv, char **envp)
 		set_signals(NULL, SIGNAL_CHILD);
 		parse_and_process_command(&shell, &envp_copy);
 	}
+}
+
+int	main(int argc, char **argv, char **envp)
+{
+	t_shell	shell;
+	char	**envp_copy;
+
+	shell.exit_code = 0;
+	envp_copy = copy_envp(envp);
+	(void)argv;
+	if (argc != 1)
+	{
+		ft_putendl_fd("Too many args. Usage: ./minishell", 2);
+		exit(1);
+	}
+	init_shell(&shell, &envp_copy);
+	init_term_and_signal(argc, argv, &shell.exit_code);
+	handle_input(shell, envp_copy);
 	free_envp(envp_copy);
 	envp_copy = NULL;
 	cleanup_shell(&shell);
