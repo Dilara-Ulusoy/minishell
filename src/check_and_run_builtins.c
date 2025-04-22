@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 22:38:06 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/21 01:11:56 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 12:17:27 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ static int	exit_w_more_than_two_args(t_shell *shell,
 {
 	if (is_number((*cmd_parts)->cmd_array[1]))
 	{
-		ft_putstr_fd("exit\n", 2);
 		ft_putstr_fd("exit: too many arguments\n", 2);
 		free_cmd_parts(cmd_parts);
 		return (EXIT_FAILURE);
