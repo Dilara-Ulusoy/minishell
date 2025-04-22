@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:14:48 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/22 15:09:50 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 15:18:59 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,7 @@ static char	*handle_dollar_and_quote(const char *line, int *index,
 		if (!temp)
 			free_this(dollar, NULL, NULL, "parse_quotes failed");
 		joined = ft_strjoin(dollar, temp);
-		free(temp);
-		free(dollar);
+		free_this(temp, dollar, NULL, NULL);
 		if (!joined)
 			return (NULL);
 		return (joined);
