@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:15 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/16 02:04:14 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/19 18:55:55 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,5 +84,7 @@ int	run_pid(t_args *arg_struct, t_cmd_parts **cmd_parts, t_shell *shell, int is_
 int	run_single_builtin(t_cmd_parts **cmd_parts, t_shell *shell, char ***envp, int *original_fd);
 int get_num_commands(const t_token *head);
 void count_pipes(const t_token *head, int *i);
-
+void	free_cmd_clean_shell(t_shell *shell, t_cmd_parts *cmd_parts);
+void	set_signal_in_child(void);
+void	set_signal_in_parent(void);
 #endif
