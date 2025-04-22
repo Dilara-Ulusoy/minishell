@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 12:58:25 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/19 19:08:42 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/21 20:17:46 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,14 +54,7 @@ void	free_cmd_parts(t_cmd_parts **cmd_parts)
 
 	if (cmd_parts == NULL || *cmd_parts == NULL)
 		return ;
-	if ((*cmd_parts)->cmd_array != NULL)
-	{
-		i = -1;
-		while ((*cmd_parts)->cmd_array[++i] != NULL)
-			free((*cmd_parts)->cmd_array[i]);
-		free((*cmd_parts)->cmd_array);
-		(*cmd_parts)->cmd_array = NULL;
-	}
+	free_cmd_array(cmd_parts);
 	if ((*cmd_parts)->files_array != NULL)
 	{
 		i = -1;
@@ -99,13 +92,7 @@ char	**copy_envp(char **envp)
 	{
 		new_envp[i] = ft_strdup(envp[i]);
 		if (!new_envp[i])
-		{
-			perror("strdup failed");
-			while (i > 0)
-				free(new_envp[--i]);
-			free(new_envp);
-			return (NULL);
-		}
+			return (free_before_return_3(new_envp, i));
 		i++;
 	}
 	new_envp[count] = NULL;
@@ -127,162 +114,3 @@ void	free_envp(char **envp)
 	free(envp[i]);
 	free(envp);
 }
-
-// void	free_array(void **arr, int is_int, int j)
-// {
-// 	if (j == -1)
-// 	{
-// 		while (arr[++j] != NULL)
-// 		{
-// 			if (is_int == 1)
-// 				free((int *)arr[j]);
-// 			else
-// 				free((char *)arr[j]);
-// 		}
-// 	}
-// 	else
-// 	{
-// 		while (--j >= 0)
-// 		{
-// 			if (is_int == 1)
-// 				free((int *)arr[j]);
-// 			else
-// 				free((char *)arr[j]);
-// 		}
-// 	}
-// 	free(arr);
-// }
-
-// int	close_and_free(t_args *arg_struct, int free_pid)
-// {
-// 	close_pipes(arg_struct->fd, arg_struct->argc + 1);
-// 	free_array((void **)arg_struct->fd, 1, arg_struct->argc + 1);
-// 	if (free_pid == 1)
-// 	{
-// 		free(arg_struct->pids);
-// 		free(arg_struct);
-// 		return (-1);
-// 	}
-// 	else
-// 		return (0);
-// }
-
-// void free_cmd_parts(t_cmd_parts *cmd_parts)
-// {
-// 	if (cmd_parts == NULL)
-// 		return ;
-// 	if (cmd_parts->cmd_array != NULL)
-// 		free(cmd_parts->cmd_array);
-// 	if (cmd_parts->infiles_array != NULL)
-// 		free(cmd_parts->infiles_array);
-// 	if (cmd_parts->outfiles_array != NULL)
-// 		free(cmd_parts->outfiles_array);
-// 	if (cmd_parts->outfiles_types != NULL)
-// 		free(cmd_parts->outfiles_types);
-// 	free(cmd_parts);
-// }
-
-// void free_cmd_parts(t_cmd_parts *cmd_parts)
-// {
-//     int i;
-
-//     if (cmd_parts == NULL)
-//         return;
-
-//     if (cmd_parts->cmd_array != NULL)
-//     {
-//         i = 0;
-//         while (cmd_parts->cmd_array[i] != NULL)
-//         {
-//             free(cmd_parts->cmd_array[i]);
-//             i++;
-//         }
-//         free(cmd_parts->cmd_array);
-//         cmd_parts->cmd_array = NULL;
-//     }
-
-//     if (cmd_parts->infiles_array != NULL)
-//     {
-//         i = 0;
-//         while (cmd_parts->infiles_array[i] != NULL)
-//         {
-//             free(cmd_parts->infiles_array[i]);
-//             i++;
-//         }
-//         free(cmd_parts->infiles_array);
-//         cmd_parts->infiles_array = NULL;
-//     }
-
-//     if (cmd_parts->outfiles_array != NULL)
-//     {
-//         i = 0;
-//         while (cmd_parts->outfiles_array[i] != NULL)
-//         {
-//             free(cmd_parts->outfiles_array[i]);
-//             i++;
-//         }
-//         free(cmd_parts->outfiles_array);
-//         cmd_parts->outfiles_array = NULL;
-//     }
-
-//     if (cmd_parts->outfiles_types != NULL)
-//     {
-//         free(cmd_parts->outfiles_types);
-//         cmd_parts->outfiles_types = NULL;
-//     }
-
-//     free(cmd_parts);
-// }
-
-// void free_cmd_parts(t_cmd_parts **cmd_parts)
-// {
-//     int i;
-
-//     if (cmd_parts == NULL || *cmd_parts == NULL)
-//         return;
-
-//     if ((*cmd_parts)->cmd_array != NULL)
-//     {
-//         i = 0;
-//         while ((*cmd_parts)->cmd_array[i] != NULL)
-//         {
-//             free((*cmd_parts)->cmd_array[i]);
-//             i++;
-//         }
-//         free((*cmd_parts)->cmd_array);
-//         (*cmd_parts)->cmd_array = NULL;
-//     }
-
-//     if ((*cmd_parts)->infiles_array != NULL)
-//     {
-//         i = 0;
-//         while ((*cmd_parts)->infiles_array[i] != NULL)
-//         {
-//             free((*cmd_parts)->infiles_array[i]);
-//             i++;
-//         }
-//         free((*cmd_parts)->infiles_array);
-//         (*cmd_parts)->infiles_array = NULL;
-//     }
-
-//     if ((*cmd_parts)->outfiles_array != NULL)
-//     {
-//         i = 0;
-//         while ((*cmd_parts)->outfiles_array[i] != NULL)
-//         {
-//             free((*cmd_parts)->outfiles_array[i]);
-//             i++;
-//         }
-//         free((*cmd_parts)->outfiles_array);
-//         (*cmd_parts)->outfiles_array = NULL;
-//     }
-
-//     if ((*cmd_parts)->outfiles_types != NULL)
-//     {
-//         free((*cmd_parts)->outfiles_types);
-//         (*cmd_parts)->outfiles_types = NULL;
-//     }
-
-//     free(*cmd_parts);
-//     *cmd_parts = NULL;
-// }

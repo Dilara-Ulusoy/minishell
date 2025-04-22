@@ -6,14 +6,14 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:45:29 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/19 18:57:45 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/21 00:06:34 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "execution.h"
 
-static void	restore_fd(int *original_fd)
+void	restore_fd(int *original_fd)
 {
 	dup2(original_fd[0], STDIN_FILENO);
 	dup2(original_fd[1], STDOUT_FILENO);

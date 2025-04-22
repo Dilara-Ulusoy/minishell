@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.c                                            :+:      :+:    :+:   */
+/*   run_pid.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 16:07:31 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/16 02:04:12 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/21 20:22:48 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "execution.h"
-#include "signal.h"  // 👈 Sinyaller için ekledik
+#include "signal.h"
 
 static int	command_not_found(t_cmd_parts **cmd_parts, t_args *arg_struct)
 {
@@ -55,31 +55,22 @@ static int	execute_command(char *path, t_cmd_parts **cmd_parts,
 		ft_putstr_fd(path, 2);
 		ft_putstr_fd(": ", 2);
 		ft_putstr_fd(strerror(21), 2);
-		if (path != (*cmd_parts)->cmd_array[0])
-			free(path);
-		free_cmd_parts(cmd_parts);
-		free(arg_struct->pids);
-		free_envp(arg_struct->envp);
-		free(arg_struct);
+		free_before_return_2(arg_struct, cmd_parts, path);
 		return (126);
 	}
 	else
 	{
-		// Child process sinyal ayarları yapılır
+		// For child process sinyal ayarları yapılır
 		set_signals(NULL, SIGNAL_CHILD);
 		execve(path, (*cmd_parts)->cmd_array, arg_struct->envp);
 		perror((*cmd_parts)->cmd_array[0]);
 	}
-	if (path != (*cmd_parts)->cmd_array[0])
-		free(path);
-	free_cmd_parts(cmd_parts);
-	free(arg_struct->pids);
-	free_envp(arg_struct->envp);
-	free(arg_struct);
+	free_before_return_2(arg_struct, cmd_parts, path);
 	return (get_exit_code());
 }
 
-int	run_single_builtin(t_cmd_parts **cmd_parts, t_shell *shell, char ***envp, int *original_fd)
+int	run_single_builtin(t_cmd_parts **cmd_parts, t_shell *shell,
+	char ***envp, int *original_fd)
 {
 	char	*path;
 	char	**command_array;
@@ -87,7 +78,6 @@ int	run_single_builtin(t_cmd_parts **cmd_parts, t_shell *shell, char ***envp, in
 
 	command_array = (*cmd_parts)->cmd_array;
 	path = find_command_path(command_array[0], *envp);
-
 	// 👇 Sinyalleri çalıştırmadan önce geçici olarak CHILD olarak ayarla
 	set_signals(NULL, SIGNAL_CHILD);
 	ret = check_and_run_builtins_single(shell, cmd_parts, envp, original_fd);
@@ -102,13 +92,11 @@ int	run_pid(t_args *arg_struct, t_cmd_parts **cmd_parts, t_shell *shell,
 {
 	char	*path;
 	char	**command_array;
-	int		check_status;
 	int		ret;
 
 	command_array = (*cmd_parts)->cmd_array;
 	path = find_command_path(command_array[0], arg_struct->envp);
-	check_status = set_pipe((*cmd_parts), arg_struct, path, is_builtin);
-	if (check_status == -1)
+	if (set_pipe((*cmd_parts), arg_struct, path, is_builtin) == -1)
 	{
 		free_cmd_parts(cmd_parts);
 		free(path);
@@ -120,10 +108,7 @@ int	run_pid(t_args *arg_struct, t_cmd_parts **cmd_parts, t_shell *shell,
 		set_signals(NULL, SIGNAL_CHILD);
 		ret = check_and_run_builtins(shell, cmd_parts, arg_struct);
 		set_signals(NULL, SIGNAL_PARENT); // restore
-		free(path);
-		free(arg_struct->pids);
-		free_envp(arg_struct->envp);
-		free(arg_struct);
+		free_before_return_1(arg_struct, path);
 		return (ret);
 	}
 	else if (path != NULL)
