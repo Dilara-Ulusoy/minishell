@@ -6,12 +6,11 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 13:01:11 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/16 15:29:58 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 20:44:52 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "execution.h"
 
 void	free_array(void **arr, int is_int, int j)
 {

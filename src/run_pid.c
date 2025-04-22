@@ -6,13 +6,11 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 16:07:31 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/22 19:28:03 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 20:50:27 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "execution.h"
-#include "signal.h"
 
 static int	command_not_found(t_cmd_parts **cmd_parts, t_args *arg_struct)
 {
@@ -61,7 +59,6 @@ static int	execute_command(char *path, t_cmd_parts **cmd_parts,
 	}
 	else
 	{
-		// For child process sinyal ayarları yapılır
 		set_signals(NULL, SIGNAL_CHILD);
 		execve(path, (*cmd_parts)->cmd_array, arg_struct->envp);
 		perror((*cmd_parts)->cmd_array[0]);
@@ -77,11 +74,10 @@ int	run_single_builtin(t_cmd_parts **cmd_parts, t_shell *shell,
 	int		ret;
 
 	command_array = (*cmd_parts)->cmd_array;
-	// 👇 Sinyalleri çalıştırmadan önce geçici olarak CHILD olarak ayarla
 	set_signals(NULL, SIGNAL_CHILD);
 	ret = check_and_run_builtins_single(shell, cmd_parts, envp, original_fd);
-	set_signals(NULL, SIGNAL_PARENT); // Tekrar eski haline getir
-	shell->exit_code = ret; // Eğer bu alan shell struct'ında varsa
+	set_signals(NULL, SIGNAL_PARENT);
+	shell->exit_code = ret;
 	return (ret);
 }
 
@@ -102,7 +98,6 @@ int	run_pid(t_args *arg_struct, t_cmd_parts **cmd_parts, t_shell *shell,
 	}
 	if (is_builtin == 1)
 	{
-		// 👇 Built-in de olsa sinyaller child gibi ayarlanır
 		set_signals(NULL, SIGNAL_CHILD);
 		ret = check_and_run_builtins(shell, cmd_parts, arg_struct);
 		set_signals(NULL, SIGNAL_PARENT);

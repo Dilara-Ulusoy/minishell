@@ -6,12 +6,11 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:38:49 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/21 14:45:29 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 20:44:06 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "execution.h"
 
 int	arrange_in_file(t_cmd_parts *cmd_parts, t_args *arg_struct,
 	int fileno, int i)

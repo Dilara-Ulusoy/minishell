@@ -6,12 +6,11 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 17:05:28 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/20 21:55:58 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 20:47:25 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "execution.h"
 
 static int	check_export_var_name_is_valid(char *name_w_equal)
 {

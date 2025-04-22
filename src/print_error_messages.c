@@ -6,12 +6,11 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 12:58:25 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/21 20:17:46 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 20:48:37 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "execution.h"
 
 int	display_error_message(int i, t_args *arg_struct)
 {

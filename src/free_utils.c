@@ -6,12 +6,11 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 20:00:31 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/21 20:17:16 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 20:45:31 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "execution.h"
 
 void	free_before_return_1(t_args *arg_struct, char *path)
 {

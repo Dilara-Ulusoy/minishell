@@ -6,12 +6,11 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 22:38:06 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/22 12:17:27 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 20:44:24 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "execution.h"
 
 static void	free_before_exit(t_shell *shell, t_cmd_parts **cmd_parts,
 	t_args *arg_struct)

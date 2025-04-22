@@ -3,18 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 15:00:56 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/22 19:22:31 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/22 20:48:17 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "execution.h"
-
-//debug_ast(shell->ast, 0);   // -------> FOR DUBEGGING
-//mprint_tokens(shell->tokens);  // -------> FOR DUBEGGING
 
 void	parse_and_process_command(t_shell *shell, char ***envp_copy)
 {

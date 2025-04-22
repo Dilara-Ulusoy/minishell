@@ -6,12 +6,11 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 17:17:23 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/20 20:31:52 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 20:45:36 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "execution.h"
 
 static int	try_to_go_folder(char *new_path)
 {

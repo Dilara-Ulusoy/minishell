@@ -6,12 +6,11 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 17:16:09 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/20 17:16:42 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 20:45:41 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "execution.h"
 
 int	ft_env(char **envp)
 {

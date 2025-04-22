@@ -23,8 +23,6 @@ OBJS := $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
 # Default target: build everything
 all: $(LIBFT) $(NAME)
 
-bonus: $(LIBFT) $(NAME)
-
 # Linking the executable
 $(NAME): $(OBJ_DIR) $(OBJS)
 	@echo "Linking $(NAME)..."
@@ -33,10 +31,6 @@ $(NAME): $(OBJ_DIR) $(OBJS)
 $(LIBFT):
 	@echo "Building libft..."
 	@$(MAKE) -C $(LIBFT_DIR)
-
-$(LIBFT)_bonus:
-	@echo "Building libft bonus..."
-	@$(MAKE) bonus -C $(LIBFT_DIR)
 
 #******************************************************************************#
 #                               COMPILE RULES                                  #
@@ -70,4 +64,4 @@ fclean: clean
 # Rebuild everything from scratch
 re: fclean all
 
-.PHONY: all bonus clean fclean re
+.PHONY: all clean fclean re

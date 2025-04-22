@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:59:15 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/22 20:09:24 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 20:47:02 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,10 @@
 # include "execution.h"
 # include "signal.h"
 # include "../Libft/libft.h"
+# include <sys/wait.h>
+# include <sys/types.h>
+# include <fcntl.h>
+# include <limits.h>
 
 typedef struct s_shell
 {

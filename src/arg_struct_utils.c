@@ -6,12 +6,11 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 22:03:24 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/21 11:18:38 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 20:44:00 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "execution.h"
 
 void	close_pipes(int **fd, int j)
 {

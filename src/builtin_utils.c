@@ -6,12 +6,11 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 17:05:54 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/20 18:46:21 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 20:44:15 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "execution.h"
 
 int	contains_equal(char *s)
 {

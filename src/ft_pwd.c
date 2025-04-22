@@ -6,12 +6,11 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 15:26:10 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/20 15:29:31 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 20:45:58 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "execution.h"
 
 int	ft_pwd(t_shell *shell)
 {

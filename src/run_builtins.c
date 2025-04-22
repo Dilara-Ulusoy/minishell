@@ -6,12 +6,11 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 23:15:20 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/22 12:55:14 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 20:48:42 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "execution.h"
 
 int	run_unset(t_cmd_parts **cmd_parts, char ***envp)
 {

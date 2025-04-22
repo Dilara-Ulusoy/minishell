@@ -6,12 +6,11 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:26:34 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/21 01:47:53 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 20:47:48 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "execution.h"
 
 static void	get_n_files_in_cmd_parts(t_cmd_parts *cmd_parts,
 	const t_token *curr)

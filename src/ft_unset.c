@@ -6,12 +6,11 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 17:18:10 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/20 18:41:50 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 20:47:36 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "execution.h"
 
 // Free if malloc fails
 static char	**get_reduced_envp(int i, int len, char ***envp)

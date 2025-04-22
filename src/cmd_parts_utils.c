@@ -6,12 +6,11 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 14:37:37 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/20 14:37:56 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 20:44:27 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "execution.h"
 
 t_cmd_parts	*initialize_cmd_parts(void)
 {

@@ -6,12 +6,11 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 15:31:04 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/20 15:39:12 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 20:45:45 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "execution.h"
 
 int	is_number(char *str)
 {

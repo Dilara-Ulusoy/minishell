@@ -6,12 +6,11 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:45:29 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/21 00:06:34 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 20:45:09 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "execution.h"
 
 void	restore_fd(int *original_fd)
 {

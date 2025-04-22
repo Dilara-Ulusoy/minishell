@@ -6,12 +6,11 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 18:54:58 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/19 18:55:02 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 20:44:45 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "execution.h"
 
 void	free_cmd_clean_shell(t_shell *shell, t_cmd_parts *cmd_parts)
 {

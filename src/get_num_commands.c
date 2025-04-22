@@ -6,12 +6,11 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:23:14 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/20 14:41:19 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 20:47:53 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "execution.h"
 
 static void	count_pipes(const t_token *head, int *i)
 {

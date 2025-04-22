@@ -6,7 +6,7 @@
 #    By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/19 10:32:48 by dakcakoc          #+#    #+#              #
-#    Updated: 2025/04/15 14:16:07 by htopa            ###   ########.fr        #
+#    Updated: 2025/04/22 21:02:31 by htopa            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,9 +24,6 @@ SRCS = ft_atoi.c ft_itoa.c ft_bzero.c ft_isalnum.c ft_isalpha.c ft_isascii.c \
        ft_tolower.c ft_toupper.c ft_calloc.c ft_strnstr.c ft_strchr.c ft_substr.c ft_strtrim.c ft_striteri.c \
 	   ft_printf.c ft_printf_utils.c ft_atoi_longlong.c ft_itoa_longlong.c\
 
-BONUS =	ft_lstadd_back_bonus.c ft_lstadd_front_bonus.c ft_lstclear_bonus.c ft_lstdelone_bonus.c ft_lstiter_bonus.c ft_lstlast_bonus.c \
-		ft_lstnew_bonus.c ft_lstsize_bonus.c ft_lstmap_bonus.c \
-
 HEADER = libft.h
 
 # Command to create a static library archive
@@ -41,9 +38,6 @@ CFLAGS = -Wall -Wextra -Werror
 # Object files
 OBJS = ${SRCS:.c=.o}
 
-# Bonus object files
-BONUS_OBJS = $(BONUS:.c=.o)
-
 # Default target
 all: $(NAME)
 
@@ -57,20 +51,10 @@ $(NAME): ${OBJS}
 	@echo "$(GREEN)Compiling $<...$(RESET)"
 	@$(CC) -c $(CFLAGS) $< -o $@
 
-# Bonus target
-bonus: .bonus
-
 # Clean object files and bonus files
 clean:
 	@echo "$(CYAN)Cleaning object files...$(RESET)"
-	@rm -f $(OBJS) $(BONUS_OBJS)
-	@rm -f .bonus
-
-# Compile bonus and create static library
-.bonus: $(OBJS) $(BONUS_OBJS)
-	@echo "$(GREEN)Compiling bonus files...$(RESET)"
-	@$(AR) $(NAME) $(OBJS) $(BONUS_OBJS)
-	@touch .bonus
+	@rm -f $(OBJS)
 
 # Full clean
 fclean: clean
@@ -78,7 +62,7 @@ fclean: clean
 	@rm -f $(NAME)
 
 # Rebuild everything
-re: fclean all bonus
+re: fclean all
 
 # Phony targets
-.PHONY: all clean fclean re bonus
+.PHONY: all clean fclean re
