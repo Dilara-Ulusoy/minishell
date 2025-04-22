@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize_word.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:14:48 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/19 18:24:12 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/22 10:57:52 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ static char	*handle_dollar_and_quote(const char *line, int *index,
 		if (!temp)
 			free_this(dollar, NULL, NULL, "parse_quotes failed");
 		joined = ft_strjoin(dollar, temp);
-		free_this(temp, dollar, NULL, "strjoin failed");
+		free(temp);
+		free(dollar);
 		if (!joined)
 			return (NULL);
 		return (joined);
