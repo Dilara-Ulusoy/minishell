@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   special_cases.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:23:33 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/19 17:18:11 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/22 15:01:16 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ static char	*handle_invalid_variable(const char *line, int *index, int start)
  	if (!ft_isalpha(line[start]) && line[start] != '_' )
 	{
 		*index = ft_strlen(line);
-		return (ft_substr(line, start + 1, size - 1));
+		return (ft_substr(line, start + 1, size));
 	}
 	return (NULL);
 }
