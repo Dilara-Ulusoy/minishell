@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 15:56:13 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/22 14:12:09 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/22 14:46:11 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,11 @@ static void	handle_empty_quote_after_non_alnum(t_parse_quote *p, const char *lin
 	{
 		if (line[index + 1] == '"' || line[index + 1] == '\'')
 		{
-			free(p->result);
-			p->result = ft_strdup(" ");
+			if(!ft_isalnum(line[index + 2]))
+			{
+				free(p->result);
+				p->result = ft_strdup(" ");
+			}
 		}
 	}
 }
@@ -55,6 +58,12 @@ char	*parse_quotes(const char *line, int *index, t_shell *shell)
 	if (p.result[0] == '\0')
 	{
 		free(p.result);
+		if(ft_strchr(line, '$') != NULL)
+		{
+			while(line[*index] && is_space(line[*index]))
+				(*index)++;
+			printf("index: %d\n", *index);
+		}
 		p.result = ft_strdup("");
 		if (p.result == NULL)
 			return (NULL);
