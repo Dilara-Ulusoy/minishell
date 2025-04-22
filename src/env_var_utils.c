@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_var_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 16:58:06 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/22 17:01:51 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 19:50:15 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,4 +106,28 @@ char	*build_command_string(t_parser *p)
 		get_next_token(p);
 	}
 	return (cmd_buffer.data);
+}
+
+char	*remove_all_quotes(char *str)
+{
+	int		i;
+	int		j;
+	char	*result;
+
+	if (!str)
+		return (NULL);
+	result = malloc(strlen(str) + 1);
+	if (!result)
+		return (NULL);
+	i = 0;
+	j = 0;
+	while (str[i])
+	{
+		if (str[i] != '"' && str[i] != '\'')
+			result[j++] = str[i];
+		i++;
+	}
+	result[j] = '\0';
+	free(str);
+	return (result);
 }

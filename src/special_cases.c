@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   special_cases.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 16:23:33 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/22 15:33:25 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 19:49:46 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,28 +54,23 @@ static char	*handle_exit_code(const char *line, int *index,
 	return (NULL);
 }
 
-char	*remove_all_quotes(char *str)
+static char	*extract_variable_or_trimmed(const char *line,
+		int *index, int start, int size)
 {
-	int		i;
-	int		j;
-	char	*result;
-
-	if (!str)
-		return (NULL);
-	result = malloc(strlen(str) + 1);
-	if (!result)
-		return (NULL);
-	i = 0;
-	j = 0;
-	while (str[i])
+	if (!ft_isalnum(line[*index]) && ft_strchr(line + start, '$') == NULL)
 	{
-		if (str[i] != '"' && str[i] != '\'')
-			result[j++] = str[i];
-		i++;
+		(*index)++;
+		*index = ft_strlen(line);
+		return (remove_all_quotes(ft_substr(line, start + 1, size)));
 	}
-	result[j] = '\0';
-	free(str);
-	return (result);
+	else
+	{
+		(*index)++;
+		while (line[*index]
+			&& (ft_isalnum(line[*index]) || line[*index] == '_'))
+			(*index)++;
+		return (ft_substr(line, start + 1, *index - start - 1));
+	}
 }
 // Case: If invalid variable name (non-alpha and not `_`), skip invalid chars
 // Eg: "echo $123ggg" → returns "23ggg"
@@ -84,31 +79,18 @@ char	*remove_all_quotes(char *str)
 static char	*handle_invalid_variable(const char *line, int *index, int start)
 {
 	int		size;
-	char	*trimmed;
+	int		s;
 
 	size = ft_strlen(line) - (start + 1);
 	if (*index > 0 && is_space(line[*index - 1])
 		&& !ft_isalpha(line[start]) && line[start] != '_')
-	{
-		if (!ft_isalnum(line[*index]) && ft_strchr(line + start, '$') == NULL)
-		{
-			(*index)++;
-			*index = ft_strlen(line);
-			trimmed = remove_all_quotes(ft_substr(line, start + 1, size));
-			return (trimmed);
-		}
-		else
-		{
-			(*index)++;
-			while (line[*index]
-				&& (ft_isalnum(line[*index]) || line[*index] == '_'))
-				(*index)++;
-			return (ft_substr(line, start + 1, *index - start - 1));
-		}
-	}
+		return (extract_variable_or_trimmed(line, index, start, size));
 	if (!ft_isalpha(line[start]) && line[start] != '_' )
 	{
+		s = ft_strlen(line) - 1;
 		*index = ft_strlen(line);
+		if (line[s] == '"' || line[s] == '\'')
+			return (ft_substr(line, start + 1, size - 1));
 		return (ft_substr(line, start + 1, size));
 	}
 	return (NULL);

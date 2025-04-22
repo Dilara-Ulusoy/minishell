@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 15:00:56 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/22 15:36:27 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 19:22:31 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "execution.h"
 
 //debug_ast(shell->ast, 0);   // -------> FOR DUBEGGING
-//print_tokens(shell->tokens);  // -------> FOR DUBEGGING
+//mprint_tokens(shell->tokens);  // -------> FOR DUBEGGING
 
 void	parse_and_process_command(t_shell *shell, char ***envp_copy)
 {

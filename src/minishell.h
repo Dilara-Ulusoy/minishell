@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:59:15 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/22 17:06:04 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 19:55:06 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ char	*remove_spaces(const char *str);
 void	copy_without_extra_spaces(const char *src, char *dst, char *base);
 int		has_digit_then_alpha(const char *line, int index);
 
+
 /* Quote Parsing */
 char	*join_string_with_quoted_if_no_space(const char *line,
 			int *index, int start, t_shell *shell);
@@ -90,6 +91,7 @@ char	*parse_quotes(const char *line, int *index, t_shell *shell);
 char	*process_quote_loop(t_parse_quote *p, t_shell *shell);
 char	*check_unmatched_quote(t_parse_quote *p);
 int		init_parse_quote(t_parse_quote *p, const char *line, int *index);
+char	*remove_all_quotes(char *str);
 
 /* Word Parsing */
 char	*read_word_range(const char *line, int *index,
