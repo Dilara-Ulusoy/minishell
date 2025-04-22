@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:59:15 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/21 20:36:41 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/22 15:10:47 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ typedef struct s_shell
 	int			line_length;
 	char		*heredoc_tmp;
 	char		***envp;
-	// 👇 Geçici parsing index’i için
 	int			index;
 }	t_shell;
 

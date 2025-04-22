@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize_word.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:14:48 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/22 13:46:48 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/22 15:09:50 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static char	*handle_dollar_and_quote(const char *line, int *index,
 	char	*temp;
 	char	*joined;
 
-	if(line[*index] == '$' && ft_strlen(line) == 1)
+	if (line[*index] == '$' && ft_strlen(line) == 1)
 	{
 		(*index)++;
 		return (ft_strdup("$"));
@@ -27,7 +27,8 @@ static char	*handle_dollar_and_quote(const char *line, int *index,
 	dollar = handle_dollar_sign(line, index, start, shell);
 	if (!dollar)
 		return (NULL);
-	if ((line[*index] == '"' || line[*index] == '\'' ) && (line[*index + 1] == '$' || ft_isalpha(line[*index + 1])))
+	if ((line[*index] == '"' || line[*index] == '\'' )
+		&& (line[*index + 1] == '$' || ft_isalpha(line[*index + 1])))
 	{
 		temp = parse_quotes(line, index, shell);
 		if (!temp)
@@ -96,9 +97,9 @@ char	*handle_env_variable_without_space(const char
 	temp2 = get_env_var_value(line, index, shell);
 	if (!temp2)
 		return (free_this(temp, NULL, NULL, "get_env_var_value failed"));
-	if(temp2[0] == '\0')
+	if (temp2[0] == '\0')
 	{
-		while(line[*index] && is_space(line[*index]))
+		while (line[*index] && is_space(line[*index]))
 			(*index)++;
 	}
 	result = ft_strjoin(temp, temp2);
