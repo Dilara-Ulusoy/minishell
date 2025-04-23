@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal_2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 15:43:28 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/22 17:02:48 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/23 15:42:39 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ int	set_signals(int *exit_code, int type)
 	{
 		if (signal(SIGINT, SIG_DFL) == SIG_ERR)
 			return (0);
-		if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
+		if (signal(SIGQUIT, SIG_DFL) == SIG_ERR)
 			return (0);
 	}
 	return (1);

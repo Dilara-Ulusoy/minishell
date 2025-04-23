@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_commands.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:45:29 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/23 10:06:41 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/23 15:48:28 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,11 +88,16 @@ static int	wait_commands(int num_commands, t_args *arg_struct)
 	while (++j < num_commands)
 	{
 		waitpid(arg_struct->pids[j], &wstatus, 0);
-		if (WIFSIGNALED(wstatus) && WTERMSIG(wstatus) == SIGINT
-			&& !printed_newline)
+		if (WIFSIGNALED(wstatus))
 		{
-			write(1, "\n", 1);
-			printed_newline = 1;
+			int sig = WTERMSIG(wstatus);
+			if (sig == SIGINT && !printed_newline)
+			{
+				write(1, "\n", 1);
+				printed_newline = 1;
+			}
+			else if (sig == SIGQUIT)
+				write(2, "Quit (core dumped)\n", 20);
 		}
 	}
 	free(arg_struct->pids);
