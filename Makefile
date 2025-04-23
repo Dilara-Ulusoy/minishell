@@ -59,6 +59,7 @@ SRCS := \
 	$(SRC_DIR)/exec_utils_2.c \
 	$(SRC_DIR)/env_variable.c \
 	$(SRC_DIR)/env_var_utils.c \
+	$(SRC_DIR)/env_var_utils_2.c \
 	$(SRC_DIR)/cmd_parts_utils.c \
 	$(SRC_DIR)/check_and_run_builtins.c \
 	$(SRC_DIR)/check_and_run_builtins_single.c \

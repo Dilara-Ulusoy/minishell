@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:59:15 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/23 09:53:55 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/23 23:56:55 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,13 @@ void	append_env_value(char **result, char *var_name, t_shell *shell);
 char	*remove_spaces(const char *str);
 void	copy_without_extra_spaces(const char *src, char *dst, char *base);
 int		has_digit_then_alpha(const char *line, int index);
+char	*append_vars_from_line(const char *line,
+		int *index, char *expanded, t_shell *shell);
+char	*append_exit_code_and_following(const char *line,
+		int *index, char *expanded, int exit_code);
+void	append_dollar_if_no_var(char **result);
+char	*append_and_free(char *original, const char *addition);
+char	*extract_alphanum(const char *line, int *index);
 
 /* Quote Parsing */
 char	*join_string_with_quoted_if_no_space(const char *line,
