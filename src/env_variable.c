@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:23:12 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/23 21:53:52 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/23 22:24:53 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,91 +92,56 @@ void	append_dollar_if_no_var(char **result)
 	free(temp);
 }
 
-char	*append_remaining_text(const char *line, int *index, char *prefix)
+char	*append_vars_from_line(const char *line,
+		int *index, char *expanded, t_shell *shell)
 {
-	char	*result;
-	char	*new_result;
-	char	temp[2];
+	char	*env_var;
+	char	*tmp;
 
-	result = prefix;
-	while (line[*index] && (ft_isalnum(line[*index]) || line[*index] == '_'))
-	{
-		temp[0] = line[*index];
-		temp[1] = '\0';
-		new_result = ft_strjoin(result, temp);
-		free(result);
-		if (!new_result)
-			return (NULL);
-		result = new_result;
-		(*index)++;
-	}
-	return (result);
-}
-
-char *expand_special_and_following_vars(const char *line, int *index, char *special, t_shell *shell)
-{
-	char	*result;
-	char	*var_name;
-
-	result = ft_strdup(special);
-	if (!result)
-		return (NULL);
 	while (line[*index] == '$')
 	{
 		(*index)++;
-		var_name = get_var_name(line, index);
-		if (!var_name && (line[*index]) != '?')
-			append_dollar_if_no_var(&result);
-		else if ((line[*index]) == '?')
+		if (line[*index] == '?')
 		{
-			result = ft_strjoin(result, ft_itoa(shell->exit_code));
+			tmp = ft_strjoin(expanded, ft_itoa(shell->exit_code));
+			free(expanded);
+			expanded = tmp;
 			(*index)++;
-			return (result);
 		}
 		else
-			append_env_value(&result, var_name, shell);
+		{
+			env_var = get_var_name(line, index);
+			if (!env_var)
+				append_dollar_if_no_var(&expanded);
+			else
+				append_env_value(&expanded, env_var, shell);
+		}
 	}
-	return (result);
+	return (expanded);
 }
 
-/*
-   get_env_var_value:
+char	*expand_special_and_following_vars(const char *line,
+	int *index, char *special_value, t_shell *shell)
+{
+	char	*expanded;
 
-- Extracts and expands an environment variable from the input string.
-- Handles special cases (e.g., isolated `$` or invalid variable names).
-- Allocates memory for the resulting expanded value using `ft_calloc()`.
-- Iterates through consecutive `$` signs, retrives and appends variable values.
-- Returns a dynamically allocated string containing the processed variable value,
-or NULL if memory allocation fails.
-*/
+	expanded = ft_strdup(special_value);
+	if (!expanded)
+		return (NULL);
+	return (append_vars_from_line(line, index, expanded, shell));
+}
+
 char	*get_env_var_value(const char *line, int *index, t_shell *shell)
 {
-	char	*result;
-	char	*special;
-	char	*var_name;
-	int		start;
+	char	*special_value;
+	char	*expanded;
 
-	start = *index + 1;
-	special = handle_special_cases(line, index, start, shell);
-	if (special)
-		return (expand_special_and_following_vars(line, index, special, shell));
-	result = ft_calloc(1, sizeof(char));
-	if (!result)
+	special_value = handle_special_cases(line, index, *index + 1, shell);
+	if (special_value)
+		return (expand_special_and_following_vars(line,
+				index, special_value, shell));
+	expanded = ft_calloc(1, sizeof(char));
+	if (!expanded)
 		return (NULL);
-	while (line[*index] == '$')
-	{
-		(*index)++;
-		var_name = get_var_name(line, index);
-		if (!var_name && (line[*index]) != '?')
-			append_dollar_if_no_var(&result);
-		else if((line[*index]) == '?')
-		{
-			result = ft_strjoin(result, ft_itoa(shell->exit_code));
-			(*index)++;
-			return (result);
-		}
-		else
-			append_env_value(&result, var_name, shell);
-	}
-	return (result);
+	return (append_vars_from_line(line, index, expanded, shell));
 }
