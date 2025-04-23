@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_quote.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 18:18:52 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/22 17:00:12 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/23 14:39:16 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ static int	update_quote_status(t_parse_quote *p)
 		if (p->quote == '"')
 			p->quote_is_double = 1;
 		p->index++;
+		if ((p->line[p->index]) == '"')
+			p->quote_is_double = 1;
 		return (1);
 	}
 	else if (p->quote == p->line[p->index])

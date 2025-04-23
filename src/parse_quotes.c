@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_quotes.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 15:56:13 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/22 16:53:04 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/23 14:11:40 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,17 +29,19 @@
 static void	handle_empty_quote_after_non_alnum(t_parse_quote *p,
 	const char *line, int index)
 {
+	char	quote;
+
+	if (!line || !line[index])
+		return;
+	quote = line[index];
+	if ((quote != '\'' && quote != '"'))
+		return;
 	if (((index == 0) || (index > 0 && !ft_isalnum(line[index - 1])))
-		&& line[index])
+		&& line[index + 1] == quote
+		&& (!line[index + 2] || !ft_isalnum(line[index + 2])))
 	{
-		if (line[index + 1] == '"' || line[index + 1] == '\'')
-		{
-			if (!ft_isalnum(line[index + 2]))
-			{
-				free(p->result);
-				p->result = ft_strdup(" ");
-			}
-		}
+		free(p->result);
+		p->result = ft_strdup(" ");
 	}
 }
 
