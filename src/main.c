@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 15:00:56 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/23 09:56:51 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/23 10:06:39 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,16 +39,6 @@ void	parse_and_process_command(t_shell *shell, char ***envp_copy)
 	if (num_commands > 0)
 		shell->exit_code = execute_commands(shell, num_commands, envp_copy);
 	cleanup_shell(shell);
-}
-
-int	check_if_exit(char *str)
-{
-	if (ft_strncmp(str, "exit\0", 5) == 0
-		|| ft_strncmp(str, "exit ", 5) == 0
-		|| ft_strncmp(str, "exit\t", 5) == 0)
-		return (1);
-	else
-		return (0);
 }
 
 static void	handle_input(t_shell *shell, char ***envp_copy)

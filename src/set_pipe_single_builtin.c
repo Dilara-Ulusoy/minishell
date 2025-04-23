@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 11:11:20 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/22 20:48:59 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/23 10:06:37 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,18 @@ static int	arrange_file_single_builtin(t_cmd_parts *cmd_parts, int i)
 	return (EXIT_SUCCESS);
 }
 
+static void	check_if_exit(char *str)
+{
+	if (ft_strncmp(str, "exit\0", 5) == 0)
+		ft_putstr_fd("exit\n", 1);
+}
+
 int	set_pipe_single_builtin(t_cmd_parts *cmd_parts)
 {
 	int	i;
 	int	ret;
 
+	check_if_exit(cmd_parts->cmd_array[0]);
 	if (cmd_parts->n_files > 0)
 	{
 		i = -1;
