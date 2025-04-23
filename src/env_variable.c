@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:23:12 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/23 20:42:01 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/23 21:53:52 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,32 @@ char	*append_remaining_text(const char *line, int *index, char *prefix)
 	return (result);
 }
 
+char *expand_special_and_following_vars(const char *line, int *index, char *special, t_shell *shell)
+{
+	char	*result;
+	char	*var_name;
+
+	result = ft_strdup(special);
+	if (!result)
+		return (NULL);
+	while (line[*index] == '$')
+	{
+		(*index)++;
+		var_name = get_var_name(line, index);
+		if (!var_name && (line[*index]) != '?')
+			append_dollar_if_no_var(&result);
+		else if ((line[*index]) == '?')
+		{
+			result = ft_strjoin(result, ft_itoa(shell->exit_code));
+			(*index)++;
+			return (result);
+		}
+		else
+			append_env_value(&result, var_name, shell);
+	}
+	return (result);
+}
+
 /*
    get_env_var_value:
 
@@ -133,7 +159,7 @@ char	*get_env_var_value(const char *line, int *index, t_shell *shell)
 	start = *index + 1;
 	special = handle_special_cases(line, index, start, shell);
 	if (special)
-		return (append_remaining_text(line, index, special));
+		return (expand_special_and_following_vars(line, index, special, shell));
 	result = ft_calloc(1, sizeof(char));
 	if (!result)
 		return (NULL);
