@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize_word.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:14:48 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/23 16:18:24 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/23 20:43:24 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ If the result of the env variable expansion is not empty,
 and there are spaces following the variable, we want to preserve those spaces.
 This function appends spaces one by one and moves the index forward.
 */
-static char	*append_spaces_if_needed(const char *line, int *index, char *result)
+/* static char	*append_spaces_if_needed(const char *line, int *index, char *result)
 {
 	char	*temp;
 
@@ -120,7 +120,7 @@ static char	*append_spaces_if_needed(const char *line, int *index, char *result)
 		(*index)++;
 	}
 	return (result);
-}
+} */
 
 // Main function to handle `$` in a shell command line.
 char	*handle_dollar_sign(const char *line, int *index,
@@ -134,12 +134,12 @@ char	*handle_dollar_sign(const char *line, int *index,
 		ft_putstr_fd("Memory error at handling dollar sign\n", STDERR_FILENO);
 		return (NULL);
 	}
-	if (result[0] != '\0' && !ft_isdigit(result[0]))
+/* 	if (result[0] != '\0' && (!ft_isdigit(result[0]) || ft_strchr(line, '"') != NULL))
 	{
 		result = append_spaces_if_needed(line, index, result);
 		if (!result)
 			return (NULL);
-	}
+	} */
 	else
 	{
 		while (line[*index] && is_space(line[*index]))

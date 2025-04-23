@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_variable.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:23:12 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/22 20:44:39 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/23 20:42:01 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,8 +141,14 @@ char	*get_env_var_value(const char *line, int *index, t_shell *shell)
 	{
 		(*index)++;
 		var_name = get_var_name(line, index);
-		if (!var_name)
+		if (!var_name && (line[*index]) != '?')
 			append_dollar_if_no_var(&result);
+		else if((line[*index]) == '?')
+		{
+			result = ft_strjoin(result, ft_itoa(shell->exit_code));
+			(*index)++;
+			return (result);
+		}
 		else
 			append_env_value(&result, var_name, shell);
 	}
