@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 15:00:56 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/22 23:57:07 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/23 08:34:48 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	parse_and_process_command(t_shell *shell, char ***envp_copy)
 	cleanup_shell(shell);
 }
 
-static int	check_if_exit(char *str)
+int	check_if_exit(char *str)
 {
 	if (ft_strncmp(str, "exit\0", 5) == 0
 		|| ft_strncmp(str, "exit ", 5) == 0
@@ -65,8 +65,6 @@ static void	handle_input(t_shell *shell, char ***envp_copy)
 			printf("exit\n");
 			break ;
 		}
-		if (check_if_exit(shell->line) == 1)
-			printf("exit\n");
 		shell->line_length = ft_strlen(shell->line);
 		set_signals(NULL, SIGNAL_CHILD);
 		parse_and_process_command(shell, envp_copy);

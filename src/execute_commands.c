@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:45:29 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/22 20:45:09 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/23 08:34:01 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ static int	if_single_and_builtin(t_shell *shell, int num_commands,
 	cmd_parts->num_commands = num_commands;
 	if (is_builtin(cmd_parts))
 	{
+		if (check_if_exit(cmd_parts->cmd_array[0]) == 1)
+			printf("exit\n");
 		exit_code = set_pipe_single_builtin(cmd_parts);
 		if (exit_code != 0)
 		{
