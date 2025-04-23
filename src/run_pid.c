@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/03 16:07:31 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/22 23:59:34 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/23 15:24:31 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static int	command_not_found(t_cmd_parts **cmd_parts, t_args *arg_struct)
 
 int	get_exit_code(void)
 {
-	if (errno == 13 || errno == 21)
+	if (errno == 13 || errno == 21 || errno == 20)
 		return (126);
 	if (errno == 2)
 		return (127);

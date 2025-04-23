@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_quotes.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 15:56:13 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/23 14:11:40 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/23 15:25:20 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,10 @@ static void	handle_empty_quote_after_non_alnum(t_parse_quote *p,
 	char	quote;
 
 	if (!line || !line[index])
-		return;
+		return ;
 	quote = line[index];
 	if ((quote != '\'' && quote != '"'))
-		return;
+		return ;
 	if (((index == 0) || (index > 0 && !ft_isalnum(line[index - 1])))
 		&& line[index + 1] == quote
 		&& (!line[index + 2] || !ft_isalnum(line[index + 2])))
