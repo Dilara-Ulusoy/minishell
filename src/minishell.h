@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 14:59:15 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/22 20:47:02 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/23 09:53:55 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ typedef struct s_buffer
 /* Input Handling and Initialization */
 char	*get_input(const char *prompt);
 void	init_shell(t_shell *shell, char ***envp);
-int		init_term_and_signal(int argc, char **argv, int *exit_code);
+int		init_term_and_signal(int argc, int *exit_code);
 int		event(void);
 
 /* Environment Variable Expansion */

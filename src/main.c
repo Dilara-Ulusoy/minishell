@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
+/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 15:00:56 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/23 08:34:48 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/23 09:56:51 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ static void	handle_input(t_shell *shell, char ***envp_copy)
 {
 	while (1)
 	{
-		set_signals(&(shell->exit_code), SIGNAL_PARENT);
 		g_signal = 1;
 		shell->line = get_input("minishell$ ");
 		g_signal = 0;
@@ -85,7 +84,7 @@ int	main(int argc, char **argv, char **envp)
 		exit(1);
 	}
 	init_shell(&shell, &envp_copy);
-	init_term_and_signal(argc, argv, &shell.exit_code);
+	init_term_and_signal(argc, &shell.exit_code);
 	handle_input(&shell, &envp_copy);
 	free_envp(envp_copy);
 	envp_copy = NULL;
