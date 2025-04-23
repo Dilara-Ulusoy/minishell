@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:14:48 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/22 16:52:32 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/23 16:18:24 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,7 @@ char	*handle_dollar_sign(const char *line, int *index,
 		ft_putstr_fd("Memory error at handling dollar sign\n", STDERR_FILENO);
 		return (NULL);
 	}
-	if (result[0] != '\0')
+	if (result[0] != '\0' && !ft_isdigit(result[0]))
 	{
 		result = append_spaces_if_needed(line, index, result);
 		if (!result)

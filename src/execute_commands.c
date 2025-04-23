@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_commands.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:45:29 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/23 15:48:28 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/23 16:23:02 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ static int	wait_commands(int num_commands, t_args *arg_struct)
 	int	printed_newline;
 	int	j;
 	int	wstatus;
+	int	sig;
 
 	printed_newline = 0;
 	j = -1;
@@ -90,7 +91,7 @@ static int	wait_commands(int num_commands, t_args *arg_struct)
 		waitpid(arg_struct->pids[j], &wstatus, 0);
 		if (WIFSIGNALED(wstatus))
 		{
-			int sig = WTERMSIG(wstatus);
+			sig = WTERMSIG(wstatus);
 			if (sig == SIGINT && !printed_newline)
 			{
 				write(1, "\n", 1);
