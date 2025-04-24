@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:45:29 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/23 16:23:02 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/24 15:34:54 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,13 +92,7 @@ static int	wait_commands(int num_commands, t_args *arg_struct)
 		if (WIFSIGNALED(wstatus))
 		{
 			sig = WTERMSIG(wstatus);
-			if (sig == SIGINT && !printed_newline)
-			{
-				write(1, "\n", 1);
-				printed_newline = 1;
-			}
-			else if (sig == SIGQUIT)
-				write(2, "Quit (core dumped)\n", 20);
+			write_core_dump(sig, &printed_newline);
 		}
 	}
 	free(arg_struct->pids);

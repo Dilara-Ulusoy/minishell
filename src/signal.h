@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 15:45:23 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/15 15:46:45 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/24 15:36:04 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 
 extern int	g_signal;
 
-int	set_signals(int *exit_code, int type);
+int		set_signals(int *exit_code, int type);
+void	write_core_dump(int sig, int *printed_newline);
 
 #endif
