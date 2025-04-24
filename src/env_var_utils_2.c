@@ -6,11 +6,22 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 23:57:37 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/24 13:56:43 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/24 14:17:38 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/*
+ * Append the numeric exit code and any following
+ * alphanumeric characters from the input line
+ * into the expanded string buffer.
+ * Advances the index past the exit code and following text.
+ *
+ * Example:
+ *   minishell$ echo $?dilara
+ *   Output: 0dilara    (assuming exit code is 0)
+ */
 
 char	*append_exit_code_and_following(const char *line,
 		int *index, char *expanded, int exit_code)
@@ -30,6 +41,18 @@ char	*append_exit_code_and_following(const char *line,
 	return (expanded);
 }
 
+/*
+ * Process and append one or more
+ shell variables from the input line into expanded.
+ * For each leading '$', advances index, then:
+ *   - if '?' follows, calls append_exit_code_and_following
+ *   - otherwise, extracts the variable name and
+ * appends its value or a literal '$' if not found
+ *
+ * Example:
+ *   minishell$ echo $HOME $?USER
+ *   Output: /home/user 0USER   (assuming $HOME=/home/user and exit code is 0)
+ */
 char	*append_vars_from_line(const char *line,
 		int *index, char *expanded, t_shell *shell)
 {
@@ -53,6 +76,14 @@ char	*append_vars_from_line(const char *line,
 	return (expanded);
 }
 
+/*
+ * Initialize an empty string and delegate to append_vars_from_line to expand any
+ * shell variables starting at the current index in line.
+ *
+ * Example:
+ *   minishell$ echo $USER$?
+ *   Output: alice0   (assuming USER=alice and exit code is 0)
+ */
 char	*get_env_var_value(const char *line, int *index, t_shell *shell)
 {
 	char	*expanded;
