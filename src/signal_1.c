@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 15:42:05 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/24 15:35:42 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/24 20:46:53 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ void	write_core_dump(int sig, int *printed_newline)
 {
 	if (sig == SIGINT && !printed_newline)
 	{
-		write(1, "\n", 1);
+		ft_putstr_fd("\n", 1);
 		*printed_newline = 1;
 	}
 	else if (sig == SIGQUIT)
-		write(2, "Quit (core dumped)\n", 20);
+		ft_putstr_fd("Quit (core dumped)\n", 2);
 }
