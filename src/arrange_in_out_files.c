@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 14:38:49 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/24 15:08:34 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/24 19:22:49 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,11 @@ int	arrange_in_file(t_cmd_parts *cmd_parts, t_args *arg_struct,
 		if (check_dup2(fd, arg_struct, fileno) == -1)
 			return (-1);
 		close(fd);
-		close(arg_struct->fd[cmd_parts->command_number - 1][0]);
+		if (arg_struct->fd[cmd_parts->command_number - 1][0] != -1)
+		{
+			close(arg_struct->fd[cmd_parts->command_number - 1][0]);
+			arg_struct->fd[cmd_parts->command_number - 1][0] = -1;
+		}
 	}
 	return (EXIT_SUCCESS);
 }
@@ -72,7 +76,11 @@ static int	run_for_not_last_command(t_cmd_parts *cmd_parts, t_args *arg_struct,
 		return (display_error_message(3, arg_struct));
 	}
 	close(fd);
-	close(arg_struct->fd[cmd_parts->command_number][1]);
+	if (arg_struct->fd[cmd_parts->command_number][1] != -1)
+	{
+		close(arg_struct->fd[cmd_parts->command_number][1]);
+		arg_struct->fd[cmd_parts->command_number][1] = -1;
+	}
 	return (EXIT_SUCCESS);
 }
 
