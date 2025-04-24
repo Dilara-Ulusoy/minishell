@@ -6,7 +6,7 @@
 /*   By: htopa <htopa@student.hive.fi>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 12:58:25 by htopa             #+#    #+#             */
-/*   Updated: 2025/04/22 20:48:37 by htopa            ###   ########.fr       */
+/*   Updated: 2025/04/24 15:07:32 by htopa            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,10 @@ int	check_dup2(int file_d, t_args *arg_struct, int std_type)
 	if (file_d == -1)
 		return (close_and_free(arg_struct, 1));
 	else if (dup2(file_d, std_type) == -1)
+	{
+		close(file_d);
 		return (display_error_message(3, arg_struct));
+	}
 	else
 		return (0);
 }
