@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 15:23:12 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/24 13:07:04 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/24 13:56:11 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,12 +62,13 @@ void	append_env_value(char **result, char *var_name, t_shell *shell)
 		free(normalized);
 	}
 	else if (ft_isdigit(var_name[0]))
-		*result = ft_strdup(var_name + 1);
-	else
 	{
-		*result = append_and_free(*result, "");
+		free(*result);
+		*result = ft_strdup(var_name + 1);
 	}
-	free_this(NULL, var_name, NULL, NULL);
+	else
+		*result = append_and_free(*result, "");
+	free(var_name);
 	free(var_value);
 }
 
@@ -78,6 +79,4 @@ Appends "$" when no valid variable follows
 void	append_dollar_if_no_var(char **result)
 {
 	*result = append_and_free(*result, "$");
-
-
 }

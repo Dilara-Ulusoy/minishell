@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 15:43:28 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/23 20:22:32 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/24 13:59:19 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ static void	sig_handler_parent(int signo)
 		if (!isatty(STDIN_FILENO) || errno != EINTR)
 			return ;
 		set_signal_exit(NULL, signo);
-		//rl_on_new_line();
-		//rl_replace_line("", 0);
-		//rl_redisplay();
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
 	}
 }
 
@@ -46,7 +46,7 @@ static void	sig_handler_heredoc(int signo)
 {
 	if (signo == SIGINT)
 	{
-		//rl_done = 1;
+		rl_done = 1;
 		set_signal_exit(NULL, signo);
 	}
 }
@@ -55,8 +55,8 @@ static int	set_parent_signals(void)
 {
 	struct sigaction	sa;
 
-	//rl_done = 0;
-	//rl_event_hook = NULL;
+	rl_done = 0;
+	rl_event_hook = NULL;
 	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = SA_RESTART;
 	sa.sa_handler = sig_handler_parent;
@@ -74,7 +74,7 @@ int	set_signals(int *exit_code, int type)
 		return (set_parent_signals());
 	else if (type == SIGNAL_HEREDOC)
 	{
-		//rl_event_hook = event;
+		rl_event_hook = event;
 		if (signal(SIGINT, sig_handler_heredoc) == SIG_ERR)
 			return (0);
 		if (signal(SIGQUIT, SIG_IGN) == SIG_ERR)
