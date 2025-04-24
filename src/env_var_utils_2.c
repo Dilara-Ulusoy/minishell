@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoc@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 23:57:37 by dakcakoc          #+#    #+#             */
-/*   Updated: 2025/04/23 23:57:49 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2025/04/24 13:10:46 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,10 @@ char	*append_vars_from_line(const char *line,
 char	*get_env_var_value(const char *line, int *index, t_shell *shell)
 {
 	char	*expanded;
+	char	*temp;
 
 	expanded = ft_calloc(1, sizeof(char));
-	if (!expanded)
-		return (NULL);
-	return (append_vars_from_line(line, index, expanded, shell));
+	temp = append_vars_from_line(line, index, expanded, shell);
+	return (temp);
 }
+
