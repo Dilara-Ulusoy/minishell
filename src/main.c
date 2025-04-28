@@ -57,6 +57,7 @@ static void	handle_input(t_shell *shell, char ***envp_copy)
 		shell->line_length = ft_strlen(shell->line);
 		set_signals(NULL, SIGNAL_CHILD);
 		parse_and_process_command(shell, envp_copy);
+		set_signals(NULL, SIGNAL_PARENT);
 	}
 }
 

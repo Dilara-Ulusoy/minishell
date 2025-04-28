@@ -27,7 +27,7 @@ int	init_term_and_signal(int argc, int *exit_code)
 
 void	write_core_dump(int sig, int *printed_newline)
 {
-	if (sig == SIGINT && !printed_newline)
+	if (sig == SIGINT && !(*printed_newline))
 	{
 		ft_putstr_fd("\n", 1);
 		*printed_newline = 1;
